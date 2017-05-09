@@ -1,7 +1,21 @@
 #!/bin/bash
 
-mkdir -p build
-cd build
+if [ ! -f "$1" ]
+then
+    echo "no chroot script provided"
+    echo "$0 [chroot script]"
+    exit 1
+fi
+
+if [ -z "$(which mksquashfs)" ]
+then
+	sudo apt install -y squashfs-tools
+fi
+
+if [ -z "$(which xorriso)" ]
+then
+    sudo apt install -y xorriso
+fi
 
 function mount_chroot {
     sudo mount -o bind /dev ubuntu/dev
@@ -75,7 +89,7 @@ sudo unsquashfs -d ubuntu system76.mount/casper/filesystem.squashfs || exit 1
 # Run chroot script
 mount_chroot
     dbus-uuidgen | sudo tee ubuntu/var/lib/dbus/machine-id
-    sudo cp ../chroot.sh ubuntu/chroot.sh
+    sudo cp "$1" ubuntu/chroot.sh
 
     sudo chroot ubuntu /chroot.sh
 
@@ -90,7 +104,7 @@ sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend || ex
 sudo du -sx --block-size=1 ubuntu | cut -f1 | sudo tee system76.mount/casper/filesystem.size
 
 # Create new ISO
-sudo xorriso -as mkisofs \
+xorriso -as mkisofs \
     -eltorito-alt-boot -e boot/grub/efi.img \
     -no-emul-boot -isohybrid-gpt-basdat \
     -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
