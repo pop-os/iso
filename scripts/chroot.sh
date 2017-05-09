@@ -13,8 +13,8 @@ apt purge -y \
 apt autoremove -y --purge
 apt install -y \
     system76-driver \
-    system76-default-settings
+    system76-default-settings \
+    plymouth-theme-system76-logo \
+    plymouth-theme-system76-text
 #apt full-upgrade
 apt clean -y
-
-bash
