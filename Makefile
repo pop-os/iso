@@ -13,4 +13,4 @@ run: build/system76.iso
 
 build/system76.iso:
 	mkdir -p build
-	cd build && ../scripts/build.sh ../scripts/chroot.sh
+	cd build && ../scripts/build.sh $(PWD)

@@ -1,9 +1,9 @@
 #!/bin/bash
 
-if [ ! -f "$1" ]
+if [ ! -d "$1" ]
 then
-    echo "no chroot script provided"
-    echo "$0 [chroot script]"
+    echo "no source directory provided"
+    echo "$0 [directory]"
     exit 1
 fi
 
@@ -89,7 +89,7 @@ sudo unsquashfs -d ubuntu system76.mount/casper/filesystem.squashfs || exit 1
 # Run chroot script
 mount_chroot
     dbus-uuidgen | sudo tee ubuntu/var/lib/dbus/machine-id
-    sudo cp "$1" ubuntu/chroot.sh
+    sudo cp "$1/scripts/chroot.sh" ubuntu/chroot.sh
 
     sudo chroot ubuntu /chroot.sh
     sudo chroot ubuntu dpkg-query -W --showformat='${Package} ${Version}\n' | sudo tee system76.mount/casper/filesystem.manifest
@@ -97,6 +97,11 @@ mount_chroot
     sudo rm ubuntu/chroot.sh
     sudo rm ubuntu/var/lib/dbus/machine-id
 unmount_chroot
+
+# Change plymouth labels
+sudo sed -i 's/Ubuntu GNOME/System76/g' ubuntu/usr/share/plymouth/themes/text.plymouth
+sudo sed -i 's/Ubuntu GNOME/System76/g' ubuntu/usr/share/plymouth/themes/ubuntu-gnome-text/ubuntu-gnome-text.plymouth
+cp "$1/data/system76_icon_cutout-warmgrey.png" ubuntu/usr/share/plymouth/themes/ubuntu-gnome-logo/ubuntu_gnome_logo.png
 
 # Compress squashfs
 sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend || exit 1
