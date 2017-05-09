@@ -84,7 +84,7 @@ mount_chroot
 unmount_chroot
 
 # Compress squashfs
-sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs || exit 1
+sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend || exit 1
 
 # Calculate filesystem size
 sudo du -sx --block-size=1 ubuntu | cut -f1 | sudo tee system76.mount/casper/filesystem.size
