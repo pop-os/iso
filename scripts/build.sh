@@ -92,6 +92,7 @@ mount_chroot
     sudo cp "$1" ubuntu/chroot.sh
 
     sudo chroot ubuntu /chroot.sh
+    sudo chroot ubuntu dpkg-query -W --showformat='${Package} ${Version}\n' | sudo tee system76.mount/casper/filesystem.manifest
 
     sudo rm ubuntu/chroot.sh
     sudo rm ubuntu/var/lib/dbus/machine-id
@@ -103,6 +104,22 @@ sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend || ex
 # Calculate filesystem size
 sudo du -sx --block-size=1 ubuntu | cut -f1 | sudo tee system76.mount/casper/filesystem.size
 
+# Change disk name
+sudo sed -i 's/Ubuntu-GNOME/System76/g' system76.mount/README.diskdefines
+sudo sed -i 's/Ubuntu-GNOME/System76/g' system76.mount/.disk/info
+sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/boot/grub/grub.cfg
+sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/boot/grub/loopback.cfg
+sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/isolinux/txt.cfg
+
+# Calculate md5sum
+pushd system76.mount
+    sudo rm md5sum.txt || exit 1
+    find -type f -print0 | sudo xargs -0 md5sum | grep -v isolinux/boot.cat | sudo tee md5sum.txt
+popd
+
+# Get correct volume label
+LABEL="$(isoinfo -d -i ubuntu.iso | grep '^Volume id: ' | cut -d ' ' -f3- | sed 's/Ubuntu-GNOME/System76/g')"
+
 # Create new ISO
 xorriso -as mkisofs \
     -eltorito-alt-boot -e boot/grub/efi.img \
@@ -110,4 +127,7 @@ xorriso -as mkisofs \
     -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
     -c isolinux/boot.cat -b isolinux/isolinux.bin \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
+    -J -R -V "$LABEL" \
     -o system76.iso system76.mount
+
+isohybrid system76.iso
