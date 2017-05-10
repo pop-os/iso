@@ -160,12 +160,10 @@ LABEL="$(isoinfo -d -i ubuntu.iso | grep '^Volume id: ' | cut -d ' ' -f3- | sed 
 
 # Create new ISO
 xorriso -as mkisofs \
-    -eltorito-alt-boot -e boot/grub/efi.img \
-    -no-emul-boot -isohybrid-gpt-basdat \
     -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
     -c isolinux/boot.cat -b isolinux/isolinux.bin \
     -no-emul-boot -boot-load-size 4 -boot-info-table \
-    -J -R -V "$LABEL" \
+    -eltorito-alt-boot -e boot/grub/efi.img \
+    -no-emul-boot -isohybrid-gpt-basdat \
+    -r -V "$LABEL" \
     -o system76.iso system76.mount
-
-isohybrid system76.iso
