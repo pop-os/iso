@@ -7,6 +7,11 @@ then
     exit 1
 fi
 
+if [ ! -f /usr/lib/ISOLINUX/isolinux.bin ]
+then
+    sudo apt install -y isolinux
+fi
+
 if [ -z "$(which mksquashfs)" ]
 then
 	sudo apt install -y squashfs-tools
