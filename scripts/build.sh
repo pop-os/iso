@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+DISTRO="System76 Ubuntu"
+
 if [ ! -d "$1" ]
 then
     echo "no source directory provided"
@@ -124,11 +126,11 @@ sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend
 sudo du -sx --block-size=1 ubuntu | cut -f1 | sudo tee system76.mount/casper/filesystem.size
 
 # Change disk name
-sudo sed -i 's/Ubuntu-GNOME/System76/g' system76.mount/README.diskdefines
-sudo sed -i 's/Ubuntu-GNOME/System76/g' system76.mount/.disk/info
-sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/boot/grub/grub.cfg
-sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/boot/grub/loopback.cfg
-sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/isolinux/txt.cfg
+sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/README.diskdefines
+sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/.disk/info
+sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/boot/grub/grub.cfg
+sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/boot/grub/loopback.cfg
+sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/isolinux/txt.cfg
 
 # Change splash
 sudo cp "$1/data/splash.pcx" system76.mount/isolinux/splash.pcx
@@ -156,7 +158,7 @@ pushd system76.mount
 popd
 
 # Get correct volume label
-LABEL="$(isoinfo -d -i ubuntu.iso | grep '^Volume id: ' | cut -d ' ' -f3- | sed 's/Ubuntu-GNOME/System76/g')"
+LABEL="$(isoinfo -d -i ubuntu.iso | grep '^Volume id: ' | cut -d ' ' -f3- | sed "s/Ubuntu-GNOME/$DISTRO/g")"
 
 # Create new ISO
 xorriso -as mkisofs \
