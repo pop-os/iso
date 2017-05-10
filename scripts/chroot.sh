@@ -11,6 +11,7 @@ apt purge -y \
     plymouth-theme-ubuntu-gnome-text
 apt autoremove -y
 apt install -y \
+    system76-driver \
     system76-default-settings \
     plymouth-theme-system76-logo \
     plymouth-theme-system76-text
