@@ -9,6 +9,7 @@ apt purge -y \
     ubuntu-gnome-default-settings \
     plymouth-theme-ubuntu-gnome-logo \
     plymouth-theme-ubuntu-gnome-text
+apt autoremove -y
 apt install -y \
     system76-default-settings \
     plymouth-theme-system76-logo \

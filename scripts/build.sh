@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 if [ ! -d "$1" ]
 then
@@ -30,10 +30,10 @@ function mount_chroot {
 }
 
 function unmount_chroot {
-    sudo umount ubuntu/dev || sudo umount -lf ubuntu/dev
-    sudo umount ubuntu/run || sudo umount -lf ubuntu/run
-    sudo umount ubuntu/proc || sudo umount -lf ubuntu/proc
-    sudo umount ubuntu/sys || sudo umount -lf ubuntu/sys
+    sudo umount ubuntu/dev || sudo umount -lf ubuntu/dev || true
+    sudo umount ubuntu/run || sudo umount -lf ubuntu/run || true
+    sudo umount ubuntu/proc || sudo umount -lf ubuntu/proc || true
+    sudo umount ubuntu/sys || sudo umount -lf ubuntu/sys || true
 }
 
 function clean_chroot {
@@ -57,39 +57,45 @@ function mount_iso {
 }
 
 function unmount_iso {
-    sudo umount ubuntu.mount || sudo umount -lf ubuntu.mount
+    sudo umount ubuntu.mount || sudo umount -lf ubuntu.mount || true
 }
 
 # Remove mounts for new ISO
 if [ -d system76.mount ]
 then
-    sudo rm -r system76.mount || exit 1
+    sudo rm -r system76.mount
 fi
+
+# Remove old initrd extract
+rm -rf initrd initrd.lz
+
+# Remove old bootlogo extract
+rm -rf bootlogo bootlogo.img
 
 # Unmount and remove mounts for old ISO
 unmount_iso
 if [ -d ubuntu.mount ]
 then
-    rm -r ubuntu.mount || exit 1
+    rm -r ubuntu.mount
 fi
 
 # Clean old chroot
-clean_chroot || exit 1
+clean_chroot
 
 # Download ISO
 if [ ! -f ubuntu.iso ]
 then
-    wget -O ubuntu.iso http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso || exit 1
+    wget -O ubuntu.iso http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
 fi
 
 # Copy squashfs from ISO
-mount_iso || exit 1
+mount_iso
     mkdir -p system76.mount
     sudo cp -ruT ubuntu.mount system76.mount
 unmount_iso
 
 # Extract squashfs
-sudo unsquashfs -d ubuntu system76.mount/casper/filesystem.squashfs || exit 1
+sudo unsquashfs -d ubuntu system76.mount/casper/filesystem.squashfs
 
 # Run chroot script
 mount_chroot
@@ -103,13 +109,16 @@ mount_chroot
     sudo rm ubuntu/var/lib/dbus/machine-id
 unmount_chroot
 
-# Change plymouth labels
-sudo sed -i 's/Ubuntu GNOME/System76/g' ubuntu/usr/share/plymouth/themes/text.plymouth
-sudo sed -i 's/Ubuntu GNOME/System76/g' ubuntu/usr/share/plymouth/themes/ubuntu-gnome-text/ubuntu-gnome-text.plymouth
-cp "$1/data/system76_icon_cutout-warmgrey.png" ubuntu/usr/share/plymouth/themes/ubuntu-gnome-logo/ubuntu_gnome_logo.png
+# Rebuild initrd
+mkdir -p initrd
+pushd initrd
+    gzip -dc ../ubuntu/initrd.img | cpio -id
+    find . | cpio --quiet -o -H newc | lzma -7 > ../initrd.lz
+popd
+sudo mv initrd.lz system76.mount/casper/initrd.lz
 
 # Compress squashfs
-sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend || exit 1
+sudo mksquashfs ubuntu system76.mount/casper/filesystem.squashfs -noappend
 
 # Calculate filesystem size
 sudo du -sx --block-size=1 ubuntu | cut -f1 | sudo tee system76.mount/casper/filesystem.size
@@ -121,9 +130,28 @@ sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/boot/grub/grub.cfg
 sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/boot/grub/loopback.cfg
 sudo sed -i 's/Ubuntu GNOME/System76/g' system76.mount/isolinux/txt.cfg
 
+# Change splash
+sudo cp "$1/data/splash.pcx" system76.mount/isolinux/splash.pcx
+sudo cp "$1/data/splash.png" system76.mount/isolinux/splash.png
+
+# Rebuild bootlogo
+mkdir -p bootlogo
+pushd bootlogo
+    cpio -id < ../system76.mount/isolinux/bootlogo
+    for file in $(find . -type f)
+    do
+        if [ -f "../system76.mount/isolinux/$file" ]
+        then
+            cp "../system76.mount/isolinux/$file" "$file"
+        fi
+    done
+    find . | cpio --quiet -o > ../bootlogo.img
+popd
+sudo mv bootlogo.img system76.mount/isolinux/bootlogo
+
 # Calculate md5sum
 pushd system76.mount
-    sudo rm md5sum.txt || exit 1
+    sudo rm md5sum.txt
     find -type f -print0 | sudo xargs -0 md5sum | grep -v isolinux/boot.cat | sudo tee md5sum.txt
 popd
 
