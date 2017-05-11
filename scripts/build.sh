@@ -1,6 +1,6 @@
 #!/bin/bash -e
 
-DISTRO="System76 Ubuntu"
+DISTRO="System76"
 
 if [ ! -d "$1" ]
 then
@@ -128,9 +128,9 @@ sudo du -sx --block-size=1 ubuntu | cut -f1 | sudo tee system76.mount/casper/fil
 # Change disk name
 sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/README.diskdefines
 sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/.disk/info
-sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/boot/grub/grub.cfg
-sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/boot/grub/loopback.cfg
-sudo sed -i "s/Ubuntu-GNOME/$DISTRO/g" system76.mount/isolinux/txt.cfg
+sudo sed -i "s/Ubuntu GNOME/$DISTRO/g" system76.mount/boot/grub/grub.cfg
+sudo sed -i "s/Ubuntu GNOME/$DISTRO/g" system76.mount/boot/grub/loopback.cfg
+sudo sed -i "s/Ubuntu GNOME/$DISTRO/g" system76.mount/isolinux/txt.cfg
 
 # Change splash
 sudo cp "$1/data/splash.pcx" system76.mount/isolinux/splash.pcx
