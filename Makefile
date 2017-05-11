@@ -7,18 +7,24 @@ all: build/system76.iso
 clean:
 	rm -f build/*.tag build/system76.iso
 
-run: build/system76.iso
+build/qemu.img:
+	mkdir -p build
+	qemu-img create -f qcow2 "$@" 16G
+
+run: build/system76.iso build/qemu.img
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
-		-boot d -cdrom "$<"
+		-boot d -cdrom "$<" \
+		-hda build/qemu.img
 
-uefi: build/system76.iso
+uefi: build/system76.iso build/qemu.img
 	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
 		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
 		-drive if=pflash,format=raw,file=build/OVMF_VARS.fd \
-		-boot d -cdrom "$<"
+		-boot d -cdrom "$<" \
+		-hda build/qemu.img
 
 build/ubuntu.iso:
 	mkdir -p build
@@ -41,9 +47,10 @@ build/iso_modify.tag: build/iso_extract.tag
 	cp "data/info" "build/iso/.disk/info"
 	cp "data/grub.cfg" "build/iso/boot/grub/grub.cfg"
 	cp "data/loopback.cfg" "build/iso/boot/grub/loopback.cfg"
-	cp "data/txt.cfg" "build/iso/isolinux/txt.cfg"
 	cp "data/splash.pcx" "build/iso/isolinux/splash.pcx"
 	cp "data/splash.png" "build/iso/isolinux/splash.png"
+	cp "data/txt.cfg" "build/iso/isolinux/txt.cfg"
+	cp "data/ubuntu-gnome.seed" "build/iso/preseed/ubuntu-gnome.seed"
 
 	touch "$@"
 
