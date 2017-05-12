@@ -5,13 +5,20 @@ export LC_ALL=C
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
-add-apt-repository -y ppa:system76-dev/daily
+for repo in $REPOS
+do
+    echo "Adding repository '$repo'"
+    add-apt-repository -y "$repo"
+done
+
 apt update -y
-apt install -y \
-    system76-driver \
-    system76-default-settings \
-    plymouth-theme-system76-logo \
-    plymouth-theme-system76-text
+apt upgrade -y
+
+if [ $# -gt 0 ]
+then
+    echo "Installing packages '$@'"
+    apt install -y "$@"
+fi
 
 apt clean -y
 

@@ -1,23 +1,41 @@
-DISTRO=System76
+DISTRO_NAME=System76
+
+DISTRO_CODE=system76
+
+DISTRO_REPOS=\
+	ppa:system76-dev/stable \
+	ppa:system76-dev/daily
+
+DISTRO_PKGS=\
+	system76-driver \
+	system76-default-settings \
+	plymouth-theme-system76-logo \
+	plymouth-theme-system76-text
+
+SED=\
+	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
+	s|DISTRO_CODE|$(DISTRO_CODE)|g; \
+	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
+	s|DISTRO_PKGS|$(DISTRO_PKGS)|g
 
 .PHONY: all clean disk run uefi
 
-all: build/system76.iso
+all: build/$(DISTRO_CODE).iso
 
 clean:
-	rm -f build/*.tag build/system76.iso
+	rm -f build/*.tag build/$(DISTRO_CODE).iso
 
 build/qemu.img:
 	mkdir -p build
 	qemu-img create -f qcow2 "$@" 16G
 
-run: build/system76.iso build/qemu.img
+run: build/$(DISTRO_CODE).iso build/qemu.img
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
 		-boot d -cdrom "$<" \
 		-hda build/qemu.img
 
-uefi: build/system76.iso build/qemu.img
+uefi: build/$(DISTRO_CODE).iso build/qemu.img
 	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
@@ -43,14 +61,15 @@ build/iso_extract.tag: build/ubuntu.iso
 	touch "$@"
 
 build/iso_modify.tag: build/iso_extract.tag
-	cp "data/README.diskdefines" "build/iso/README.diskdefines"
-	cp "data/info" "build/iso/.disk/info"
-	cp "data/grub.cfg" "build/iso/boot/grub/grub.cfg"
-	cp "data/loopback.cfg" "build/iso/boot/grub/loopback.cfg"
+	sed "$(SED)" "data/README.diskdefines" > "build/iso/README.diskdefines"
+	sed "$(SED)" "data/info" > "build/iso/.disk/info"
+	sed "$(SED)" "data/grub.cfg" > "build/iso/boot/grub/grub.cfg"
+	sed "$(SED)" "data/loopback.cfg" > "build/iso/boot/grub/loopback.cfg"
+	sed "$(SED)" "data/txt.cfg" > "build/iso/isolinux/txt.cfg"
+	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$DISTRO_CODE.seed"
+
 	cp "data/splash.pcx" "build/iso/isolinux/splash.pcx"
 	cp "data/splash.png" "build/iso/isolinux/splash.png"
-	cp "data/txt.cfg" "build/iso/isolinux/txt.cfg"
-	cp "data/ubuntu-gnome.seed" "build/iso/preseed/ubuntu-gnome.seed"
 
 	touch "$@"
 
@@ -77,7 +96,7 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	sudo cp "scripts/chroot.sh" "build/chroot/chroot.sh"
 
 	# Run chroot script
-	sudo chroot "build/chroot" /chroot.sh
+	sudo chroot "build/chroot" /bin/bash -e -c "REPOS=\"$(DISTRO_REPOS)\" /chroot.sh $(DISTRO_PKGS)"
 
 	# Remove chroot script
 	sudo rm "build/chroot/chroot.sh"
@@ -102,7 +121,7 @@ build/iso_chroot.tag: build/chroot_modify.tag
 
 	touch "$@"
 
-build/system76.iso: build/iso_modify.tag build/iso_chroot.tag
+build/$(DISTRO_CODE).iso: build/iso_modify.tag build/iso_chroot.tag
 	# Regenerate bootlogo
 	scripts/bootlogo.sh "build/iso" "build/bootlogo"
 
@@ -115,5 +134,5 @@ build/system76.iso: build/iso_modify.tag build/iso_chroot.tag
 	    -no-emul-boot -boot-load-size 4 -boot-info-table \
 	    -eltorito-alt-boot -e boot/grub/efi.img \
 	    -no-emul-boot -isohybrid-gpt-basdat \
-	    -r -V "System76 17.04 amd64" \
+	    -r -V "$DISTRO_NAME 17.04 amd64" \
 		-o "$@" "build/iso"
