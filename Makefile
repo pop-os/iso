@@ -32,8 +32,8 @@ build/qemu.img:
 run: build/$(DISTRO_CODE).iso build/qemu.img
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
-		-boot d -cdrom "$<" \
-		-hda build/qemu.img
+		-boot d -cdrom "$<"
+		#-hda build/qemu.img
 
 uefi: build/$(DISTRO_CODE).iso build/qemu.img
 	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
@@ -41,8 +41,8 @@ uefi: build/$(DISTRO_CODE).iso build/qemu.img
 		-enable-kvm -m 2048 -vga qxl \
 		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
 		-drive if=pflash,format=raw,file=build/OVMF_VARS.fd \
-		-boot d -cdrom "$<" \
-		-hda build/qemu.img
+		-boot d -cdrom "$<"
+		#-hda build/qemu.img
 
 build/ubuntu.iso:
 	mkdir -p build
