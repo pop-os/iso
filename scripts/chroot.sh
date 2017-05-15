@@ -12,7 +12,6 @@ do
 done
 
 apt update -y
-apt upgrade -y
 
 if [ $# -gt 0 ]
 then
