@@ -69,6 +69,9 @@ build/iso_modify.tag: build/iso_extract.tag
 	sed "$(SED)" "data/txt.cfg" > "build/iso/isolinux/txt.cfg"
 	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$DISTRO_CODE.seed"
 
+	cp "data/access.pcx" "build/iso/isolinux/access.pcx"
+	cp "data/blank.pcx" "build/iso/isolinux/blank.pcx"
+	cp "data/gfxboot.cfg" "build/iso/isolinux/gfxboot.cfg"
 	cp "data/splash.pcx" "build/iso/isolinux/splash.pcx"
 	cp "data/splash.png" "build/iso/isolinux/splash.png"
 
