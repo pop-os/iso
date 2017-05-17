@@ -10,7 +10,8 @@ DISTRO_PKGS=\
 	system76-driver \
 	system76-default-settings \
 	plymouth-theme-system76-logo \
-	plymouth-theme-system76-text
+	plymouth-theme-system76-text \
+	lightdm-gtk-greeter
 
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
@@ -70,6 +71,9 @@ build/iso_modify.tag: build/iso_extract.tag
 
 	cp "data/splash.pcx" "build/iso/isolinux/splash.pcx"
 	cp "data/splash.png" "build/iso/isolinux/splash.png"
+
+	rm -rf "build/iso/boot/grub/theme"
+	cp -r "data/grub-theme" "build/iso/boot/grub/theme"
 
 	touch "$@"
 

@@ -1,0 +1,3 @@
+[submodule "data/grub-theme"]
+	path = data/grub-theme
+	url = https://github.com/system76/grub2-theme-vimix.git
