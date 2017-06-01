@@ -3,15 +3,10 @@ DISTRO_NAME=System76
 DISTRO_CODE=system76
 
 DISTRO_REPOS=\
-	ppa:system76-dev/stable \
-	ppa:system76-dev/daily
+	ppa:system76-dev/stable
 
 DISTRO_PKGS=\
-	system76-driver \
-	system76-default-settings \
-	plymouth-theme-system76-logo \
-	plymouth-theme-system76-text \
-	lightdm-gtk-greeter
+	system76-desktop
 
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
@@ -67,7 +62,7 @@ build/iso_modify.tag: build/iso_extract.tag
 	sed "$(SED)" "data/grub.cfg" > "build/iso/boot/grub/grub.cfg"
 	sed "$(SED)" "data/loopback.cfg" > "build/iso/boot/grub/loopback.cfg"
 	sed "$(SED)" "data/txt.cfg" > "build/iso/isolinux/txt.cfg"
-	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$DISTRO_CODE.seed"
+	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$(DISTRO_CODE).seed"
 
 	cp "data/access.pcx" "build/iso/isolinux/access.pcx"
 	cp "data/blank.pcx" "build/iso/isolinux/blank.pcx"
@@ -141,5 +136,5 @@ build/$(DISTRO_CODE).iso: build/iso_modify.tag build/iso_chroot.tag
 	    -no-emul-boot -boot-load-size 4 -boot-info-table \
 	    -eltorito-alt-boot -e boot/grub/efi.img \
 	    -no-emul-boot -isohybrid-gpt-basdat \
-	    -r -V "$DISTRO_NAME 17.04 amd64" \
+	    -r -V "$(DISTRO_NAME) 17.04 amd64" \
 		-o "$@" "build/iso"
