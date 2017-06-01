@@ -148,4 +148,4 @@ build/SHA256SUMS: build/$(DISTRO_CODE).iso
 	cd build && sha256sum -b "`basename "$<"`" > "`basename "$@"`"
 
 build/SHA256SUMS.gpg: build/SHA256SUMS
-	cd build && gpg --output "`basename "$@"`" --detach-sig "`basename "$<"`"
+	cd build && gpg --batch --yes --output "`basename "$@"`" --detach-sig "`basename "$<"`"
