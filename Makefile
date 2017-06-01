@@ -18,7 +18,7 @@ SED=\
 
 iso: build/$(DISTRO_CODE).iso
 
-all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS
+all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
 
 clean:
 	rm -f build/*.tag build/$(DISTRO_CODE).iso
@@ -146,3 +146,6 @@ build/$(DISTRO_CODE).iso.zsync: build/$(DISTRO_CODE).iso
 
 build/SHA256SUMS: build/$(DISTRO_CODE).iso
 	cd build && sha256sum -b "`basename "$<"`" > "`basename "$@"`"
+
+build/SHA256SUMS.gpg: build/SHA256SUMS
+	cd build && gpg --output "`basename "$@"`" --detach-sig "`basename "$<"`"
