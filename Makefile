@@ -142,7 +142,7 @@ build/$(DISTRO_CODE).iso: build/iso_modify.tag build/iso_chroot.tag
 		-o "$@" "build/iso"
 
 build/$(DISTRO_CODE).iso.zsync: build/$(DISTRO_CODE).iso
-	zsyncmake -o "$@" "$<"
+	cd build && zsyncmake -o "`basename "$@"`" "`basename "$<"`"
 
 build/SHA256SUMS: build/$(DISTRO_CODE).iso
-	sha256sum -b "$<" > "$@"
+	cd build && sha256sum -b "`basename "$<"`" > "`basename "$@"`"
