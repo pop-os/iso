@@ -5,6 +5,8 @@ export LC_ALL=C
 
 dbus-uuidgen > /var/lib/dbus/machine-id
 
+touch /var/cache/system76-pre-master.marker
+
 for repo in $REPOS
 do
     echo "Adding repository '$repo'"
@@ -22,5 +24,7 @@ fi
 apt clean -y
 
 dpkg-query -W --showformat='${Package} ${Version}\n' > /filesystem.manifest
+
+rm /var/cache/system76-pre-master.marker
 
 rm /var/lib/dbus/machine-id
