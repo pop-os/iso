@@ -21,7 +21,7 @@ iso: build/$(DISTRO_CODE).iso
 all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
 
 clean:
-	rm -f build/*.tag build/$(DISTRO_CODE).iso
+	rm -f build/*.tag build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
 
 build/qemu.img:
 	mkdir -p build
@@ -72,8 +72,8 @@ build/iso_modify.tag: build/iso_extract.tag
 	cp "data/splash.pcx" "build/iso/isolinux/splash.pcx"
 	cp "data/splash.png" "build/iso/isolinux/splash.png"
 
-	rm -rf "build/iso/boot/grub/theme"
-	cp -r "data/grub-theme" "build/iso/boot/grub/theme"
+	rm -rf "build/iso/boot/grub/themes"
+	cp -r "data/default-settings/usr/share/grub/themes" "build/iso/boot/grub/themes"
 
 	touch "$@"
 
