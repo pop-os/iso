@@ -14,9 +14,11 @@ SED=\
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g
 
-.PHONY: all clean disk run uefi
+.PHONY: all clean iso run uefi
 
-all: build/$(DISTRO_CODE).iso
+iso: build/$(DISTRO_CODE).iso
+
+all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS
 
 clean:
 	rm -f build/*.tag build/$(DISTRO_CODE).iso
@@ -138,3 +140,9 @@ build/$(DISTRO_CODE).iso: build/iso_modify.tag build/iso_chroot.tag
 	    -no-emul-boot -isohybrid-gpt-basdat \
 	    -r -V "$(DISTRO_NAME) 17.04 amd64" \
 		-o "$@" "build/iso"
+
+build/$(DISTRO_CODE).iso.zsync: build/$(DISTRO_CODE).iso
+	zsyncmake -o "$@" "$<"
+
+build/SHA256SUMS: build/$(DISTRO_CODE).iso
+	sha256sum "$<" > "$@"
