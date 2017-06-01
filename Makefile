@@ -145,4 +145,4 @@ build/$(DISTRO_CODE).iso.zsync: build/$(DISTRO_CODE).iso
 	zsyncmake -o "$@" "$<"
 
 build/SHA256SUMS: build/$(DISTRO_CODE).iso
-	sha256sum "$<" > "$@"
+	sha256sum -b "$<" > "$@"
