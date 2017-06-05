@@ -61,16 +61,18 @@ build/iso_extract.tag: build/ubuntu.iso
 build/iso_modify.tag: build/iso_extract.tag
 	sed "$(SED)" "data/README.diskdefines" > "build/iso/README.diskdefines"
 	sed "$(SED)" "data/info" > "build/iso/.disk/info"
-	sed "$(SED)" "data/grub.cfg" > "build/iso/boot/grub/grub.cfg"
-	sed "$(SED)" "data/loopback.cfg" > "build/iso/boot/grub/loopback.cfg"
-	sed "$(SED)" "data/txt.cfg" > "build/iso/isolinux/txt.cfg"
 	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$(DISTRO_CODE).seed"
 
-	cp "data/access.pcx" "build/iso/isolinux/access.pcx"
-	cp "data/blank.pcx" "build/iso/isolinux/blank.pcx"
-	cp "data/gfxboot.cfg" "build/iso/isolinux/gfxboot.cfg"
-	cp "data/splash.pcx" "build/iso/isolinux/splash.pcx"
-	cp "data/splash.png" "build/iso/isolinux/splash.png"
+	sed "$(SED)" "data/grub/grub.cfg" > "build/iso/boot/grub/grub.cfg"
+	sed "$(SED)" "data/grub/loopback.cfg" > "build/iso/boot/grub/loopback.cfg"
+
+	cp "data/isolinux/access.pcx" "build/iso/isolinux/access.pcx"
+	cp "data/isolinux/blank.pcx" "build/iso/isolinux/blank.pcx"
+	sed "$(SED)" "data/isolinux/gfxboot.cfg" > "build/iso/isolinux/gfxboot.cfg"
+	sed "$(SED)" "data/isolinux/isolinux.cfg" > "build/iso/isolinux/isolinux.cfg"
+	cp "data/isolinux/splash.pcx" "build/iso/isolinux/splash.pcx"
+	cp "data/isolinux/splash.png" "build/iso/isolinux/splash.png"
+	sed "$(SED)" "data/isolinux/txt.cfg" > "build/iso/isolinux/txt.cfg"
 
 	rm -rf "build/iso/boot/grub/themes"
 	cp -r "data/default-settings/usr/share/grub/themes" "build/iso/boot/grub/themes"
