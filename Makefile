@@ -1,6 +1,6 @@
 UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
 
-DISTRO_NAME=Pop!_OS
+DISTRO_NAME=Pop_OS
 
 DISTRO_CODE=pop_os
 
