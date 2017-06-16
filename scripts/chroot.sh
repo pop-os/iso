@@ -15,6 +15,8 @@ done
 
 apt update -y
 
+#sudo apt upgrade
+
 if [ $# -gt 0 ]
 then
     echo "Installing packages '$@'"

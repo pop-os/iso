@@ -1,6 +1,8 @@
-DISTRO_NAME=System76
+UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
 
-DISTRO_CODE=system76
+DISTRO_NAME=Pop!_OS
+
+DISTRO_CODE=pop_os
 
 DISTRO_REPOS=\
 	ppa:system76-dev/stable
@@ -14,7 +16,7 @@ SED=\
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g
 
-.PHONY: all clean iso run uefi
+.PHONY: all clean iso run uefi zsync
 
 iso: build/$(DISTRO_CODE).iso
 
@@ -44,7 +46,11 @@ uefi: build/$(DISTRO_CODE).iso build/qemu.img
 
 build/ubuntu.iso:
 	mkdir -p build
-	wget -O "$@" "http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso"
+	wget -O "$@" "$(UBUNTU_ISO)"
+
+zsync: build/ubuntu.iso
+	zsync "$(UBUNTU_ISO).zsync" -o "$<"
+
 
 build/iso_extract.tag: build/ubuntu.iso
 	# Remove old ISO
