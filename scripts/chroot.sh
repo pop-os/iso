@@ -25,7 +25,7 @@ apt clean -y
 
 dpkg-query -W --showformat='${Package} ${Version}\n' > /filesystem.manifest
 
-rm /usr/lib/ubiquity/plugins/{ubi-timezone.py,ubi-usersetup.py}
+rm /usr/lib/ubiquity/plugins/ubi-usersetup.py
 
 rm /var/cache/system76-pre-master.marker
 
