@@ -5,6 +5,7 @@ DISTRO_NAME=Pop_OS
 DISTRO_CODE=pop_os
 
 DISTRO_REPOS=\
+	ppa:system76-dev/pre-stable \
 	ppa:system76-dev/stable
 
 DISTRO_PKGS=\
@@ -108,7 +109,7 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	sudo cp "scripts/chroot.sh" "build/chroot/chroot.sh"
 
 	# Run chroot script
-	sudo chroot "build/chroot" /bin/bash -e -c "REPOS=\"$(DISTRO_REPOS)\" /chroot.sh $(DISTRO_PKGS)"
+	sudo chroot "build/chroot" /bin/bash -e -c "DISTRO_NAME=\"$(DISTRO_NAME)\" DISTRO_CODE=\"$(DISTRO_CODE)\" DISTRO_REPOS=\"$(DISTRO_REPOS)\" /chroot.sh $(DISTRO_PKGS)"
 
 	# Remove chroot script
 	sudo rm "build/chroot/chroot.sh"
@@ -121,6 +122,9 @@ build/chroot_modify.tag: build/chroot_extract.tag
 build/iso_chroot.tag: build/chroot_modify.tag
 	# Rebuild filesystem image
 	sudo mksquashfs "build/chroot" "build/iso/casper/filesystem.squashfs" -noappend
+
+	# Copy vmlinuz
+	sudo cp "build/chroot/vmlinuz" "build/iso/casper/vmlinuz.efi"
 
 	# Rebuild initrd
 	sudo gzip -dc "build/chroot/initrd.img" | lzma -7 > "build/iso/casper/initrd.lz"
