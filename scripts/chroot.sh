@@ -15,13 +15,15 @@ done
 
 apt update -y
 
-sudo apt upgrade -y
+apt upgrade -y
 
 if [ $# -gt 0 ]
 then
     echo "Installing packages '$@'"
     apt install -y "$@"
 fi
+
+apt autoremove --purge -y
 
 apt clean -y
 
