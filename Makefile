@@ -2,14 +2,13 @@ UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-
 
 DISTRO_NAME=Pop_OS
 
-DISTRO_CODE=pop_os
+DISTRO_CODE=pop-os
 
 DISTRO_REPOS=\
-	ppa:system76-dev/pre-stable \
-	ppa:system76-dev/stable
+	ppa:system76/pop
 
 DISTRO_PKGS=\
-	system76-desktop
+	pop-desktop
 
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
@@ -51,7 +50,6 @@ build/ubuntu.iso:
 
 zsync: build/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
-
 
 build/iso_extract.tag: build/ubuntu.iso
 	# Remove old ISO
