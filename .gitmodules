@@ -1,3 +1,4 @@
 [submodule "data/default-settings"]
 	path = data/default-settings
-	url = https://github.com/system76/default-settings.git
+	url = https://github.com/system76/pop-default-settings.git
+	branch = master
