@@ -44,7 +44,7 @@ VERSION_CODENAME=zesty
 UBUNTU_CODENAME=zesty
 EOF
 
-rm /usr/lib/ubiquity/plugins/ubi-usersetup.py
+rm -f /usr/lib/ubiquity/plugins/ubi-usersetup.py
 
 rm /var/cache/system76-pre-master.marker
 
