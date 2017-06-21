@@ -76,7 +76,6 @@ build/iso_modify.tag: build/iso_extract.tag
 	sed "$(SED)" "data/isolinux/gfxboot.cfg" > "build/iso/isolinux/gfxboot.cfg"
 	sed "$(SED)" "data/isolinux/isolinux.cfg" > "build/iso/isolinux/isolinux.cfg"
 	cp "data/isolinux/splash.pcx" "build/iso/isolinux/splash.pcx"
-	cp "data/isolinux/splash.png" "build/iso/isolinux/splash.png"
 	sed "$(SED)" "data/isolinux/txt.cfg" > "build/iso/isolinux/txt.cfg"
 
 	rm -rf "build/iso/boot/grub/themes"
