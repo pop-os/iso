@@ -16,7 +16,7 @@ SED=\
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g
 
-.PHONY: all clean iso run uefi zsync
+.PHONY: all clean iso qemu qemu_uefi zsync
 
 iso: build/$(DISTRO_CODE).iso
 
@@ -29,13 +29,13 @@ build/qemu.img:
 	mkdir -p build
 	qemu-img create -f qcow2 "$@" 16G
 
-run: build/$(DISTRO_CODE).iso build/qemu.img
+qemu: build/$(DISTRO_CODE).iso build/qemu.img
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
 		-boot d -cdrom "$<"
 		#-hda build/qemu.img
 
-uefi: build/$(DISTRO_CODE).iso build/qemu.img
+qemu_uefi: build/$(DISTRO_CODE).iso build/qemu.img
 	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
