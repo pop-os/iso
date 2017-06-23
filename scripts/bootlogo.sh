@@ -11,7 +11,7 @@ then
 fi
 ISODIR="$(realpath "$1")"
 
-if [ -z "$1" ]
+if [ -z "$2" ]
 then
     usage
     exit 1

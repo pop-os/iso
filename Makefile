@@ -10,6 +10,32 @@ DISTRO_REPOS=\
 DISTRO_PKGS=\
 	pop-desktop
 
+MAIN_POOL=\
+	b43-fwcutter \
+	dkms \
+	grub-efi \
+	grub-efi-amd64 \
+	grub-efi-amd64-bin \
+	grub-efi-amd64-signed \
+	libuniconf4.6 \
+	libwvstreams4.6-base \
+	libwvstreams4.6-extras \
+	lupin-support \
+	mouseemu \
+	oem-config \
+	oem-config-gtk \
+	oem-config-slideshow-ubuntu \
+	setserial \
+	shim \
+	shim-signed \
+	user-setup \
+	wvdial
+
+RESTRICTED_POOL=\
+	bcmwl-kernel-source \
+	intel-microcode \
+	iucode-tool
+
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
 	s|DISTRO_CODE|$(DISTRO_CODE)|g; \
@@ -99,20 +125,43 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	# Unmount chroot if mounted
 	"scripts/unmount.sh" "build/chroot"
 
+	# Make temp directory for modifications
+	sudo rm -rf "build/chroot/iso"
+	sudo mkdir -p "build/chroot/iso"
+
+	# Copy chroot script
+	sudo cp "scripts/chroot.sh" "build/chroot/iso/chroot.sh"
+
 	# Mount chroot
 	"scripts/mount.sh" "build/chroot"
 
-	# Copy chroot script
-	sudo cp "scripts/chroot.sh" "build/chroot/chroot.sh"
-
 	# Run chroot script
-	sudo chroot "build/chroot" /bin/bash -e -c "DISTRO_NAME=\"$(DISTRO_NAME)\" DISTRO_CODE=\"$(DISTRO_CODE)\" DISTRO_REPOS=\"$(DISTRO_REPOS)\" /chroot.sh $(DISTRO_PKGS)"
-
-	# Remove chroot script
-	sudo rm "build/chroot/chroot.sh"
+	sudo chroot "build/chroot" /bin/bash -e -c \
+		"DISTRO_NAME=\"$(DISTRO_NAME)\" \
+		DISTRO_CODE=\"$(DISTRO_CODE)\" \
+		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
+		MAIN_POOL=\"$(MAIN_POOL)\" \
+		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
+		/iso/chroot.sh $(DISTRO_PKGS)"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "build/chroot"
+
+	# Update manifest
+	sudo cp "build/chroot/iso/filesystem.manifest" "build/iso/casper/filesystem.manifest"
+
+	# Copy new dists
+	sudo rm -rf "build/iso/pool"
+	sudo cp -r "build/chroot/iso/pool" "build/iso/pool"
+
+	# Update pool package lists
+	cd build/iso && \
+	for pool in $$(ls -1 pool); do \
+		apt-ftparchive packages "pool/$$pool" | gzip > "dists/zesty/$$pool/binary-amd64/Packages.gz"; \
+	done
+
+	# Remove temp directory for modifications
+	sudo rm -rf "build/chroot/iso"
 
 	touch "$@"
 
@@ -125,9 +174,6 @@ build/iso_chroot.tag: build/chroot_modify.tag
 
 	# Rebuild initrd
 	sudo gzip -dc "build/chroot/initrd.img" | lzma -7 > "build/iso/casper/initrd.lz"
-
-	# Update manifest
-	sudo cp "build/chroot/filesystem.manifest" "build/iso/casper/filesystem.manifest"
 
 	# Update filesystem size
 	sudo du -sx --block-size=1 "build/chroot" | cut -f1 > "build/iso/casper/filesystem.size"
