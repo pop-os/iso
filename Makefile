@@ -51,24 +51,24 @@ all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS bu
 clean:
 	rm -f build/*.tag build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
 
-build/qemu.img:
+build/qemu%.img:
 	mkdir -p build
 	qemu-img create -f qcow2 "$@" 16G
 
 qemu: build/$(DISTRO_CODE).iso build/qemu.img
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
-		-boot d -cdrom "$<"
-		#-hda build/qemu.img
+		-boot d -cdrom "$<" \
+		-hda build/qemu.img
 
-qemu_uefi: build/$(DISTRO_CODE).iso build/qemu.img
+qemu_uefi: build/$(DISTRO_CODE).iso build/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
 		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
 		-drive if=pflash,format=raw,file=build/OVMF_VARS.fd \
-		-boot d -cdrom "$<"
-		#-hda build/qemu.img
+		-boot d -cdrom "$<" \
+		-hda build/qemu_uefi.img
 
 build/ubuntu.iso:
 	mkdir -p build
@@ -128,6 +128,7 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	# Make temp directory for modifications
 	sudo rm -rf "build/chroot/iso"
 	sudo mkdir -p "build/chroot/iso"
+	sudo chmod 777 -R "build/chroot/iso"
 
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "build/chroot/iso/chroot.sh"
@@ -151,8 +152,8 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	sudo cp "build/chroot/iso/filesystem.manifest" "build/iso/casper/filesystem.manifest"
 
 	# Copy new dists
-	sudo rm -rf "build/iso/pool"
-	sudo cp -r "build/chroot/iso/pool" "build/iso/pool"
+	rm -rf "build/iso/pool"
+	cp -r "build/chroot/iso/pool" "build/iso/pool"
 
 	# Update pool package lists
 	cd build/iso && \
