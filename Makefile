@@ -51,7 +51,7 @@ all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS bu
 clean:
 	rm -f build/*.tag build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
 
-build/qemu%.img:
+build/qemu.img:
 	mkdir -p build
 	qemu-img create -f qcow2 "$@" 16G
 
@@ -60,6 +60,10 @@ qemu: build/$(DISTRO_CODE).iso build/qemu.img
 		-enable-kvm -m 2048 -vga qxl \
 		-boot d -cdrom "$<" \
 		-hda build/qemu.img
+
+build/qemu_uefi.img:
+	mkdir -p build
+	qemu-img create -f qcow2 "$@" 16G
 
 qemu_uefi: build/$(DISTRO_CODE).iso build/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
