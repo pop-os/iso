@@ -79,7 +79,7 @@ zsync: build/ubuntu.iso
 
 build/iso_extract.tag: build/ubuntu.iso
 	# Remove old ISO
-	rm -rf "build/iso"
+	sudo rm -rf "build/iso"
 
 	# Extract ISO
 	xorriso -acl on -xattr on -osirrox on -indev "$<" -extract / "build/iso"
@@ -128,7 +128,6 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	# Make temp directory for modifications
 	sudo rm -rf "build/chroot/iso"
 	sudo mkdir -p "build/chroot/iso"
-	sudo chmod 777 -R "build/chroot/iso"
 
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "build/chroot/iso/chroot.sh"
@@ -152,8 +151,8 @@ build/chroot_modify.tag: build/chroot_extract.tag
 	sudo cp "build/chroot/iso/filesystem.manifest" "build/iso/casper/filesystem.manifest"
 
 	# Copy new dists
-	rm -rf "build/iso/pool"
-	cp -r "build/chroot/iso/pool" "build/iso/pool"
+	sudo rm -rf "build/iso/pool"
+	sudo cp -r "build/chroot/iso/pool" "build/iso/pool"
 
 	# Update pool package lists
 	cd build/iso && \
