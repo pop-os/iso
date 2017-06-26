@@ -8,7 +8,8 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop
+	pop-desktop \
+	ubiquity-slideshow-pop
 
 MAIN_POOL=\
 	b43-fwcutter \
