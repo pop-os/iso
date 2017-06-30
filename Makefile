@@ -95,6 +95,8 @@ build/iso_extract.tag: build/ubuntu.iso
 	touch "$@"
 
 build/iso_modify.tag: build/iso_extract.tag
+	git submodule update --init data/default-settings
+
 	sed "$(SED)" "data/README.diskdefines" > "build/iso/README.diskdefines"
 	sed "$(SED)" "data/info" > "build/iso/.disk/info"
 	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$(DISTRO_CODE).seed"
