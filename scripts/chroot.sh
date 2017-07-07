@@ -62,21 +62,5 @@ rm /var/cache/system76-pre-master.marker
 # Remove machine ID
 rm /var/lib/dbus/machine-id
 
-# Update OS release
-cat > /etc/os-release <<EOF
-NAME="${DISTRO_NAME}"
-VERSION="17.04 (Zesty Zapus)"
-ID=${DISTRO_CODE}
-ID_LIKE=debian ubuntu
-PRETTY_NAME="${DISTRO_NAME} 17.04"
-VERSION_ID="17.04"
-HOME_URL="http://www.system76.com"
-SUPPORT_URL="http://support.system76.com"
-BUG_REPORT_URL="https://github.com/system76/distro"
-PRIVACY_POLICY_URL="https://system76.com/privacy"
-VERSION_CODENAME=zesty
-UBUNTU_CODENAME=zesty
-EOF
-
 # Remove ubi-usersetup
 rm -f /usr/lib/ubiquity/plugins/ubi-usersetup.py
