@@ -17,7 +17,7 @@ The ISO contains a few changes, controlled by bash scripts in the `scripts` dire
 ## Building
 
 The build is controlled by the Makefile. The following commands can be used:
-- `make` - Build an ISO at `build/system76.iso`
+- `make` - Build an ISO at `build/pop-os.iso`
 - `make qemu` - Run the ISO in BIOS mode
 - `make qemu_uefi` - Run the ISO in UEFI mode
 - `make clean` - Remove the ISO
