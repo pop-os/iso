@@ -8,11 +8,11 @@ Pop!\_OS’s first release is October 19, 2017
 
 The ISO contains a few changes, controlled by bash scripts in the `scripts` directory. The following packages are installed:
 
-- [pop-default-settings](https://github.com/pop-default-settings) - sets the boot logo, login screen logo, default gsettings, and installs system76-pop-theme
-- [pop-theme](https://github.com/pop-theme) - metapackage installing pop-fonts, pop-gtk-theme, and pop-icon-theme
-- [pop-fonts](https://github.com/pop-fonts) - contains packaged Fira and Roboto for use in the Pop theme
-- [pop-gtk-theme](https://github.com/pop-gtk-theme) - contains the Pop GTK theme
-- [pop-icon-theme](https://github.com/pop-icon-theme) - contains the Pop Icon theme
+- [pop-default-settings](https://github.com/system76/pop-default-settings) - sets the boot logo, login screen logo, default gsettings, and installs system76-pop-theme
+- [pop-theme](https://github.com/system76/pop-theme) - metapackage installing pop-fonts, pop-gtk-theme, and pop-icon-theme
+- [pop-fonts](https://github.com/system76/pop-fonts) - contains packaged Fira and Roboto for use in the Pop theme
+- [pop-gtk-theme](https://github.com/system76/pop-gtk-theme) - contains the Pop GTK theme
+- [pop-icon-theme](https://github.com/system76/pop-icon-theme) - contains the Pop Icon theme
 
 ## Building
 
