@@ -158,6 +158,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 	sudo chroot "$(BUILD)/chroot" /bin/bash -e -c \
 		"DISTRO_NAME=\"$(DISTRO_NAME)\" \
 		DISTRO_CODE=\"$(DISTRO_CODE)\" \
+		DISTRO_VERSION=\"$(DISTRO_VERSION)\" \
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
 		MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
