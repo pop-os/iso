@@ -55,16 +55,16 @@ SED=\
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g
 
-.PHONY: all clean iso qemu qemu_uefi zsync
+.PHONY: all clean iso qemu qemu_uefi qemu_ubuntu qemu_ubuntu_uefi zsync
 
 iso: $(BUILD)/$(DISTRO_CODE).iso
 
 all: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 clean:
-	rm -f $(BUILD)/*.tag $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
+	rm -f $(BUILD)/*.tag $(BUILD)/*.img $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
-$(BUILD)/qemu.img:
+$(BUILD)/%.img:
 	mkdir -p $(BUILD)
 	qemu-img create -f qcow2 "$@" 16G
 
@@ -74,11 +74,22 @@ qemu: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu.img
 		-boot d -cdrom "$<" \
 		-hda $(BUILD)/qemu.img
 
-$(BUILD)/qemu_uefi.img:
-	mkdir -p $(BUILD)
-	qemu-img create -f qcow2 "$@" 16G
-
 qemu_uefi: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
+	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
+	qemu-system-x86_64 \
+		-enable-kvm -m 2048 -vga qxl \
+		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
+		-drive if=pflash,format=raw,file=$(BUILD)/OVMF_VARS.fd \
+		-boot d -cdrom "$<" \
+		-hda $(BUILD)/qemu_uefi.img
+
+qemu_ubuntu: $(BUILD)/ubuntu.iso $(BUILD)/qemu.img
+	qemu-system-x86_64 \
+	-enable-kvm -m 2048 -vga qxl \
+	-boot d -cdrom "$<" \
+	-hda $(BUILD)/qemu.img
+
+qemu_ubuntu_uefi: $(BUILD)/ubuntu.iso $(BUILD)/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
