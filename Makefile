@@ -1,4 +1,4 @@
-UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
+DISTRO_VERSION?=17.10
 
 DISTRO_NAME=Pop_OS
 
@@ -37,6 +37,14 @@ RESTRICTED_POOL=\
 	intel-microcode \
 	iucode-tool
 
+ifeq ($(DISTRO_VERSION),17.04)
+	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
+else ifeq ($(DISTRO_VERSION),17.10)
+	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu/daily-live/current/artful-desktop-amd64.iso
+endif
+
+BUILD=build/$(DISTRO_CODE)
+
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
 	s|DISTRO_CODE|$(DISTRO_CODE)|g; \
@@ -45,105 +53,105 @@ SED=\
 
 .PHONY: all clean iso qemu qemu_uefi zsync
 
-iso: build/$(DISTRO_CODE).iso
+iso: $(BUILD)/$(DISTRO_CODE).iso
 
-all: build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
+all: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 clean:
-	rm -f build/*.tag build/$(DISTRO_CODE).iso build/$(DISTRO_CODE).iso.zsync build/SHA256SUMS build/SHA256SUMS.gpg
+	rm -f $(BUILD)/*.tag $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
-build/qemu.img:
-	mkdir -p build
+$(BUILD)/qemu.img:
+	mkdir -p $(BUILD)
 	qemu-img create -f qcow2 "$@" 16G
 
-qemu: build/$(DISTRO_CODE).iso build/qemu.img
+qemu: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu.img
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
 		-boot d -cdrom "$<" \
-		-hda build/qemu.img
+		-hda $(BUILD)/qemu.img
 
-build/qemu_uefi.img:
-	mkdir -p build
+$(BUILD)/qemu_uefi.img:
+	mkdir -p $(BUILD)
 	qemu-img create -f qcow2 "$@" 16G
 
-qemu_uefi: build/$(DISTRO_CODE).iso build/qemu_uefi.img
-	cp /usr/share/OVMF/OVMF_VARS.fd build/OVMF_VARS.fd
+qemu_uefi: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
+	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
 	qemu-system-x86_64 \
 		-enable-kvm -m 2048 -vga qxl \
 		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
-		-drive if=pflash,format=raw,file=build/OVMF_VARS.fd \
+		-drive if=pflash,format=raw,file=$(BUILD)/OVMF_VARS.fd \
 		-boot d -cdrom "$<" \
-		-hda build/qemu_uefi.img
+		-hda $(BUILD)/qemu_uefi.img
 
-build/ubuntu.iso:
-	mkdir -p build
+$(BUILD)/ubuntu.iso:
+	mkdir -p $(BUILD)
 	wget -O "$@" "$(UBUNTU_ISO)"
 
-zsync: build/ubuntu.iso
+zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
-build/iso_extract.tag: build/ubuntu.iso
+$(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
 	# Remove old ISO
-	sudo rm -rf "build/iso"
+	sudo rm -rf "$(BUILD)/iso"
 
 	# Extract ISO
-	xorriso -acl on -xattr on -osirrox on -indev "$<" -extract / "build/iso"
+	xorriso -acl on -xattr on -osirrox on -indev "$<" -extract / "$(BUILD)/iso"
 
 	# Make readable
-	chmod u+w -R "build/iso"
+	chmod u+w -R "$(BUILD)/iso"
 
 	touch "$@"
 
-build/iso_modify.tag: build/iso_extract.tag
+$(BUILD)/iso_modify.tag: $(BUILD)/iso_extract.tag
 	git submodule update --init data/default-settings
 
-	sed "$(SED)" "data/README.diskdefines" > "build/iso/README.diskdefines"
-	sed "$(SED)" "data/info" > "build/iso/.disk/info"
-	sed "$(SED)" "data/preseed.seed" > "build/iso/preseed/$(DISTRO_CODE).seed"
+	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
+	sed "$(SED)" "data/info" > "$(BUILD)/iso/.disk/info"
+	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
 
-	sed "$(SED)" "data/grub/grub.cfg" > "build/iso/boot/grub/grub.cfg"
-	sed "$(SED)" "data/grub/loopback.cfg" > "build/iso/boot/grub/loopback.cfg"
+	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
+	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
 
-	cp "data/isolinux/access.pcx" "build/iso/isolinux/access.pcx"
-	cp "data/isolinux/blank.pcx" "build/iso/isolinux/blank.pcx"
-	sed "$(SED)" "data/isolinux/gfxboot.cfg" > "build/iso/isolinux/gfxboot.cfg"
-	sed "$(SED)" "data/isolinux/isolinux.cfg" > "build/iso/isolinux/isolinux.cfg"
-	cp "data/isolinux/splash.pcx" "build/iso/isolinux/splash.pcx"
-	sed "$(SED)" "data/isolinux/txt.cfg" > "build/iso/isolinux/txt.cfg"
+	cp "data/isolinux/access.pcx" "$(BUILD)/iso/isolinux/access.pcx"
+	cp "data/isolinux/blank.pcx" "$(BUILD)/iso/isolinux/blank.pcx"
+	sed "$(SED)" "data/isolinux/gfxboot.cfg" > "$(BUILD)/iso/isolinux/gfxboot.cfg"
+	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
+	cp "data/isolinux/splash.pcx" "$(BUILD)/iso/isolinux/splash.pcx"
+	sed "$(SED)" "data/isolinux/txt.cfg" > "$(BUILD)/iso/isolinux/txt.cfg"
 
-	rm -rf "build/iso/boot/grub/themes"
-	cp -r "data/default-settings/usr/share/grub/themes" "build/iso/boot/grub/themes"
+	rm -rf "$(BUILD)/iso/boot/grub/themes"
+	cp -r "data/default-settings/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
 
 	touch "$@"
 
-build/chroot_extract.tag: build/iso_extract.tag
+$(BUILD)/chroot_extract.tag: $(BUILD)/iso_extract.tag
 	# Unmount chroot if mounted
-	scripts/unmount.sh "build/chroot"
+	scripts/unmount.sh "$(BUILD)/chroot"
 
 	# Remove old chroot
-	sudo rm -rf "build/chroot"
+	sudo rm -rf "$(BUILD)/chroot"
 
 	# Extract squashfs
-	sudo unsquashfs -d "build/chroot" "build/iso/casper/filesystem.squashfs"
+	sudo unsquashfs -d "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs"
 
 	touch "$@"
 
-build/chroot_modify.tag: build/chroot_extract.tag
+$(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 	# Unmount chroot if mounted
-	"scripts/unmount.sh" "build/chroot"
+	"scripts/unmount.sh" "$(BUILD)/chroot"
 
 	# Make temp directory for modifications
-	sudo rm -rf "build/chroot/iso"
-	sudo mkdir -p "build/chroot/iso"
+	sudo rm -rf "$(BUILD)/chroot/iso"
+	sudo mkdir -p "$(BUILD)/chroot/iso"
 
 	# Copy chroot script
-	sudo cp "scripts/chroot.sh" "build/chroot/iso/chroot.sh"
+	sudo cp "scripts/chroot.sh" "$(BUILD)/chroot/iso/chroot.sh"
 
 	# Mount chroot
-	"scripts/mount.sh" "build/chroot"
+	"scripts/mount.sh" "$(BUILD)/chroot"
 
 	# Run chroot script
-	sudo chroot "build/chroot" /bin/bash -e -c \
+	sudo chroot "$(BUILD)/chroot" /bin/bash -e -c \
 		"DISTRO_NAME=\"$(DISTRO_NAME)\" \
 		DISTRO_CODE=\"$(DISTRO_CODE)\" \
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
@@ -152,47 +160,47 @@ build/chroot_modify.tag: build/chroot_extract.tag
 		/iso/chroot.sh $(DISTRO_PKGS)"
 
 	# Unmount chroot
-	"scripts/unmount.sh" "build/chroot"
+	"scripts/unmount.sh" "$(BUILD)/chroot"
 
 	# Update manifest
-	sudo cp "build/chroot/iso/filesystem.manifest" "build/iso/casper/filesystem.manifest"
+	sudo cp "$(BUILD)/chroot/iso/filesystem.manifest" "$(BUILD)/iso/casper/filesystem.manifest"
 
 	# Copy new dists
-	sudo rm -rf "build/iso/pool"
-	sudo cp -r "build/chroot/iso/pool" "build/iso/pool"
+	sudo rm -rf "$(BUILD)/iso/pool"
+	sudo cp -r "$(BUILD)/chroot/iso/pool" "$(BUILD)/iso/pool"
 
 	# Update pool package lists
-	cd build/iso && \
+	cd $(BUILD)/iso && \
 	for pool in $$(ls -1 pool); do \
 		apt-ftparchive packages "pool/$$pool" | gzip > "dists/zesty/$$pool/binary-amd64/Packages.gz"; \
 	done
 
 	# Remove temp directory for modifications
-	sudo rm -rf "build/chroot/iso"
+	sudo rm -rf "$(BUILD)/chroot/iso"
 
 	touch "$@"
 
-build/iso_chroot.tag: build/chroot_modify.tag
+$(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 	# Rebuild filesystem image
-	sudo mksquashfs "build/chroot" "build/iso/casper/filesystem.squashfs" -noappend
+	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend
 
 	# Copy vmlinuz
-	sudo cp "build/chroot/vmlinuz" "build/iso/casper/vmlinuz.efi"
+	sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
 
 	# Rebuild initrd
-	sudo gzip -dc "build/chroot/initrd.img" | lzma -7 > "build/iso/casper/initrd.lz"
+	sudo gzip -dc "$(BUILD)/chroot/initrd.img" | lzma -7 > "$(BUILD)/iso/casper/initrd.lz"
 
 	# Update filesystem size
-	sudo du -sx --block-size=1 "build/chroot" | cut -f1 > "build/iso/casper/filesystem.size"
+	sudo du -sx --block-size=1 "$(BUILD)/chroot" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
 
 	touch "$@"
 
-build/$(DISTRO_CODE).iso: build/iso_modify.tag build/iso_chroot.tag
+$(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
 	# Regenerate bootlogo
-	scripts/bootlogo.sh "build/iso" "build/bootlogo"
+	scripts/bootlogo.sh "$(BUILD)/iso" "$(BUILD)/bootlogo"
 
 	# Calculate md5sum
-	cd "build/iso" && sudo bash -e -c "rm md5sum.txt && find -type f -print0 | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt"
+	cd "$(BUILD)/iso" && sudo bash -e -c "rm md5sum.txt && find -type f -print0 | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt"
 
 	xorriso -as mkisofs \
 	    -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
@@ -200,14 +208,14 @@ build/$(DISTRO_CODE).iso: build/iso_modify.tag build/iso_chroot.tag
 	    -no-emul-boot -boot-load-size 4 -boot-info-table \
 	    -eltorito-alt-boot -e boot/grub/efi.img \
 	    -no-emul-boot -isohybrid-gpt-basdat \
-	    -r -V "$(DISTRO_NAME) 17.04 amd64" \
-		-o "$@" "build/iso"
+	    -r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
+		-o "$@" "$(BUILD)/iso"
 
-build/$(DISTRO_CODE).iso.zsync: build/$(DISTRO_CODE).iso
-	cd build && zsyncmake -o "`basename "$@"`" "`basename "$<"`"
+$(BUILD)/$(DISTRO_CODE).iso.zsync: $(BUILD)/$(DISTRO_CODE).iso
+	cd "$(BUILD)" && zsyncmake -o "`basename "$@"`" "`basename "$<"`"
 
-build/SHA256SUMS: build/$(DISTRO_CODE).iso
-	cd build && sha256sum -b "`basename "$<"`" > "`basename "$@"`"
+$(BUILD)/SHA256SUMS: $(BUILD)/$(DISTRO_CODE).iso
+	cd "$(BUILD)" && sha256sum -b "`basename "$<"`" > "`basename "$@"`"
 
-build/SHA256SUMS.gpg: build/SHA256SUMS
-	cd build && gpg --batch --yes --output "`basename "$@"`" --detach-sig "`basename "$<"`"
+$(BUILD)/SHA256SUMS.gpg: $(BUILD)/SHA256SUMS
+	cd "$(BUILD)" && gpg --batch --yes --output "`basename "$@"`" --detach-sig "`basename "$<"`"

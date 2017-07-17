@@ -1,4 +1,4 @@
-#define DISKNAME  DISTRO_NAME 17.04 "Zesty Zapus" - Release amd64
+#define DISKNAME  DISTRO_NAME DISTRO_VERSION "Zesty Zapus" - Release amd64
 #define TYPE  binary
 #define TYPEbinary  1
 #define ARCH  amd64
