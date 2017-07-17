@@ -26,8 +26,14 @@ apt-get upgrade -y
 if [ $# -gt 0 ]
 then
     echo "Installing packages '$@'"
-    apt install -y "$@"
+    apt-get install -y "$@"
 fi
+
+# Insuring that kernel is installed
+apt-get install --reinstall "$(basename $(readlink -f /vmlinuz) | sed 's/vmlinuz/linux-image/')"
+
+# Insuring that initrd exists
+update-initramfs -u
 
 # Remove unnecessary packages
 apt-get autoremove --purge -y
