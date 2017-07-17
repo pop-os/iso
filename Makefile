@@ -5,6 +5,7 @@ DISTRO_NAME=Pop_OS
 DISTRO_CODE=pop-os
 
 DISTRO_REPOS=\
+	universe \
 	ppa:system76/pop
 
 DISTRO_PKGS=\

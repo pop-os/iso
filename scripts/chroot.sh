@@ -17,10 +17,10 @@ do
 done
 
 # Update package definitions
-apt update -y
+apt-get update -y
 
 # Upgrade installed packages
-apt upgrade -y
+apt-get upgrade -y
 
 # Install distribution packages
 if [ $# -gt 0 ]
@@ -30,10 +30,10 @@ then
 fi
 
 # Remove unnecessary packages
-apt autoremove --purge -y
+apt-get autoremove --purge -y
 
 # Clean temporary files
-apt clean -y
+apt-get clean -y
 
 # Update package manifest
 dpkg-query -W --showformat='${Package} ${Version}\n' > /iso/filesystem.manifest
