@@ -43,7 +43,7 @@ else ifeq ($(DISTRO_VERSION),17.10)
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu/daily-live/current/artful-desktop-amd64.iso
 endif
 
-BUILD=build/$(DISTRO_CODE)
+BUILD=build/$(DISTRO_VERSION)
 
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
