@@ -39,8 +39,10 @@ RESTRICTED_POOL=\
 	iucode-tool
 
 ifeq ($(DISTRO_VERSION),17.04)
+	UBUNTU_CODE=zesty
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
 else ifeq ($(DISTRO_VERSION),17.10)
+	UBUNTU_CODE=artful
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu/daily-live/current/artful-desktop-amd64.iso
 endif
 
@@ -173,7 +175,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 	# Update pool package lists
 	cd $(BUILD)/iso && \
 	for pool in $$(ls -1 pool); do \
-		apt-ftparchive packages "pool/$$pool" | gzip > "dists/zesty/$$pool/binary-amd64/Packages.gz"; \
+		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz"; \
 	done
 
 	# Remove temp directory for modifications
