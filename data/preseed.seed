@@ -1,7 +1,7 @@
 # Enable extras.ubuntu.com.
 d-i	apt-setup/extras	boolean true
 # Install the DISTRO_NAME desktop.
-tasksel	tasksel/first	multiselect ubuntu-gnome-desktop DISTRO_PKGS
+tasksel	tasksel/first	multiselect DISTRO_PKGS
 # On live DVDs, don't spend huge amounts of time removing substantial
 # application packages pulled in by language packs. Given that we clearly
 # have the space to include them on the DVD, they're useful and we might as

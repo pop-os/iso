@@ -23,10 +23,10 @@ apt-get update -y
 apt-get upgrade -y
 
 # Install distribution packages
-if [ $# -gt 0 ]
+if [ -n "${DISTRO_PKGS}" ]
 then
-    echo "Installing packages '$@'"
-    apt-get install -y "$@"
+    echo "Installing packages: ${DISTRO_PKGS}"
+    apt-get install -y ${DISTRO_PKGS}
 fi
 
 # Insuring that kernel is installed

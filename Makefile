@@ -1,5 +1,7 @@
 DISTRO_VERSION?=17.10
 
+DISTRO_DATE=`date +%Y%M%d`
+
 DISTRO_NAME=Pop_OS
 
 DISTRO_CODE=pop-os
@@ -39,10 +41,12 @@ RESTRICTED_POOL=\
 	iucode-tool
 
 ifeq ($(DISTRO_VERSION),17.04)
+	UBUNTU_NAME=Zesty Zapus
 	UBUNTU_CODE=zesty
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
 else ifeq ($(DISTRO_VERSION),17.10)
 	UBUNTU_CODE=artful
+	UBUNTU_NAME=Artful Aardvark
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu/daily-live/current/artful-desktop-amd64.iso
 endif
 
@@ -52,8 +56,11 @@ SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
 	s|DISTRO_CODE|$(DISTRO_CODE)|g; \
 	s|DISTRO_VERSION|$(DISTRO_VERSION)|g; \
+	s|DISTRO_DATE|$(DISTRO_DATE)|g; \
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
-	s|DISTRO_PKGS|$(DISTRO_PKGS)|g
+	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
+	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
+	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
 .PHONY: all clean iso qemu qemu_uefi qemu_ubuntu qemu_ubuntu_uefi zsync
 
@@ -171,9 +178,10 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 		DISTRO_CODE=\"$(DISTRO_CODE)\" \
 		DISTRO_VERSION=\"$(DISTRO_VERSION)\" \
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
+		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
 		MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
-		/iso/chroot.sh $(DISTRO_PKGS)"
+		/iso/chroot.sh"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$(BUILD)/chroot"
