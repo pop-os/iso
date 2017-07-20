@@ -1,4 +1,4 @@
-DISTRO_VERSION?=17.10
+DISTRO_VERSION?=17.04
 
 DISTRO_DATE=`date +%Y%M%d`
 
@@ -201,6 +201,16 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 
 	# Remove temp directory for modifications
 	sudo rm -rf "$(BUILD)/chroot/iso"
+
+	# Patch ubiquity by removing plugins and updating order
+	sudo sed -i "s/AFTER = .*\$$/AFTER = 'language'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-console-setup.py"
+	sudo sed -i "s/AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-timezone.py"
+	sudo sed -i "s/AFTER = .*\$$/AFTER = 'timezone'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
+	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-prepare.py"
+	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-network.py"
+	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-tasks.py"
+	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-usersetup.py"
+	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
 	touch "$@"
 
