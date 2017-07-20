@@ -204,8 +204,8 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 
 	# Patch ubiquity by removing plugins and updating order
 	sudo sed -i "s/AFTER = .*\$$/AFTER = 'language'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	sudo sed -i "s/AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-timezone.py"
-	sudo sed -i "s/AFTER = .*\$$/AFTER = 'timezone'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
+	sudo sed -i "s/AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
+	sudo sed -i "s/AFTER = .*\$$/AFTER = 'partman'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-timezone.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-prepare.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-network.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-tasks.py"
