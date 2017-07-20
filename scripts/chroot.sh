@@ -67,6 +67,3 @@ rm /var/cache/system76-pre-master.marker
 
 # Remove machine ID
 rm /var/lib/dbus/machine-id
-
-# Remove ubi-usersetup
-rm -f /usr/lib/ubiquity/plugins/ubi-usersetup.py
