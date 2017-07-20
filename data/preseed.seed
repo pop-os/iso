@@ -10,5 +10,9 @@ tasksel	tasksel/first multiselect DISTRO_PKGS
 # well keep them installed.
 ubiquity ubiquity/keep-installed string icedtea6-plugin openoffice.org
 
+# Preseed prepare so it can be skipped
+ubiquity ubiquity/download_updates boolean false
+ubiquity ubiquity/install/nonfree boolean false
+
 # Skip timezone
 ubiquity ubiquity/automatic/timezone boolean true
