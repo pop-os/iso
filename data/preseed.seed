@@ -15,4 +15,5 @@ ubiquity ubiquity/download_updates boolean false
 ubiquity ubiquity/install/nonfree boolean false
 
 # Skip timezone
-#ubiquity ubiquity/automatic/timezone boolean true
+ubiquity ubiquity/automatic/timezone boolean true
+ubiquity time/zone select America/Denver
