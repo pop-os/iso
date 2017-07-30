@@ -62,6 +62,9 @@ SED=\
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
+# Does the xorriso command exist?
+XORRISO=$(shell command -v xorriso 2> /dev/null)
+
 .PHONY: all clean iso qemu qemu_uefi qemu_ubuntu qemu_ubuntu_uefi zsync
 
 iso: $(BUILD)/$(DISTRO_CODE).iso
@@ -113,6 +116,12 @@ zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
 $(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
+# Ensure that `xorriso` is installed already
+ifeq (,$(XORRISO))
+	@echo "xorriso not found, installing..."
+	sudo apt install -y xorriso
+endif
+
 	# Remove old ISO
 	sudo rm -rf "$(BUILD)/iso"
 
