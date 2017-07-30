@@ -62,8 +62,22 @@ SED=\
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
-# Does the xorriso command exist?
 XORRISO=$(shell command -v xorriso 2> /dev/null)
+ZSYNC=$(shell command -v zsync 2> /dev/null)
+SQUASHFS=$(shell command -v mksquashfs 2> /dev/null)
+
+# Ensure that `zsync` is installed already
+ifeq (,$(ZSYNC))
+$(error zsync not found! Run deps.sh first.)
+endif
+# Ensure that `xorriso` is installed already
+ifeq (,$(XORRISO))
+$(error xorriso not found! Run deps.sh first.)
+endif
+# Ensure that `squashfs` is installed already
+ifeq (,$(SQUASHFS))
+$(error squashfs-tools not found! Run deps.sh first.)
+endif
 
 .PHONY: all clean iso qemu qemu_uefi qemu_ubuntu qemu_ubuntu_uefi zsync
 
@@ -116,10 +130,6 @@ zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
 $(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
-# Ensure that `xorriso` is installed already
-ifeq (,$(XORRISO))
-	$(error xorriso not found! Run deps.sh first.)
-endif
 
 	# Remove old ISO
 	sudo rm -rf "$(BUILD)/iso"
