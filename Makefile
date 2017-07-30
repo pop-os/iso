@@ -118,8 +118,7 @@ zsync: $(BUILD)/ubuntu.iso
 $(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
 # Ensure that `xorriso` is installed already
 ifeq (,$(XORRISO))
-	@echo "xorriso not found, installing..."
-	sudo apt install -y xorriso
+	$(error xorriso not found! Run deps.sh first.)
 endif
 
 	# Remove old ISO
