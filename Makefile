@@ -1,4 +1,4 @@
-DISTRO_VERSION?=17.04
+DISTRO_VERSION?=17.10
 
 DISTRO_DATE=`date +%Y%M%d`
 
@@ -12,6 +12,9 @@ DISTRO_REPOS=\
 
 DISTRO_PKGS=\
 	pop-desktop \
+	gnome-initial-setup
+
+ISO_PKGS=\
 	ubiquity-slideshow-pop
 
 MAIN_POOL=\
@@ -59,6 +62,7 @@ SED=\
 	s|DISTRO_DATE|$(DISTRO_DATE)|g; \
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
+	s|ISO_PKGS|$(ISO_PKGS)|g; \
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
@@ -197,6 +201,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 		DISTRO_VERSION=\"$(DISTRO_VERSION)\" \
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
 		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
+		ISO_PKGS=\"$(ISO_PKGS)\" \
 		MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
 		/iso/chroot.sh"
@@ -221,14 +226,17 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 	sudo rm -rf "$(BUILD)/chroot/iso"
 
 	# Patch ubiquity by removing plugins and updating order
-	sudo sed -i "s/AFTER = .*\$$/AFTER = 'language'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	sudo sed -i "s/AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
-	sudo sed -i "s/AFTER = .*\$$/AFTER = 'partman'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-timezone.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-console-setup.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-timezone.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-prepare.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-network.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-tasks.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-usersetup.py"
 	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-wireless.py"
+
+	# Remove gnome-classic
+	sudo rm -f "$(BUILD)/chroot/usr/share/xsessions/gnome-classic.desktop"
 
 	touch "$@"
 
