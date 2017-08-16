@@ -1,4 +1,6 @@
-#!/bin/bash -e
+#!/usr/bin/env bash
+
+set -e -x
 
 export HOME=/root
 export LC_ALL=C
@@ -20,13 +22,20 @@ done
 apt-get update -y
 
 # Upgrade installed packages
-apt-get upgrade -y
+apt-get dist-upgrade -y
 
 # Install distribution packages
 if [ -n "${DISTRO_PKGS}" ]
 then
     echo "Installing packages: ${DISTRO_PKGS}"
     apt-get install -y ${DISTRO_PKGS}
+fi
+
+# Install ISO packages
+if [ -n "${ISO_PKGS}" ]
+then
+    echo "Installing packages: ${ISO_PKGS}"
+    apt-get install -y ${ISO_PKGS}
 fi
 
 # Insuring that kernel is installed
