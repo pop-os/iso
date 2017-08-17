@@ -13,7 +13,8 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop
+	pop-desktop \
+	gnome-initial-setup
 
 ISO_PKGS=\
 	ubiquity-slideshow-pop
@@ -244,7 +245,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 
 $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(SOURCE_DATE_EPOCH)"
+	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
 
 	# Copy vmlinuz
 	sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
@@ -262,9 +263,17 @@ $(BUILD)/iso_regen.tag: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
 	scripts/bootlogo.sh "$(BUILD)/iso" "$(BUILD)/bootlogo"
 
 	# Calculate md5sum
-	cd "$(BUILD)/iso" && rm -f md5sum.txt && find -type f -print0 | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
+	cd "$(BUILD)/iso" && rm -f md5sum.txt && find -type f -print0 | sort -z | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
 
 	touch "$@"
+
+$(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_regen.tag
+	tar --create \
+		--mtime="@$(DISTRO_EPOCH)" --sort=name \
+	    --owner=0 --group=0 --numeric-owner --mode='a=,u+rX' \
+	    --file "$@.partial" --directory "$(BUILD)/iso" .
+
+	mv "$@.partial" "$@"
 
 $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_regen.tag
 	xorriso -as mkisofs \
@@ -274,8 +283,10 @@ $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_regen.tag
 	    -eltorito-alt-boot -e boot/grub/efi.img \
 	    -no-emul-boot -isohybrid-gpt-basdat \
 	    -r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
-		-o "$@" "$(BUILD)/iso" -- \
+		-o "$@.partial" "$(BUILD)/iso" -- \
 		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+
+	mv "$@.partial" "$@"
 
 $(BUILD)/$(DISTRO_CODE).iso.zsync: $(BUILD)/$(DISTRO_CODE).iso
 	cd "$(BUILD)" && zsyncmake -o "`basename "$@"`" "`basename "$<"`"
