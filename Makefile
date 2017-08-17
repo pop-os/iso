@@ -2,7 +2,7 @@ DISTRO_VERSION?=17.10
 
 DISTRO_EPOCH?=`date +%s`
 
-DISTRO_DATE=`date --date=@"$(DISTRO_EPOCH)" +%Y%M%d`
+DISTRO_DATE?=`date +%Y%M%d`
 
 DISTRO_NAME=Pop_OS
 
