@@ -1,6 +1,8 @@
 DISTRO_VERSION?=17.10
 
-DISTRO_DATE=`date +%Y%M%d`
+DISTRO_EPOCH?=`date +%s`
+
+DISTRO_DATE=`date --date=@"$(DISTRO_EPOCH)" +%Y%M%d`
 
 DISTRO_NAME=Pop_OS
 
@@ -11,8 +13,7 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop \
-	gnome-initial-setup
+	pop-desktop
 
 ISO_PKGS=\
 	ubiquity-slideshow-pop
@@ -60,6 +61,7 @@ SED=\
 	s|DISTRO_CODE|$(DISTRO_CODE)|g; \
 	s|DISTRO_VERSION|$(DISTRO_VERSION)|g; \
 	s|DISTRO_DATE|$(DISTRO_DATE)|g; \
+	s|DISTRO_EPOCH|$(DISTRO_EPOCH)|g; \
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
 	s|ISO_PKGS|$(ISO_PKGS)|g; \
@@ -242,7 +244,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 
 $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend
+	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(SOURCE_DATE_EPOCH)"
 
 	# Copy vmlinuz
 	sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
@@ -255,13 +257,16 @@ $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 
 	touch "$@"
 
-$(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
+$(BUILD)/iso_regen.tag: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
 	# Regenerate bootlogo
 	scripts/bootlogo.sh "$(BUILD)/iso" "$(BUILD)/bootlogo"
 
 	# Calculate md5sum
-	cd "$(BUILD)/iso" && sudo bash -e -c "rm md5sum.txt && find -type f -print0 | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt"
+	cd "$(BUILD)/iso" && rm -f md5sum.txt && find -type f -print0 | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
 
+	touch "$@"
+
+$(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_regen.tag
 	xorriso -as mkisofs \
 	    -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
 	    -c isolinux/boot.cat -b isolinux/isolinux.bin \
@@ -269,7 +274,8 @@ $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
 	    -eltorito-alt-boot -e boot/grub/efi.img \
 	    -no-emul-boot -isohybrid-gpt-basdat \
 	    -r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
-		-o "$@" "$(BUILD)/iso"
+		-o "$@" "$(BUILD)/iso" -- \
+		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
 
 $(BUILD)/$(DISTRO_CODE).iso.zsync: $(BUILD)/$(DISTRO_CODE).iso
 	cd "$(BUILD)" && zsyncmake -o "`basename "$@"`" "`basename "$<"`"

@@ -20,8 +20,8 @@ BOOTLOGO="$(realpath "$2")"
 
 rm -rf "$BOOTLOGO"
 mkdir -p "$BOOTLOGO"
-pushd "$BOOTLOGO"
-    cpio -id < "$ISODIR/isolinux/bootlogo"
+pushd "$BOOTLOGO" > /dev/null
+    cpio --extract --quiet --make-directories < "$ISODIR/isolinux/bootlogo"
     for file in $(find . -type f)
     do
         if [ -f "$ISODIR/isolinux/$file" ]
@@ -29,5 +29,6 @@ pushd "$BOOTLOGO"
             cp "$ISODIR/isolinux/$file" "$file"
         fi
     done
-    sudo bash -e -c "find . | cpio --quiet -o > \"$ISODIR/isolinux/bootlogo\""
-popd
+    find . -exec touch -h -d @"${DISTRO_EPOCH}" {} \;
+    find . | sort | cpio --create --quiet --reproducible --owner=0:0 > "$ISODIR/isolinux/bootlogo"
+popd > /dev/null
