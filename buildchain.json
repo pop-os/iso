@@ -1,0 +1,14 @@
+{
+    "name": "firmware",
+    "base": "ubuntu:17.04",
+    "source": {
+        "kind": "git",
+        "url": "."
+    },
+    "commands": [
+        ["add-apt-repository", "-y", "ppa:system76/pop"],
+        ["apt-get", "update"],
+        ["apt-get", "install", "-y", "isolinux", "ovmf", "qemu-efi", "qemu-kvm", "squashfs-tools", "xorriso", "zsync"],
+        ["bash", "-c", "cd source && ./buildchain.sh ../artifacts/"]
+    ]
+}
