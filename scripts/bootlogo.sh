@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 function usage {
-    echo "$0 [iso directory] [bootlogo directory]"
+    echo "$0 [iso directory] [bootlogo directory] [epoch timestamp]"
 }
 
 if [ ! -d "$1" ]
@@ -17,6 +17,13 @@ then
     exit 1
 fi
 BOOTLOGO="$(realpath "$2")"
+
+if [ -z "$3" ]
+then
+    usage
+    exit 1
+fi
+DISTRO_EPOCH="$3"
 
 rm -rf "$BOOTLOGO"
 mkdir -p "$BOOTLOGO"

@@ -1,8 +1,8 @@
 DISTRO_VERSION?=17.10
 
-DISTRO_EPOCH?=`date +%s`
+DISTRO_EPOCH?=$(shell date +%s)
 
-DISTRO_DATE?=`date +%Y%M%d`
+DISTRO_DATE?=$(shell date +%Y%M%d)
 
 DISTRO_NAME=Pop_OS
 
@@ -260,7 +260,7 @@ $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 
 $(BUILD)/iso_regen.tag: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
 	# Regenerate bootlogo
-	scripts/bootlogo.sh "$(BUILD)/iso" "$(BUILD)/bootlogo"
+	scripts/bootlogo.sh "$(BUILD)/iso" "$(BUILD)/bootlogo" "$(DISTRO_EPOCH)"
 
 	# Calculate md5sum
 	cd "$(BUILD)/iso" && rm -f md5sum.txt && find -type f -print0 | sort -z | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
