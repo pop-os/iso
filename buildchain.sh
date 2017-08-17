@@ -30,8 +30,8 @@ msg "clean"
 make clean
 
 msg "build"
-make
+make "build/${DISTRO_VERSION}/pop-os.tar"
 
 pushd "build/${DISTRO_VERSION}" > /dev/null
-    mv -v pop-os.iso "$DIR"
+    mv -v pop-os.tar "$DIR"
 popd > /dev/null
