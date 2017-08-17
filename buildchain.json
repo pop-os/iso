@@ -1,9 +1,9 @@
 {
-    "name": "firmware",
+    "name": "pop-distro",
     "base": "ubuntu:17.04",
     "source": {
         "kind": "git",
-        "url": "."
+        "url": "https://github.com/system76/pop-distro.git"
     },
     "commands": [
         ["add-apt-repository", "-y", "ppa:system76/pop"],
