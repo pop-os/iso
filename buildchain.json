@@ -8,7 +8,7 @@
     "commands": [
         ["add-apt-repository", "-y", "ppa:system76/pop"],
         ["apt-get", "update"],
-        ["apt-get", "install", "-y", "make", "isolinux", "ovmf", "qemu-efi", "qemu-kvm", "squashfs-tools", "xorriso", "zsync"],
+        ["apt-get", "install", "-y", "make", "ovmf", "qemu-efi", "qemu-kvm", "squashfs-tools", "xorriso", "zsync"],
         ["bash", "-c", "cd source && ./buildchain.sh ../artifacts/"]
     ]
 }

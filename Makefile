@@ -13,11 +13,13 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop \
-	gnome-initial-setup
+	pop-desktop
 
 ISO_PKGS=\
 	ubiquity-slideshow-pop
+
+RM_PKGS=\
+	gnome-shell-extension-ubuntu-dock
 
 MAIN_POOL=\
 	b43-fwcutter \
@@ -66,6 +68,7 @@ SED=\
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
 	s|ISO_PKGS|$(ISO_PKGS)|g; \
+	s|RM_PKGS|$(RM_PKGS)|g; \
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
@@ -93,7 +96,7 @@ iso: $(BUILD)/$(DISTRO_CODE).iso
 all: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 clean:
-	rm -f $(BUILD)/*.tag $(BUILD)/*.img $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
+	rm -f $(BUILD)/*.tag $(BUILD)/*.img $(BUILD)/*.partial $(BUILD)/$(DISTRO_CODE).tar $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 $(BUILD)/%.img:
 	mkdir -p $(BUILD)
@@ -154,18 +157,28 @@ $(BUILD)/iso_modify.tag: $(BUILD)/iso_extract.tag
 
 	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
 	sed "$(SED)" "data/info" > "$(BUILD)/iso/.disk/info"
+
+	# Replace preseeds
+	rm -f "$(BUILD)/iso/preseed"/*.seed
 	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
 
+	# Remove isolinux
+	rm -rf "$(BUILD)/iso/isolinux"
+
+	# Remove pics
+	rm -rf "$(BUILD)/iso/pics"
+
+	# Update grub config
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
 	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
 
-	cp "data/isolinux/access.pcx" "$(BUILD)/iso/isolinux/access.pcx"
-	cp "data/isolinux/blank.pcx" "$(BUILD)/iso/isolinux/blank.pcx"
-	sed "$(SED)" "data/isolinux/gfxboot.cfg" > "$(BUILD)/iso/isolinux/gfxboot.cfg"
-	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
-	cp "data/isolinux/splash.pcx" "$(BUILD)/iso/isolinux/splash.pcx"
-	sed "$(SED)" "data/isolinux/txt.cfg" > "$(BUILD)/iso/isolinux/txt.cfg"
+	# Copy grub i386 stuff, create eltorito image
+	cd "$(BUILD)/iso/boot/grub" && \
+	rm -rf i386-pc && \
+	cp -R /usr/lib/grub/i386-pc . && \
+	grub-mkimage -O i386-pc-eltorito -d i386-pc -o i386-pc/eltorito.img -p /boot/grub iso9660 biosdisk
 
+	# Copy grub theme
 	rm -rf "$(BUILD)/iso/boot/grub/themes"
 	cp -r "data/default-settings/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
 
@@ -205,6 +218,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
 		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
 		ISO_PKGS=\"$(ISO_PKGS)\" \
+		RM_PKGS=\"$(RM_PKGS)\" \
 		MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
 		/iso/chroot.sh"
@@ -247,27 +261,30 @@ $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 	# Rebuild filesystem image
 	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
 
-	# Copy vmlinuz
-	sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
+	# Copy vmlinuz, if necessary
+	if [ -e "$(BUILD)/chroot/vmlinuz" ]; then \
+	sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"; \
+	fi
 
-	# Rebuild initrd
-	sudo gzip -dc "$(BUILD)/chroot/initrd.img" | lzma -7 > "$(BUILD)/iso/casper/initrd.lz"
+	# Rebuild initrd, if necessary
+	if [ -e "$(BUILD)/chroot/initrd.img" ]; then \
+	sudo gzip -dc "$(BUILD)/chroot/initrd.img" | lzma -7 > "$(BUILD)/iso/casper/initrd.lz"; \
+	fi
 
 	# Update filesystem size
 	sudo du -sx --block-size=1 "$(BUILD)/chroot" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
 
 	touch "$@"
 
-$(BUILD)/iso_regen.tag: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
-	# Regenerate bootlogo
-	scripts/bootlogo.sh "$(BUILD)/iso" "$(BUILD)/bootlogo" "$(DISTRO_EPOCH)"
-
+$(BUILD)/iso_sum.tag: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
 	# Calculate md5sum
-	cd "$(BUILD)/iso" && rm -f md5sum.txt && find -type f -print0 | sort -z | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
+	cd "$(BUILD)/iso" && \
+	rm -f md5sum.txt && \
+	find -type f -print0 | sort -z | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
 
 	touch "$@"
 
-$(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_regen.tag
+$(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
 	tar --create \
 		--mtime="@$(DISTRO_EPOCH)" --sort=name \
 	    --owner=0 --group=0 --numeric-owner --mode='a=,u+rX' \
@@ -275,11 +292,11 @@ $(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_regen.tag
 
 	mv "$@.partial" "$@"
 
-$(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_regen.tag
+$(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
 	xorriso -as mkisofs \
-	    -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
-	    -c isolinux/boot.cat -b isolinux/isolinux.bin \
+		-b boot/grub/i386-pc/eltorito.img \
 	    -no-emul-boot -boot-load-size 4 -boot-info-table \
+		--grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
 	    -eltorito-alt-boot -e boot/grub/efi.img \
 	    -no-emul-boot -isohybrid-gpt-basdat \
 	    -r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \

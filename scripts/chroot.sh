@@ -22,7 +22,7 @@ done
 apt-get update -y
 
 # Upgrade installed packages
-apt-get dist-upgrade -y
+apt-get upgrade -y
 
 # Install distribution packages
 if [ -n "${DISTRO_PKGS}" ]
@@ -34,14 +34,20 @@ fi
 # Install ISO packages
 if [ -n "${ISO_PKGS}" ]
 then
-    echo "Installing packages: ${ISO_PKGS}"
+    echo "Installing packages for live install only: ${ISO_PKGS}"
     apt-get install -y ${ISO_PKGS}
 fi
 
-# Insuring that kernel is installed
+if [ -n "${RM_PKGS}" ]
+then
+    echo "Removing packages: ${RM_PKGS}"
+    apt-get purge -y ${RM_PKGS}
+fi
+
+# Insuring that kernel and initramfs is installed
 apt-get install --reinstall "$(basename $(readlink -f /vmlinuz) | sed 's/vmlinuz/linux-image/')"
 
-# Insuring that initrd exists
+# Update initramfs
 update-initramfs -u
 
 # Remove unnecessary packages
