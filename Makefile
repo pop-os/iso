@@ -13,13 +13,20 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
+	gnome-session \
 	pop-desktop
 
 ISO_PKGS=\
 	ubiquity-slideshow-pop
 
+ifeq ($(DISTRO_VERSION),17.04)
+RM_PKGS=
+else ifeq ($(DISTRO_VERSION),17.10)
 RM_PKGS=\
+	ubuntu-session \
+	ubuntu-settings \
 	gnome-shell-extension-ubuntu-dock
+endif
 
 MAIN_POOL=\
 	b43-fwcutter \

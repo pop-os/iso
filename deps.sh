@@ -1,3 +1,3 @@
 #!/bin/bash
 
-sudo apt install ovmf qemu-efi qemu-kvm squashfs-tools xorriso zsync
+sudo apt install ovmf qemu-efi grub-pc-bin qemu-kvm squashfs-tools xorriso zsync
