@@ -9,24 +9,21 @@ DISTRO_NAME=Pop_OS
 DISTRO_CODE=pop-os
 
 DISTRO_REPOS=\
+	main \
 	universe \
+	restricted \
 	ppa:system76/pop
 
 DISTRO_PKGS=\
 	gnome-session \
 	pop-desktop
 
-ISO_PKGS=\
+LIVE_PKGS=\
+	casper \
+	linux-generic \
+	lupin-casper \
+	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop
-
-ifeq ($(DISTRO_VERSION),17.04)
-RM_PKGS=
-else ifeq ($(DISTRO_VERSION),17.10)
-RM_PKGS=\
-	ubuntu-session \
-	ubuntu-settings \
-	gnome-shell-extension-ubuntu-dock
-endif
 
 MAIN_POOL=\
 	b43-fwcutter \
@@ -74,8 +71,7 @@ SED=\
 	s|DISTRO_EPOCH|$(DISTRO_EPOCH)|g; \
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
-	s|ISO_PKGS|$(ISO_PKGS)|g; \
-	s|RM_PKGS|$(RM_PKGS)|g; \
+	s|LIVE_PKGS|$(LIVE_PKGS)|g; \
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
@@ -147,7 +143,6 @@ zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
 $(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
-
 	# Remove old ISO
 	sudo rm -rf "$(BUILD)/iso"
 
@@ -198,8 +193,8 @@ $(BUILD)/chroot_extract.tag: $(BUILD)/iso_extract.tag
 	# Remove old chroot
 	sudo rm -rf "$(BUILD)/chroot"
 
-	# Extract squashfs
-	sudo unsquashfs -d "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs"
+	# Install using debootstrap
+	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$(BUILD)/chroot"
 
 	touch "$@"
 
@@ -224,8 +219,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
 		DISTRO_VERSION=\"$(DISTRO_VERSION)\" \
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
 		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
-		ISO_PKGS=\"$(ISO_PKGS)\" \
-		RM_PKGS=\"$(RM_PKGS)\" \
+		LIVE_PKGS=\"$(LIVE_PKGS)\" \
 		MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
 		/iso/chroot.sh"
