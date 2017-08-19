@@ -43,6 +43,7 @@ MAIN_POOL=\
 	libwvstreams4.6-base \
 	libwvstreams4.6-extras \
 	lupin-support \
+	mokutil \
 	mouseemu \
 	oem-config \
 	oem-config-gtk \
