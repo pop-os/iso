@@ -25,9 +25,13 @@ DISTRO_PKGS=\
 
 LIVE_PKGS=\
 	casper \
+	cups \
+	fwupdate-signed \
 	laptop-detect \
 	linux-generic \
 	lupin-casper \
+	mokutil \
+	secureboot-db \
 	ubuntu-standard \
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop
@@ -43,7 +47,6 @@ MAIN_POOL=\
 	libwvstreams4.6-base \
 	libwvstreams4.6-extras \
 	lupin-support \
-	mokutil \
 	mouseemu \
 	oem-config \
 	oem-config-gtk \
