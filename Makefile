@@ -15,8 +15,13 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	gnome-session \
-	pop-desktop
+	pop-desktop \
+	firefox \
+	gnome-disk-utility \
+	gnome-power-manager \
+	gnome-system-monitor \
+	gnome-terminal \
+	nautilus
 
 LIVE_PKGS=\
 	casper \
