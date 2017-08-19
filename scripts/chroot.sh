@@ -2,11 +2,15 @@
 
 set -e -x
 
+export DEBIAN_FRONTEND=noninteractive
 export HOME=/root
 export LC_ALL=C
 
 # Generate a machine ID
 dbus-uuidgen > /var/lib/dbus/machine-id
+
+# Create DNS, currently using Google DNS
+echo -e "nameserver 8.8.8.8\nnameserver 8.8.4.4" > /etc/resolv.conf
 
 # Add all distro PPAs
 for repo in ${DISTRO_REPOS}
@@ -40,11 +44,6 @@ update-initramfs -u
 # Remove unnecessary packages
 apt-get autoremove --purge -y
 
-# Clean temporary files
-apt-get clean -y
-rm -rf /tmp/*
-rm /etc/resolv.conf
-
 # Update package manifest
 dpkg-query -W --showformat='${Package} ${Version}\n' > /iso/filesystem.manifest
 
@@ -67,6 +66,13 @@ pushd "/iso/pool/restricted"
         sudo -u _apt apt-get download "$pkg"
     done
 popd
+
+# Remove temporary files
+apt-get clean -y
+rm -rf /tmp/*
+
+# Remove DNS
+rm /etc/resolv.conf
 
 # Remove machine ID
 rm /var/lib/dbus/machine-id
