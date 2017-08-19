@@ -59,8 +59,8 @@ RESTRICTED_POOL=\
 	iucode-tool
 
 ifeq ($(DISTRO_VERSION),17.04)
-	UBUNTU_NAME=Zesty Zapus
 	UBUNTU_CODE=zesty
+	UBUNTU_NAME=Zesty Zapus
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
 else ifeq ($(DISTRO_VERSION),17.10)
 	UBUNTU_CODE=artful
@@ -113,34 +113,34 @@ $(BUILD)/%.img:
 	qemu-img create -f qcow2 "$@" 16G
 
 qemu: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu.img
-	qemu-system-x86_64 \
-		-enable-kvm -m 2048 -vga qxl \
-		-boot d -cdrom "$<" \
-		-hda $(BUILD)/qemu.img
+	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) BIOS" \
+		-enable-kvm -m 2048 -vga cirrus \
+		-hda $(BUILD)/qemu.img \
+		-boot d -cdrom "$<"
 
 qemu_uefi: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
-	qemu-system-x86_64 \
-		-enable-kvm -m 2048 -vga qxl \
+	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) UEFI" \
+		-enable-kvm -m 2048 -vga cirrus \
 		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
 		-drive if=pflash,format=raw,file=$(BUILD)/OVMF_VARS.fd \
-		-boot d -cdrom "$<" \
-		-hda $(BUILD)/qemu_uefi.img
+		-hda $(BUILD)/qemu_uefi.img \
+		-boot d -cdrom "$<"
 
 qemu_ubuntu: $(BUILD)/ubuntu.iso $(BUILD)/qemu.img
-	qemu-system-x86_64 \
-	-enable-kvm -m 2048 -vga qxl \
-	-boot d -cdrom "$<" \
-	-hda $(BUILD)/qemu.img
+	qemu-system-x86_64 -name "Ubuntu $(DISTRO_VERSION) BIOS" \
+		-enable-kvm -m 2048 -vga cirrus \
+		-hda $(BUILD)/qemu.img \
+		-boot d -cdrom "$<"
 
 qemu_ubuntu_uefi: $(BUILD)/ubuntu.iso $(BUILD)/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
-	qemu-system-x86_64 \
-		-enable-kvm -m 2048 -vga qxl \
+	qemu-system-x86_64 -name "Ubuntu $(DISTRO_VERSION) UEFI" \
+		-enable-kvm -m 2048 -vga cirrus \
 		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
 		-drive if=pflash,format=raw,file=$(BUILD)/OVMF_VARS.fd \
-		-boot d -cdrom "$<" \
-		-hda $(BUILD)/qemu_uefi.img
+		-hda $(BUILD)/qemu_uefi.img \
+		-boot d -cdrom "$<"
 
 $(BUILD)/ubuntu.iso:
 	mkdir -p $(BUILD)
