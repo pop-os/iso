@@ -42,6 +42,8 @@ apt-get autoremove --purge -y
 
 # Clean temporary files
 apt-get clean -y
+rm -rf /tmp/*
+rm /etc/resolv.conf
 
 # Update package manifest
 dpkg-query -W --showformat='${Package} ${Version}\n' > /iso/filesystem.manifest
