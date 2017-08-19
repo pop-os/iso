@@ -31,7 +31,6 @@ LIVE_PKGS=\
 	linux-generic \
 	lupin-casper \
 	mokutil \
-	secureboot-db \
 	ubuntu-standard \
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop
