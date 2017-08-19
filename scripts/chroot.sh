@@ -71,8 +71,5 @@ popd
 apt-get clean -y
 rm -rf /tmp/*
 
-# Remove DNS
-rm /etc/resolv.conf
-
 # Remove machine ID
 rm /var/lib/dbus/machine-id
