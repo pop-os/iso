@@ -25,8 +25,10 @@ DISTRO_PKGS=\
 
 LIVE_PKGS=\
 	casper \
+	laptop-detect \
 	linux-generic \
 	lupin-casper \
+	ubuntu-standard \
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop
 
