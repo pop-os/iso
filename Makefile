@@ -15,19 +15,10 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop \
-	firefox \
-	gnome-disk-utility \
-	gnome-power-manager \
-	gnome-system-monitor \
-	gnome-terminal \
-	nautilus
+	pop-desktop
 
 LIVE_PKGS=\
 	casper \
-	cups \
-	fwupdate-signed \
-	laptop-detect \
 	linux-generic \
 	lupin-casper \
 	mokutil \
@@ -102,14 +93,34 @@ ifeq (,$(SQUASHFS))
 $(error squashfs-tools not found! Run deps.sh first.)
 endif
 
-.PHONY: all clean iso qemu qemu_uefi qemu_ubuntu qemu_ubuntu_uefi zsync
+.PHONY: all clean distclean iso qemu qemu_uefi qemu_ubuntu qemu_ubuntu_uefi zsync
 
 iso: $(BUILD)/$(DISTRO_CODE).iso
 
 all: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 clean:
-	rm -f $(BUILD)/*.tag $(BUILD)/*.img $(BUILD)/*.partial $(BUILD)/$(DISTRO_CODE).tar $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
+	# Unmount chroot if mounted
+	scripts/unmount.sh "$(BUILD)/chroot"
+
+	# Remove chroot
+	sudo rm -rf "$(BUILD)/chroot"
+
+	# Remove ISO extract
+	sudo rm -rf "$(BUILD)/iso"
+
+	# Remove tag files, partial files, and build artifacts
+	rm -f $(BUILD)/*.tag $(BUILD)/*.partial $(BUILD)/$(DISTRO_CODE).tar $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
+
+	# Remove QEMU files
+	rm -f $(BUILD)/*.img $(BUILD)/OVMF_VARS.fd
+
+distclean:
+	# Remove debootstrap
+	sudo rm -rf "$(BUILD)/debootstrap"
+
+	# Execute normal clean
+	make clean
 
 $(BUILD)/%.img:
 	mkdir -p $(BUILD)
@@ -151,6 +162,15 @@ $(BUILD)/ubuntu.iso:
 
 zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
+
+$(BUILD)/debootstrap.tag:
+	# Remove old debootstrap
+	sudo rm -rf "$(BUILD)/debootstrap"
+
+	# Install using debootstrap
+	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$(BUILD)/debootstrap"
+
+	touch "$@"
 
 $(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
 	# Remove old ISO
@@ -196,19 +216,19 @@ $(BUILD)/iso_modify.tag: $(BUILD)/iso_extract.tag
 
 	touch "$@"
 
-$(BUILD)/chroot_extract.tag: $(BUILD)/iso_extract.tag
+$(BUILD)/chroot_extract.tag: $(BUILD)/debootstrap.tag
 	# Unmount chroot if mounted
 	scripts/unmount.sh "$(BUILD)/chroot"
 
 	# Remove old chroot
 	sudo rm -rf "$(BUILD)/chroot"
 
-	# Install using debootstrap
-	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$(BUILD)/chroot"
+	# Copy debootstrap to chroot
+	sudo cp -a "$(BUILD)/debootstrap" "$(BUILD)/chroot"
 
 	touch "$@"
 
-$(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag
+$(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
 	# Unmount chroot if mounted
 	"scripts/unmount.sh" "$(BUILD)/chroot"
 
