@@ -124,7 +124,9 @@ distclean:
 
 $(BUILD)/%.img:
 	mkdir -p $(BUILD)
-	qemu-img create -f qcow2 "$@" 16G
+	qemu-img create -f qcow2 "$@.partial" 16G
+
+	mv "$@.partial" "$@"
 
 qemu: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu.img
 	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) BIOS" \
@@ -158,7 +160,9 @@ qemu_ubuntu_uefi: $(BUILD)/ubuntu.iso $(BUILD)/qemu_uefi.img
 
 $(BUILD)/ubuntu.iso:
 	mkdir -p $(BUILD)
-	wget -O "$@" "$(UBUNTU_ISO)"
+	wget -O "$@.partial" "$(UBUNTU_ISO)"
+
+	mv "$@.partial" "$@"
 
 zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
@@ -337,10 +341,16 @@ $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
 	mv "$@.partial" "$@"
 
 $(BUILD)/$(DISTRO_CODE).iso.zsync: $(BUILD)/$(DISTRO_CODE).iso
-	cd "$(BUILD)" && zsyncmake -o "`basename "$@"`" "`basename "$<"`"
+	cd "$(BUILD)" && zsyncmake -o "`basename "$@.partial"`" "`basename "$<"`"
+
+	mv "$@.partial" "$@"
 
 $(BUILD)/SHA256SUMS: $(BUILD)/$(DISTRO_CODE).iso
-	cd "$(BUILD)" && sha256sum -b "`basename "$<"`" > "`basename "$@"`"
+	cd "$(BUILD)" && sha256sum -b "`basename "$<"`" > "`basename "$@.partial"`"
+
+	mv "$@.partial" "$@"
 
 $(BUILD)/SHA256SUMS.gpg: $(BUILD)/SHA256SUMS
-	cd "$(BUILD)" && gpg --batch --yes --output "`basename "$@"`" --detach-sig "`basename "$<"`"
+	cd "$(BUILD)" && gpg --batch --yes --output "`basename "$@.partial"`" --detach-sig "`basename "$<"`"
+
+	mv "$@.partial" "$@"
