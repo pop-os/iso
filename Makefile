@@ -16,18 +16,40 @@ DISTRO_REPOS=\
 
 DISTRO_PKGS=\
 	pop-desktop \
+	acpi-support \
+	alsa-base \
+	app-install-data-partner \
+	apport-gtk \
+	avahi-autoipd \
+	bluez-cups \
+	brltty \
+	cups-bsd \
 	dbus-user-session \
-	flatpak
+	flatpak \
+	gnome-orca \
+	gnome-screenshot \
+	gnome-video-effects \
+	ibus-table \
+	inputattach \
+	pcmciautils \
+	rfkill \
+	xdg-user-dirs-gtk \
+	xdg-utils \
+	zip
 
 LIVE_PKGS=\
 	casper \
+	jfsutils \
 	linux-generic \
 	lupin-casper \
 	mokutil \
+	mtools \
+	reiserfsprogs \
 	ubuntu-minimal \
 	ubuntu-standard \
 	ubiquity-frontend-gtk \
-	ubiquity-slideshow-pop
+	ubiquity-slideshow-pop \
+	xfsprogs
 
 MAIN_POOL=\
 	b43-fwcutter \
