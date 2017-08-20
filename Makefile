@@ -15,13 +15,16 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop
+	pop-desktop \
+	dbus-user-session \
+	flatpak
 
 LIVE_PKGS=\
 	casper \
 	linux-generic \
 	lupin-casper \
 	mokutil \
+	ubuntu-minimal \
 	ubuntu-standard \
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop
