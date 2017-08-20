@@ -302,6 +302,9 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
 	# Remove temp directory for modifications
 	sudo rm -rf "$(BUILD)/chroot/iso"
 
+	# Create missing network-manager file
+	sudo touch "$(BUILD)/chroot/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
+
 	# Patch ubiquity by removing plugins and updating order
 	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-console-setup.py"
 	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
