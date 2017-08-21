@@ -12,30 +12,12 @@ DISTRO_REPOS=\
 	main \
 	universe \
 	restricted \
-	ppa:system76/pop
+	ppa:system76/pop \
+	ppa:system76/pop-staging
 
 DISTRO_PKGS=\
-	pop-desktop \
-	acpi-support \
-	alsa-base \
-	app-install-data-partner \
-	apport-gtk \
-	avahi-autoipd \
-	bluez-cups \
-	brltty \
-	cups-bsd \
-	dbus-user-session \
-	flatpak \
-	gnome-orca \
-	gnome-screenshot \
-	gnome-video-effects \
-	ibus-table \
-	inputattach \
-	pcmciautils \
-	rfkill \
-	xdg-user-dirs-gtk \
-	xdg-utils \
-	zip
+	pop-gnome-initial-setup \
+	pop-desktop
 
 LIVE_PKGS=\
 	casper \

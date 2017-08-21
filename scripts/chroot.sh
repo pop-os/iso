@@ -9,9 +9,6 @@ export LC_ALL=C
 # Generate a machine ID
 dbus-uuidgen > /var/lib/dbus/machine-id
 
-# Create DNS, currently using Google DNS
-echo -e "nameserver 8.8.8.8\nnameserver 8.8.4.4" > /etc/resolv.conf
-
 # Add all distro PPAs
 for repo in ${DISTRO_REPOS}
 do
