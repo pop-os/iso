@@ -12,6 +12,7 @@ DISTRO_REPOS=\
 	main \
 	universe \
 	restricted \
+	multiverse \
 	ppa:system76/pop \
 	ppa:system76/pop-staging
 
@@ -31,7 +32,15 @@ LIVE_PKGS=\
 	ubiquity-slideshow-pop \
 	xfsprogs \
 	ubuntu-standard \
-	ubuntu-minimal
+	ubuntu-minimal \
+	language-pack-gnome-de \
+	language-pack-gnome-en \
+	language-pack-gnome-es \
+	language-pack-gnome-fr \
+	language-pack-gnome-it \
+	language-pack-gnome-pt \
+	language-pack-gnome-ru \
+	language-pack-gnome-zh-hans
 
 MAIN_POOL=\
 	b43-fwcutter \
