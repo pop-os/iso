@@ -16,8 +16,10 @@ DISTRO_REPOS=\
 	ppa:system76/pop-staging
 
 DISTRO_PKGS=\
-	pop-gnome-initial-setup \
-	pop-desktop
+	pop-desktop \
+	libreoffice-calc \
+	libreoffice-impress \
+	libreoffice-writer
 
 LIVE_PKGS=\
 	casper \
@@ -79,7 +81,6 @@ SED=\
 	s|DISTRO_EPOCH|$(DISTRO_EPOCH)|g; \
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
-	s|LIVE_PKGS|$(LIVE_PKGS)|g; \
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
