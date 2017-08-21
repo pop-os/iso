@@ -17,9 +17,7 @@ DISTRO_REPOS=\
 
 DISTRO_PKGS=\
 	pop-desktop \
-	libreoffice-calc \
-	libreoffice-impress \
-	libreoffice-writer
+	pop-gnome-initial-setup
 
 LIVE_PKGS=\
 	casper \
@@ -29,11 +27,11 @@ LIVE_PKGS=\
 	mokutil \
 	mtools \
 	reiserfsprogs \
-	ubuntu-minimal \
-	ubuntu-standard \
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop \
-	xfsprogs
+	xfsprogs \
+	ubuntu-standard \
+	ubuntu-minimal
 
 MAIN_POOL=\
 	b43-fwcutter \
