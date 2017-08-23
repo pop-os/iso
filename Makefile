@@ -159,6 +159,17 @@ qemu_uefi: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
 		-hda $(BUILD)/qemu_uefi.img \
 		-boot d -cdrom "$<"
 
+qemu_uefi_usb: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
+	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
+	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) UEFI" \
+		-enable-kvm -m 2048 -vga qxl \
+		-drive if=pflash,format=raw,readonly,file=/usr/share/OVMF/OVMF_CODE.fd \
+		-drive if=pflash,format=raw,file=$(BUILD)/OVMF_VARS.fd \
+		-hda $(BUILD)/qemu_uefi.img \
+		-boot d -drive if=none,id=iso,file="$<" \
+		-device nec-usb-xhci,id=xhci \
+		-device usb-storage,bus=xhci.0,drive=iso
+
 qemu_ubuntu: $(BUILD)/ubuntu.iso $(BUILD)/qemu.img
 	qemu-system-x86_64 -name "Ubuntu $(DISTRO_VERSION) BIOS" \
 		-enable-kvm -m 2048 -vga qxl \
@@ -192,47 +203,12 @@ $(BUILD)/debootstrap:
 
 	mv "$@.partial" "$@"
 
-$(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
+$(BUILD)/iso_extract.tag:
 	# Remove old ISO
 	sudo rm -rf "$(BUILD)/iso"
 
-	# Extract ISO
-	xorriso -acl on -xattr on -osirrox on -indev "$<" -extract / "$(BUILD)/iso"
-
-	# Make readable
-	chmod u+w -R "$(BUILD)/iso"
-
-	touch "$@"
-
-$(BUILD)/iso_modify.tag: $(BUILD)/iso_extract.tag
-	git submodule update --init data/default-settings
-
-	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
-	sed "$(SED)" "data/info" > "$(BUILD)/iso/.disk/info"
-
-	# Replace preseeds
-	rm -f "$(BUILD)/iso/preseed"/*.seed
-	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
-
-	# Remove isolinux
-	rm -rf "$(BUILD)/iso/isolinux"
-
-	# Remove pics
-	rm -rf "$(BUILD)/iso/pics"
-
-	# Update grub config
-	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
-	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
-
-	# Copy grub i386 stuff, create eltorito image
-	cd "$(BUILD)/iso/boot/grub" && \
-	rm -rf i386-pc && \
-	cp -R /usr/lib/grub/i386-pc . && \
-	grub-mkimage -O i386-pc-eltorito -d i386-pc -o i386-pc/eltorito.img -p /boot/grub iso9660 biosdisk
-
-	# Copy grub theme
-	rm -rf "$(BUILD)/iso/boot/grub/themes"
-	cp -r "data/default-settings/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
+	# Create ISO directory
+	mkdir -p "$(BUILD)/iso"
 
 	touch "$@"
 
@@ -278,22 +254,6 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
 	# Unmount chroot
 	"scripts/unmount.sh" "$(BUILD)/chroot"
 
-	# Update manifest
-	sudo cp "$(BUILD)/chroot/iso/filesystem.manifest" "$(BUILD)/iso/casper/filesystem.manifest"
-
-	# Copy new dists
-	sudo rm -rf "$(BUILD)/iso/pool"
-	sudo cp -r "$(BUILD)/chroot/iso/pool" "$(BUILD)/iso/pool"
-
-	# Update pool package lists
-	cd $(BUILD)/iso && \
-	for pool in $$(ls -1 pool); do \
-		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz"; \
-	done
-
-	# Remove temp directory for modifications
-	sudo rm -rf "$(BUILD)/chroot/iso"
-
 	# Create missing network-manager file
 	sudo touch "$(BUILD)/chroot/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
@@ -310,6 +270,25 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
 	# Remove gnome-classic
 	sudo rm -f "$(BUILD)/chroot/usr/share/xsessions/gnome-classic.desktop"
 
+	# Update manifest
+	mkdir -p "$(BUILD)/iso/casper"
+	sudo cp "$(BUILD)/chroot/iso/filesystem.manifest" "$(BUILD)/iso/casper/filesystem.manifest"
+
+	# Copy new dists
+	sudo rm -rf "$(BUILD)/iso/pool"
+	sudo cp -r "$(BUILD)/chroot/iso/pool" "$(BUILD)/iso/pool"
+
+	# Update pool package lists
+	sudo rm -rf "$(BUILD)/iso/dists"
+	cd $(BUILD)/iso && \
+	for pool in $$(ls -1 pool); do \
+		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
+		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz"; \
+	done
+
+	# Remove temp directory for modifications
+	sudo rm -rf "$(BUILD)/chroot/iso"
+
 	touch "$@"
 
 $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
@@ -318,24 +297,60 @@ $(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
 
 	# Copy vmlinuz, if necessary
 	if [ -e "$(BUILD)/chroot/vmlinuz" ]; then \
-	sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"; \
+		sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"; \
 	fi
 
 	# Rebuild initrd, if necessary
 	if [ -e "$(BUILD)/chroot/initrd.img" ]; then \
-	sudo gzip -dc "$(BUILD)/chroot/initrd.img" | lzma -7 > "$(BUILD)/iso/casper/initrd.lz"; \
+		sudo gzip -dc "$(BUILD)/chroot/initrd.img" | lzma -7 > "$(BUILD)/iso/casper/initrd.lz"; \
 	fi
 
 	# Update filesystem size
 	sudo du -sx --block-size=1 "$(BUILD)/chroot" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
 
+	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/casper"
+
 	touch "$@"
 
-$(BUILD)/iso_sum.tag: $(BUILD)/iso_modify.tag $(BUILD)/iso_chroot.tag
+$(BUILD)/iso_modify.tag: $(BUILD)/iso_chroot.tag
+	git submodule update --init data/default-settings
+
+	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
+
+	# Replace disk info
+	rm -rf "$(BUILD)/iso/.disk"
+	mkdir -p "$(BUILD)/iso/.disk"
+	sed "$(SED)" "data/disk/base_installable" > "$(BUILD)/iso/.disk/base_installable"
+	sed "$(SED)" "data/disk/casper-uuid-generic" > "$(BUILD)/iso/.disk/casper-uuid-generic"
+	sed "$(SED)" "data/disk/cd_type" > "$(BUILD)/iso/.disk/cd_type"
+	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
+	sed "$(SED)" "data/disk/release_notes_url" > "$(BUILD)/iso/.disk/release_notes_url"
+
+	# Replace preseeds
+	rm -rf "$(BUILD)/iso/preseed"
+	mkdir -p "$(BUILD)/iso/preseed"
+	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
+
+	# Copy filesystem.manifest-remove
+	cp "data/casper/filesystem.manifest-remove" "$(BUILD)/iso/casper/filesystem.manifest-remove"
+	cp "data/casper/filesystem.squashfs.gpg" "$(BUILD)/iso/casper/filesystem.squashfs.gpg"
+
+	# Update grub config
+	rm -rf "$(BUILD)/iso/boot/grub"
+	mkdir -p "$(BUILD)/iso/boot/grub"
+	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
+	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
+
+	# Copy grub theme
+	cp -r "data/default-settings/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
+
+	touch "$@"
+
+$(BUILD)/iso_sum.tag: $(BUILD)/iso_modify.tag
 	# Calculate md5sum
 	cd "$(BUILD)/iso" && \
 	rm -f md5sum.txt && \
-	find -type f -print0 | sort -z | xargs -0 md5sum | grep -v isolinux/boot.cat > md5sum.txt
+	find -type f -print0 | sort -z | xargs -0 md5sum > md5sum.txt
 
 	touch "$@"
 
@@ -348,15 +363,7 @@ $(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
 	mv "$@.partial" "$@"
 
 $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
-	xorriso -as mkisofs \
-		-b boot/grub/i386-pc/eltorito.img \
-	    -no-emul-boot -boot-load-size 4 -boot-info-table \
-		--grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
-	    -eltorito-alt-boot -e boot/grub/efi.img \
-	    -no-emul-boot -isohybrid-gpt-basdat \
-	    -r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
-		-o "$@.partial" "$(BUILD)/iso" -- \
-		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+	grub-mkrescue "$(BUILD)/iso" -o "$@.partial"
 
 	mv "$@.partial" "$@"
 
