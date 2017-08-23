@@ -185,14 +185,14 @@ $(BUILD)/ubuntu.iso:
 zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
-$(BUILD)/debootstrap.tag:
+$(BUILD)/debootstrap:
 	# Remove old debootstrap
-	sudo rm -rf "$(BUILD)/debootstrap"
+	sudo rm -rf "$@" "$@.partial"
 
 	# Install using debootstrap
-	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$(BUILD)/debootstrap"
+	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial"
 
-	touch "$@"
+	mv "$@.partial" "$@"
 
 $(BUILD)/iso_extract.tag: $(BUILD)/ubuntu.iso
 	# Remove old ISO
@@ -238,7 +238,7 @@ $(BUILD)/iso_modify.tag: $(BUILD)/iso_extract.tag
 
 	touch "$@"
 
-$(BUILD)/chroot_extract.tag: $(BUILD)/debootstrap.tag
+$(BUILD)/chroot_extract.tag: $(BUILD)/debootstrap
 	# Unmount chroot if mounted
 	scripts/unmount.sh "$(BUILD)/chroot"
 
