@@ -283,6 +283,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
 	cd $(BUILD)/iso && \
 	for pool in $$(ls -1 pool); do \
 		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
+		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release" && \
 		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz"; \
 	done
 
