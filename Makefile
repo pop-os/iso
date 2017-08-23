@@ -42,6 +42,9 @@ LIVE_PKGS=\
 	language-pack-gnome-ru \
 	language-pack-gnome-zh-hans
 
+RM_PKGS=\
+	imagemagick-6.q16
+
 MAIN_POOL=\
 	b43-fwcutter \
 	dkms \
@@ -269,6 +272,7 @@ $(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
 		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
 		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
 		LIVE_PKGS=\"$(LIVE_PKGS)\" \
+		RM_PKGS=\"$(RM_PKGS)\" \
 		MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
 		/iso/chroot.sh"

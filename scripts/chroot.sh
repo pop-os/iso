@@ -29,6 +29,12 @@ then
     apt-get install -y ${DISTRO_PKGS} ${LIVE_PKGS}
 fi
 
+if [ -n "${RM_PKGS}" ]
+then
+    echo "Removing packages: ${RM_PKGS}"
+    apt-get purge -y ${RM_PKGS}
+fi
+
 # Insuring that kernel is installed
 if [ ! -e /vmlinuz ]
 then
