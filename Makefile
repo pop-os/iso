@@ -13,12 +13,12 @@ DISTRO_REPOS=\
 	universe \
 	restricted \
 	multiverse \
-	ppa:system76/pop \
-	ppa:system76/pop-staging
+	ppa:system76/pop
 
 DISTRO_PKGS=\
 	pop-desktop \
-	pop-gnome-initial-setup
+	pop-gnome-initial-setup \
+	pop-gnome-shell-theme
 
 LIVE_PKGS=\
 	casper \
