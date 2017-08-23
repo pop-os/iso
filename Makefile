@@ -16,9 +16,7 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	pop-desktop \
-	pop-gnome-initial-setup \
-	pop-gnome-shell-theme
+	pop-desktop
 
 LIVE_PKGS=\
 	casper \
