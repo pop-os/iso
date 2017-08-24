@@ -365,8 +365,7 @@ $(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
 
 $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
 	grub-mkrescue -o "$@.partial" "$(BUILD)/iso" -- \
-		-volid "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
-		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+		-volid "$(DISTRO_NAME) $(DISTRO_VERSION) amd64"
 
 
 	mv "$@.partial" "$@"
