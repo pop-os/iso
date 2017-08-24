@@ -10,11 +10,14 @@ export LC_ALL=C
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 # Add all distro PPAs
-for repo in ${DISTRO_REPOS}
-do
-    echo "Adding repository '$repo'"
-    add-apt-repository -y "$repo"
-done
+if [ -n "${DISTRO_REPOS}" ]
+then
+    for repo in ${DISTRO_REPOS}
+    do
+        echo "Adding repository '$repo'"
+        add-apt-repository -y "$repo"
+    done
+fi
 
 # Update package definitions
 apt-get update -y
@@ -22,53 +25,48 @@ apt-get update -y
 # Upgrade installed packages
 apt-get dist-upgrade -y
 
-# Install new packages
-if [ -n "${DISTRO_PKGS}" -o -n "${LIVE_PKGS}" ]
+# Install distro packages
+if [ -n "${DISTRO_PKGS}" ]
 then
-    echo "Installing packages: ${DISTRO_PKGS} ${LIVE_PKGS}"
-    apt-get install -y ${DISTRO_PKGS} ${LIVE_PKGS}
+    echo "Installing distro packages: ${DISTRO_PKGS}"
+    apt-get install -y ${DISTRO_PKGS}
 fi
 
+# Remove unwanted packages
 if [ -n "${RM_PKGS}" ]
 then
     echo "Removing packages: ${RM_PKGS}"
     apt-get purge -y ${RM_PKGS}
 fi
 
-# Insuring that kernel is installed
-if [ ! -e /vmlinuz ]
-then
-    apt-get install --reinstall "$(basename $(readlink -f /vmlinuz) | sed 's/vmlinuz/linux-image/')"
-fi
-
-# Update initramfs
-update-initramfs -u
-
 # Remove unnecessary packages
 apt-get autoremove --purge -y
 
-# Update package manifest
-dpkg-query -W --showformat='${Package} ${Version}\n' > /iso/filesystem.manifest
-
 # Download main pool packages
-mkdir -p "/iso/pool/main"
-chown -R _apt "/iso/pool/main"
-pushd "/iso/pool/main"
-    for pkg in ${MAIN_POOL}
-    do
-        sudo -u _apt apt-get download "$pkg"
-    done
-popd
+if [ -n "${MAIN_POOL}" ]
+then
+    mkdir -p "/iso/pool/main"
+    chown -R _apt "/iso/pool/main"
+    pushd "/iso/pool/main"
+        for pkg in ${MAIN_POOL}
+        do
+            sudo -u _apt apt-get download "$pkg"
+        done
+    popd
+fi
 
 # Download restricted pool packages
-mkdir -p "/iso/pool/restricted"
-chown -R _apt "/iso/pool/restricted"
-pushd "/iso/pool/restricted"
-    for pkg in ${RESTRICTED_POOL}
-    do
-        sudo -u _apt apt-get download "$pkg"
-    done
-popd
+if [ -n "${RESTRICTED_POOL}" ]
+then
+    mkdir -p "/iso/pool/restricted"
+    chown -R _apt "/iso/pool/restricted"
+    pushd "/iso/pool/restricted"
+        for pkg in ${RESTRICTED_POOL}
+        do
+            sudo -u _apt apt-get download "$pkg"
+        done
+    popd
+fi
 
 # Remove temporary files
 apt-get clean -y

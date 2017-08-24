@@ -16,12 +16,14 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
+	gnome-session \
 	pop-desktop
 
 LIVE_PKGS=\
 	casper \
 	jfsutils \
 	linux-generic \
+	linux-signed-generic \
 	lupin-casper \
 	mokutil \
 	mtools \
@@ -31,6 +33,113 @@ LIVE_PKGS=\
 	xfsprogs \
 	ubuntu-standard \
 	ubuntu-minimal \
+	fcitx \
+	fcitx-hangul \
+	fcitx-module-cloudpinyin \
+	fcitx-mozc \
+	fcitx-pinyin \
+	fcitx-table \
+	fcitx-unikey \
+	fcitx-ui-qimpanel \
+	firefox-locale-de \
+	firefox-locale-en \
+	firefox-locale-es \
+	firefox-locale-fr \
+	firefox-locale-it \
+	firefox-locale-pt \
+	firefox-locale-ru \
+	firefox-locale-zh-hans \
+	fonts-arphic-ukai \
+	fonts-arphic-uming \
+	fonts-dejavu-core \
+	fonts-droid-fallback \
+	fonts-freefont-ttf \
+	fonts-guru \
+	fonts-guru-extra \
+	fonts-kacst \
+	fonts-kacst-one \
+	fonts-khmeros-core \
+	fonts-lao \
+	fonts-liberation \
+	fonts-lklug-sinhala \
+	fonts-lohit-guru \
+	fonts-nanum \
+	fonts-noto-cjk \
+	fonts-noto-mono \
+	fonts-opensymbol \
+	fonts-sil-abyssinica \
+	fonts-sil-padauk \
+	fonts-symbola \
+	fonts-takao-pgothic \
+	fonts-thai-tlwg \
+	fonts-tibetan-machine \
+	fonts-tlwg-garuda \
+	fonts-tlwg-garuda-ttf \
+	fonts-tlwg-kinnari \
+	fonts-tlwg-kinnari-ttf \
+	fonts-tlwg-laksaman \
+	fonts-tlwg-laksaman-ttf \
+	fonts-tlwg-loma \
+	fonts-tlwg-loma-ttf \
+	fonts-tlwg-mono \
+	fonts-tlwg-mono-ttf \
+	fonts-tlwg-norasi \
+	fonts-tlwg-norasi-ttf \
+	fonts-tlwg-purisa \
+	fonts-tlwg-purisa-ttf \
+	fonts-tlwg-sawasdee \
+	fonts-tlwg-sawasdee-ttf \
+	fonts-tlwg-typewriter \
+	fonts-tlwg-typewriter-ttf \
+	fonts-tlwg-typist \
+	fonts-tlwg-typist-ttf \
+	fonts-tlwg-typo \
+	fonts-tlwg-typo-ttf \
+	fonts-tlwg-umpush \
+	fonts-tlwg-umpush-ttf \
+	fonts-tlwg-waree \
+	fonts-tlwg-waree-ttf \
+	gnome-getting-started-docs \
+	gnome-getting-started-docs-de \
+	gnome-getting-started-docs-es \
+	gnome-getting-started-docs-fr \
+	gnome-getting-started-docs-it \
+	gnome-getting-started-docs-pt \
+	gnome-getting-started-docs-ru \
+	gnome-user-docs \
+	gnome-user-docs-de \
+	gnome-user-docs-es \
+	gnome-user-docs-fr \
+	gnome-user-docs-it \
+	gnome-user-docs-pt \
+	gnome-user-docs-ru \
+	gnome-user-docs-zh-hans \
+	hunspell-de-at-frami \
+	hunspell-de-ch-frami \
+	hunspell-de-de-frami \
+	hunspell-en-au \
+	hunspell-en-ca \
+	hunspell-en-gb \
+	hunspell-en-us \
+	hunspell-en-za \
+	hunspell-es \
+	hunspell-fr \
+	hunspell-fr-classical \
+	hunspell-it \
+	hunspell-pt-br \
+	hunspell-pt-pt \
+	hunspell-ru \
+	hyphen-de \
+	hyphen-en-ca \
+	hyphen-en-gb \
+	hyphen-en-us \
+	hyphen-fr \
+	hyphen-it \
+	hyphen-pt-br \
+	hyphen-pt-pt \
+	hyphen-ru \
+	ibus-gtk \
+	ibus-gtk3 \
 	language-pack-gnome-de \
 	language-pack-gnome-en \
 	language-pack-gnome-es \
@@ -38,7 +147,49 @@ LIVE_PKGS=\
 	language-pack-gnome-it \
 	language-pack-gnome-pt \
 	language-pack-gnome-ru \
-	language-pack-gnome-zh-hans
+	language-pack-gnome-zh-hans \
+	libreoffice-help-de \
+	libreoffice-help-en-gb \
+	libreoffice-help-en-us \
+	libreoffice-help-es \
+	libreoffice-help-fr \
+	libreoffice-help-it \
+	libreoffice-help-pt \
+	libreoffice-help-pt-br \
+	libreoffice-help-ru \
+	libreoffice-help-zh-cn \
+	libreoffice-help-zh-tw \
+	libreoffice-l10n-de \
+	libreoffice-l10n-en-gb \
+	libreoffice-l10n-en-za \
+	libreoffice-l10n-es \
+	libreoffice-l10n-fr \
+	libreoffice-l10n-it \
+	libreoffice-l10n-pt \
+	libreoffice-l10n-pt-br \
+	libreoffice-l10n-ru \
+	libreoffice-l10n-zh-cn \
+	libreoffice-l10n-zh-tw \
+	mozc-utils-gui \
+	mythes-de \
+	mythes-de-ch \
+	mythes-en-au \
+	mythes-en-us \
+	mythes-fr \
+	mythes-it \
+	mythes-pt-pt \
+	mythes-ru \
+	onboard \
+	wamerican \
+	wbrazilian \
+	wbritish \
+	wfrench \
+	witalian \
+	wngerman \
+	wogerman \
+	wportuguese \
+	wspanish \
+	wswiss
 
 RM_PKGS=\
 	imagemagick-6.q16
@@ -117,10 +268,22 @@ all: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA2
 
 clean:
 	# Unmount chroot if mounted
-	scripts/unmount.sh "$(BUILD)/chroot"
+	scripts/unmount.sh "$(BUILD)/chroot.partial"
+
+	# Unmount squashfs if mounted
+	scripts/unmount.sh "$(BUILD)/squashfs.partial"
 
 	# Remove chroot
-	sudo rm -rf "$(BUILD)/chroot"
+	sudo rm -rf "$(BUILD)/chroot" "$(BUILD)/chroot.partial"
+
+	# Remove squashfs
+	sudo rm -rf "$(BUILD)/squashfs" "$(BUILD)/squashfs.partial"
+
+	# Remove pool
+	sudo rm -rf "$(BUILD)/pool" "$(BUILD)/pool.partial"
+
+	# Remove casper
+	sudo rm -rf "$(BUILD)/casper" "$(BUILD)/casper.partial"
 
 	# Remove ISO extract
 	sudo rm -rf "$(BUILD)/iso"
@@ -187,6 +350,8 @@ qemu_ubuntu_uefi: $(BUILD)/ubuntu.iso $(BUILD)/qemu_uefi.img
 
 $(BUILD)/ubuntu.iso:
 	mkdir -p $(BUILD)
+
+	# Download Ubuntu ISO
 	wget -O "$@.partial" "$(UBUNTU_ISO)"
 
 	mv "$@.partial" "$@"
@@ -194,7 +359,16 @@ $(BUILD)/ubuntu.iso:
 zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
+$(BUILD)/iso:
+	# Remove old ISO
+	sudo rm -rf "$(BUILD)/iso"
+
+	# Create ISO directory
+	mkdir -p "$@"
+
 $(BUILD)/debootstrap:
+	mkdir -p $(BUILD)
+
 	# Remove old debootstrap
 	sudo rm -rf "$@" "$@.partial"
 
@@ -203,117 +377,173 @@ $(BUILD)/debootstrap:
 
 	mv "$@.partial" "$@"
 
-$(BUILD)/iso_extract.tag:
-	# Remove old ISO
-	sudo rm -rf "$(BUILD)/iso"
-
-	# Create ISO directory
-	mkdir -p "$(BUILD)/iso"
-
-	touch "$@"
-
-$(BUILD)/chroot_extract.tag: $(BUILD)/debootstrap
+$(BUILD)/chroot: $(BUILD)/debootstrap
 	# Unmount chroot if mounted
-	scripts/unmount.sh "$(BUILD)/chroot"
+	scripts/unmount.sh "$@.partial"
 
 	# Remove old chroot
-	sudo rm -rf "$(BUILD)/chroot"
+	sudo rm -rf "$@" "$@.partial"
 
-	# Copy debootstrap to chroot
-	sudo cp -a "$(BUILD)/debootstrap" "$(BUILD)/chroot"
-
-	touch "$@"
-
-$(BUILD)/chroot_modify.tag: $(BUILD)/chroot_extract.tag $(BUILD)/iso_extract.tag
-	# Unmount chroot if mounted
-	"scripts/unmount.sh" "$(BUILD)/chroot"
+	# Copy chroot
+	sudo cp -a "$<" "$@.partial"
 
 	# Make temp directory for modifications
-	sudo rm -rf "$(BUILD)/chroot/iso"
-	sudo mkdir -p "$(BUILD)/chroot/iso"
+	sudo rm -rf "$@.partial/iso"
+	sudo mkdir -p "$@.partial/iso"
 
 	# Copy chroot script
-	sudo cp "scripts/chroot.sh" "$(BUILD)/chroot/iso/chroot.sh"
+	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
 
 	# Mount chroot
-	"scripts/mount.sh" "$(BUILD)/chroot"
+	"scripts/mount.sh" "$@.partial"
 
 	# Run chroot script
-	sudo chroot "$(BUILD)/chroot" /bin/bash -e -c \
-		"DISTRO_NAME=\"$(DISTRO_NAME)\" \
-		DISTRO_CODE=\"$(DISTRO_CODE)\" \
-		DISTRO_VERSION=\"$(DISTRO_VERSION)\" \
-		DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
 		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
-		LIVE_PKGS=\"$(LIVE_PKGS)\" \
 		RM_PKGS=\"$(RM_PKGS)\" \
-		MAIN_POOL=\"$(MAIN_POOL)\" \
+		/iso/chroot.sh"
+
+	# Unmount chroot
+	"scripts/unmount.sh" "$@.partial"
+
+	# Remove temp directory for modifications
+	sudo rm -rf "$@.partial/iso"
+
+	sudo mv "$@.partial" "$@"
+
+$(BUILD)/chroot.tag: $(BUILD)/chroot
+	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='${Package}\t${Version}\n'" > "$@"
+
+$(BUILD)/squashfs: $(BUILD)/chroot
+	# Unmount chroot if mounted
+	scripts/unmount.sh "$@.partial"
+
+	# Remove old chroot
+	sudo rm -rf "$@" "$@.partial"
+
+	# Copy chroot
+	sudo cp -a "$<" "$@.partial"
+
+	# Make temp directory for modifications
+	sudo rm -rf "$@.partial/iso"
+	sudo mkdir -p "$@.partial/iso"
+
+	# Copy chroot script
+	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
+
+	# Mount chroot
+	"scripts/mount.sh" "$@.partial"
+
+	# Run chroot script
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"DISTRO_PKGS=\"$(LIVE_PKGS)\" \
+		RM_PKGS=\"$(RM_PKGS)\" \
+		/iso/chroot.sh"
+
+	# Unmount chroot
+	"scripts/unmount.sh" "$@.partial"
+
+	# Remove temp directory for modifications
+	sudo rm -rf "$@.partial/iso"
+
+	# Create missing network-manager file
+	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
+
+	# Patch ubiquity by removing plugins and updating order
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
+
+	# Remove gnome-classic
+	# sudo rm -f "$(BUILD)/chroot/usr/share/xsessions/gnome-classic.desktop"
+
+	sudo mv "$@.partial" "$@"
+
+$(BUILD)/squashfs.tag: $(BUILD)/squashfs
+	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='${Package}\t${Version}\n'" > "$@"
+
+$(BUILD)/pool: $(BUILD)/squashfs
+	# Unmount chroot if mounted
+	scripts/unmount.sh "$<"
+
+	# Remove old chroot
+	sudo rm -rf "$@" "$@.partial"
+
+	# Copy chroot
+	mkdir -p "$@.partial"
+
+	# Make temp directory for modifications
+	sudo rm -rf "$</iso"
+	sudo mkdir -p "$</iso"
+
+	# Copy chroot script
+	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
+
+	# Mount chroot
+	"scripts/mount.sh" "$@.partial"
+
+	# Run chroot script
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
 		/iso/chroot.sh"
 
 	# Unmount chroot
-	"scripts/unmount.sh" "$(BUILD)/chroot"
-
-	# Create missing network-manager file
-	sudo touch "$(BUILD)/chroot/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
-
-	# Patch ubiquity by removing plugins and updating order
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-partman.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-timezone.py"
-	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-prepare.py"
-	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-network.py"
-	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-tasks.py"
-	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-usersetup.py"
-	sudo rm -f "$(BUILD)/chroot/usr/lib/ubiquity/plugins/ubi-wireless.py"
-
-	# Remove gnome-classic
-	sudo rm -f "$(BUILD)/chroot/usr/share/xsessions/gnome-classic.desktop"
-
-	# Update manifest
-	mkdir -p "$(BUILD)/iso/casper"
-	sudo cp "$(BUILD)/chroot/iso/filesystem.manifest" "$(BUILD)/iso/casper/filesystem.manifest"
+	"scripts/unmount.sh" "$@.partial"
 
 	# Copy new dists
 	sudo rm -rf "$(BUILD)/iso/pool"
-	sudo cp -r "$(BUILD)/chroot/iso/pool" "$(BUILD)/iso/pool"
+	sudo cp -r "$@.partial/iso/pool" "$(BUILD)/iso/pool"
 
 	# Update pool package lists
 	sudo rm -rf "$(BUILD)/iso/dists"
-	cd $(BUILD)/iso && \
-	for pool in $$(ls -1 pool); do \
+	cd "$(BUILD)/iso" && \
+	for pool in main restricted; do \
 		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
 		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release" && \
-		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz"; \
+		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz" && \
+		apt-ftparchive release "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
 	done
 
 	# Remove temp directory for modifications
-	sudo rm -rf "$(BUILD)/chroot/iso"
+	sudo rm -rf "$@.partial/iso"
 
-	touch "$@"
+	sudo mv "$@.partial" "$@"
 
-$(BUILD)/iso_chroot.tag: $(BUILD)/chroot_modify.tag
+$(BUILD)/casper: $(BUILD)/iso $(BUILD)/squashfs $(BUILD)/pool $(BUILD)/chroot.manifest $(BUILD)/squashfs.manifest
+	# Remove old casper directory
+	rm -rf "$@" "$@.partial"
+
+	# Create new casper directory
+	mkdir -p "$@.partial"
+
 	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/chroot" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
+	sudo mksquashfs "$(BUILD)/squashfs" "$@.partial/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
 
 	# Copy vmlinuz, if necessary
-	if [ -e "$(BUILD)/chroot/vmlinuz" ]; then \
-		sudo cp "$(BUILD)/chroot/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"; \
-	fi
+	sudo cp "$(BUILD)/chroot/vmlinuz" "$@.partial/vmlinuz.efi"
 
 	# Rebuild initrd, if necessary
-	if [ -e "$(BUILD)/chroot/initrd.img" ]; then \
-		sudo gzip -dc "$(BUILD)/chroot/initrd.img" | lzma -7 > "$(BUILD)/iso/casper/initrd.lz"; \
-	fi
+	sudo cp "$(BUILD)/chroot/initrd.img" "$@.partial/initrd.gz"
 
 	# Update filesystem size
-	sudo du -sx --block-size=1 "$(BUILD)/chroot" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
+	sudo du -sx --block-size=1 "$(BUILD)/chroot" | cut -f1 > "$@.partial/filesystem.size"
 
-	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/casper"
+	# Update manifest
+	cp "$</squashfs.manifest" "$@.partial/filesystem.manifest"
+	grep -F -x -v -f "$(BUILD)/chroot.manifest" "$(BUILD)/squashfs.manifest" | cut -d $'\t' -f1 > "$@.partial/filesystem.manifest-remove"
 
-	touch "$@"
+	sudo chown -R "$(USER):$(USER)" "$@.partial"
 
-$(BUILD)/iso_modify.tag: $(BUILD)/iso_chroot.tag
+	mv "$@.partial" "$@"
+
+$(BUILD)/iso: $(BUILD)/casper $(BUILD)/pool
 	git submodule update --init data/default-settings
 
 	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
@@ -332,8 +562,7 @@ $(BUILD)/iso_modify.tag: $(BUILD)/iso_chroot.tag
 	mkdir -p "$(BUILD)/iso/preseed"
 	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
 
-	# Copy filesystem.manifest-remove
-	cp "data/casper/filesystem.manifest-remove" "$(BUILD)/iso/casper/filesystem.manifest-remove"
+	# Copy filesystem.squashfs.gpg
 	cp "data/casper/filesystem.squashfs.gpg" "$(BUILD)/iso/casper/filesystem.squashfs.gpg"
 
 	# Update grub config
