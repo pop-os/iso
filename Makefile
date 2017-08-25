@@ -463,7 +463,7 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
 	# Remove gnome-classic
-	# sudo rm -f "$(BUILD)/chroot/usr/share/xsessions/gnome-classic.desktop"
+	sudo rm -f "$@.partial/usr/share/xsessions/gnome-classic.desktop"
 
 	sudo mv "$@.partial" "$@"
 
