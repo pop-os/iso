@@ -73,7 +73,11 @@ RESTRICTED_POOL=\
 	iucode-tool
 
 # Description of upstream Ubuntu
-ifeq ($(DISTRO_VERSION),17.04)
+ifeq ($(DISTRO_VERSION),16.04)
+	UBUNTU_CODE=xenial
+	UBUNTU_NAME=Xenial Xerus
+	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/16.04/release/ubuntu-gnome-16.04-desktop-amd64.iso
+else ifeq ($(DISTRO_VERSION),17.04)
 	UBUNTU_CODE=zesty
 	UBUNTU_NAME=Zesty Zapus
 	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso

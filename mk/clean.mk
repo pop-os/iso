@@ -1,12 +1,12 @@
 clean:
 	# Unmount chroot if mounted
-	scripts/unmount.sh "$(BUILD)/chroot.partial"
+	scripts/unmount.sh "$(BUILD)/chroot.partial" || true
 
 	# Unmount squashfs if mounted
-	scripts/unmount.sh "$(BUILD)/squashfs.partial"
+	scripts/unmount.sh "$(BUILD)/squashfs.partial" || true
 
 	# Unmount pool if mounted
-	scripts/unmount.sh "$(BUILD)/pool.partial"
+	scripts/unmount.sh "$(BUILD)/pool.partial" || true
 
 	# Remove chroot
 	sudo rm -rf "$(BUILD)/chroot" "$(BUILD)/chroot.partial"
