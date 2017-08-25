@@ -16,7 +16,8 @@ DISTRO_REPOS=\
 	ppa:system76/pop
 
 DISTRO_PKGS=\
-	gnome-session \
+	ubuntu-minimal \
+	ubuntu-standard \
 	pop-desktop
 
 LIVE_PKGS=\
@@ -31,8 +32,6 @@ LIVE_PKGS=\
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop \
 	xfsprogs \
-	ubuntu-standard \
-	ubuntu-minimal \
 	fcitx \
 	fcitx-hangul \
 	fcitx-module-cloudpinyin \
