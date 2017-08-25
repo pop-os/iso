@@ -8,12 +8,18 @@ DISTRO_NAME=Pop_OS
 
 DISTRO_CODE=pop-os
 
+# Include automatic variables
+include mk/automatic.mk
+
+# Include Ubuntu definitions
+include mk/ubuntu.mk
+
+# Language packages
+include mk/language.mk
+
 # Repositories to be present in installed system
 DISTRO_REPOS=\
-	main \
-	universe \
-	restricted \
-	multiverse \
+	$(UBUNTU_REPOS) \
 	ppa:system76/pop
 
 # Packages to install
@@ -21,9 +27,6 @@ DISTRO_PKGS=\
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop
-
-# Language packages
-include mk/language.mk
 
 # Packages to have in live instance
 LIVE_PKGS=\
@@ -71,18 +74,3 @@ RESTRICTED_POOL=\
 	bcmwl-kernel-source \
 	intel-microcode \
 	iucode-tool
-
-# Description of upstream Ubuntu
-ifeq ($(DISTRO_VERSION),16.04)
-	UBUNTU_CODE=xenial
-	UBUNTU_NAME=Xenial Xerus
-	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/16.04/release/ubuntu-gnome-16.04-desktop-amd64.iso
-else ifeq ($(DISTRO_VERSION),17.04)
-	UBUNTU_CODE=zesty
-	UBUNTU_NAME=Zesty Zapus
-	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
-else ifeq ($(DISTRO_VERSION),17.10)
-	UBUNTU_CODE=artful
-	UBUNTU_NAME=Artful Aardvark
-	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu/daily-live/current/artful-desktop-amd64.iso
-endif
