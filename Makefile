@@ -273,6 +273,9 @@ clean:
 	# Unmount squashfs if mounted
 	scripts/unmount.sh "$(BUILD)/squashfs.partial"
 
+	# Unmount pool if mounted
+	scripts/unmount.sh "$(BUILD)/pool.partial"
+
 	# Remove chroot
 	sudo rm -rf "$(BUILD)/chroot" "$(BUILD)/chroot.partial"
 
@@ -359,13 +362,6 @@ $(BUILD)/ubuntu.iso:
 zsync: $(BUILD)/ubuntu.iso
 	zsync "$(UBUNTU_ISO).zsync" -o "$<"
 
-$(BUILD)/iso:
-	# Remove old ISO
-	sudo rm -rf "$(BUILD)/iso"
-
-	# Create ISO directory
-	mkdir -p "$@"
-
 $(BUILD)/debootstrap:
 	mkdir -p $(BUILD)
 
@@ -399,9 +395,13 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
-		"DISTRO_REPOS=\"$(DISTRO_REPOS)\" \
-		DISTRO_PKGS=\"$(DISTRO_PKGS)\" \
-		RM_PKGS=\"$(RM_PKGS)\" \
+		"REPOS=\"$(DISTRO_REPOS)\" \
+		UPDATE=1 \
+		UPGRADE=1 \
+		INSTALL=\"$(DISTRO_PKGS)\" \
+		PURGE=\"$(RM_PKGS)\" \
+		AUTOREMOVE=1 \
+		CLEAN=1 \
 		/iso/chroot.sh"
 
 	# Unmount chroot
@@ -413,7 +413,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/chroot.tag: $(BUILD)/chroot
-	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='${Package}\t${Version}\n'" > "$@"
+	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
 $(BUILD)/squashfs: $(BUILD)/chroot
 	# Unmount chroot if mounted
@@ -437,8 +437,10 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
-		"DISTRO_PKGS=\"$(LIVE_PKGS)\" \
-		RM_PKGS=\"$(RM_PKGS)\" \
+		"INSTALL=\"$(LIVE_PKGS)\" \
+		PURGE=\"$(RM_PKGS)\" \
+		AUTOREMOVE=1 \
+		CLEAN=1 \
 		/iso/chroot.sh"
 
 	# Unmount chroot
@@ -466,21 +468,21 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/squashfs.tag: $(BUILD)/squashfs
-	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='${Package}\t${Version}\n'" > "$@"
+	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
-$(BUILD)/pool: $(BUILD)/squashfs
+$(BUILD)/pool: $(BUILD)/chroot
 	# Unmount chroot if mounted
-	scripts/unmount.sh "$<"
+	scripts/unmount.sh "$@.partial"
 
 	# Remove old chroot
 	sudo rm -rf "$@" "$@.partial"
 
 	# Copy chroot
-	mkdir -p "$@.partial"
+	sudo cp -a "$<" "$@.partial"
 
 	# Make temp directory for modifications
-	sudo rm -rf "$</iso"
-	sudo mkdir -p "$</iso"
+	sudo rm -rf "$@.partial/iso"
+	sudo mkdir -p "$@.partial/iso"
 
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
@@ -492,58 +494,76 @@ $(BUILD)/pool: $(BUILD)/squashfs
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
+		CLEAN=1 \
 		/iso/chroot.sh"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
 
-	# Copy new dists
-	sudo rm -rf "$(BUILD)/iso/pool"
-	sudo cp -r "$@.partial/iso/pool" "$(BUILD)/iso/pool"
-
-	# Update pool package lists
-	sudo rm -rf "$(BUILD)/iso/dists"
-	cd "$(BUILD)/iso" && \
-	for pool in main restricted; do \
-		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
-		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release" && \
-		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz" && \
-		apt-ftparchive release "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
-	done
+	# Save package pool
+	sudo mv "$@.partial/iso/pool" "$@.partial/pool"
 
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
 	sudo mv "$@.partial" "$@"
 
-$(BUILD)/casper: $(BUILD)/iso $(BUILD)/squashfs $(BUILD)/pool $(BUILD)/chroot.manifest $(BUILD)/squashfs.manifest
+$(BUILD)/iso_create.tag:
+	# Remove old ISO
+	sudo rm -rf "$(BUILD)/iso"
+
+	# Create new ISO
+	mkdir -p "$(BUILD)/iso"
+
+	touch "$@"
+
+$(BUILD)/iso_casper.tag: $(BUILD)/squashfs $(BUILD)/chroot.tag $(BUILD)/squashfs.tag $(BUILD)/iso_create.tag
 	# Remove old casper directory
-	rm -rf "$@" "$@.partial"
+	sudo rm -rf "$(BUILD)/iso/casper"
 
 	# Create new casper directory
-	mkdir -p "$@.partial"
+	mkdir -p "$(BUILD)/iso/casper"
 
-	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/squashfs" "$@.partial/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
+	# Copy vmlinuz
+	sudo cp "$(BUILD)/squashfs/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
 
-	# Copy vmlinuz, if necessary
-	sudo cp "$(BUILD)/chroot/vmlinuz" "$@.partial/vmlinuz.efi"
-
-	# Rebuild initrd, if necessary
-	sudo cp "$(BUILD)/chroot/initrd.img" "$@.partial/initrd.gz"
-
-	# Update filesystem size
-	sudo du -sx --block-size=1 "$(BUILD)/chroot" | cut -f1 > "$@.partial/filesystem.size"
+	# Copy initrd
+	sudo cp "$(BUILD)/squashfs/initrd.img" "$(BUILD)/iso/casper/initrd.gz"
 
 	# Update manifest
-	cp "$</squashfs.manifest" "$@.partial/filesystem.manifest"
-	grep -F -x -v -f "$(BUILD)/chroot.manifest" "$(BUILD)/squashfs.manifest" | cut -d $'\t' -f1 > "$@.partial/filesystem.manifest-remove"
+	cp "$(BUILD)/squashfs.tag" "$(BUILD)/iso/casper/filesystem.manifest"
+	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/squashfs.tag" | cut -f1 > "$(BUILD)/iso/casper/filesystem.manifest-remove"
 
-	sudo chown -R "$(USER):$(USER)" "$@.partial"
+	# Update filesystem size
+	sudo du -sx --block-size=1 "$(BUILD)/squashfs" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
 
-	mv "$@.partial" "$@"
+	# Rebuild filesystem image
+	sudo mksquashfs "$(BUILD)/squashfs" "$(BUILD)/iso/casper/filesystem.squashfs" -b 4096 -noappend -fstime "$(DISTRO_EPOCH)"
 
-$(BUILD)/iso: $(BUILD)/casper $(BUILD)/pool
+	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/casper"
+
+	touch "$@"
+
+$(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
+	# Remove dists and pool directory
+	sudo rm -rf "$(BUILD)/iso/dists" "$(BUILD)/iso/pool"
+
+	# Copy package pool
+	sudo cp -r "$</pool" "$(BUILD)/iso/pool"
+	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/pool"
+
+	# Update pool package lists
+	cd "$(BUILD)/iso" && \
+	for pool in $$(ls -1 pool); do \
+		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
+		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz" && \
+		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
+	done; \
+	apt-ftparchive release "dists/$(UBUNTU_CODE)" > "dists/$(UBUNTU_CODE)/Release"
+
+	touch "$@"
+
+$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/iso_casper.tag $(BUILD)/iso_pool.tag
 	git submodule update --init data/default-settings
 
 	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
@@ -562,9 +582,6 @@ $(BUILD)/iso: $(BUILD)/casper $(BUILD)/pool
 	mkdir -p "$(BUILD)/iso/preseed"
 	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
 
-	# Copy filesystem.squashfs.gpg
-	cp "data/casper/filesystem.squashfs.gpg" "$(BUILD)/iso/casper/filesystem.squashfs.gpg"
-
 	# Update grub config
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
@@ -576,7 +593,7 @@ $(BUILD)/iso: $(BUILD)/casper $(BUILD)/pool
 
 	touch "$@"
 
-$(BUILD)/iso_sum.tag: $(BUILD)/iso_modify.tag
+$(BUILD)/iso_sum.tag: $(BUILD)/iso_data.tag
 	# Calculate md5sum
 	cd "$(BUILD)/iso" && \
 	rm -f md5sum.txt && \

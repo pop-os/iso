@@ -10,9 +10,9 @@ export LC_ALL=C
 dbus-uuidgen > /var/lib/dbus/machine-id
 
 # Add all distro PPAs
-if [ -n "${DISTRO_REPOS}" ]
+if [ -n "${REPOS}" ]
 then
-    for repo in ${DISTRO_REPOS}
+    for repo in ${REPOS}
     do
         echo "Adding repository '$repo'"
         add-apt-repository -y "$repo"
@@ -20,27 +20,36 @@ then
 fi
 
 # Update package definitions
-apt-get update -y
-
-# Upgrade installed packages
-apt-get dist-upgrade -y
-
-# Install distro packages
-if [ -n "${DISTRO_PKGS}" ]
+if [ -n "${UPDATE}" ]
 then
-    echo "Installing distro packages: ${DISTRO_PKGS}"
-    apt-get install -y ${DISTRO_PKGS}
+    apt-get update -y
 fi
 
-# Remove unwanted packages
-if [ -n "${RM_PKGS}" ]
+# Upgrade installed packages
+if [ -n "${UPGRADE}" ]
 then
-    echo "Removing packages: ${RM_PKGS}"
-    apt-get purge -y ${RM_PKGS}
+    apt-get dist-upgrade -y
+fi
+
+# Install packages
+if [ -n "${INSTALL}" ]
+then
+    echo "Installing packages: ${INSTALL}"
+    apt-get install -y ${INSTALL}
+fi
+
+# Remove packages
+if [ -n "${PURGE}" ]
+then
+    echo "Removing packages: ${PURGE}"
+    apt-get purge -y ${PURGE}
 fi
 
 # Remove unnecessary packages
-apt-get autoremove --purge -y
+if [ -n "${AUTOREMOVE}" ]
+then
+    apt-get autoremove --purge -y
+fi
 
 # Download main pool packages
 if [ -n "${MAIN_POOL}" ]
@@ -68,8 +77,13 @@ then
     popd
 fi
 
+# Remove apt files
+if [ -n "${CLEAN}" ]
+then
+    apt-get clean -y
+fi
+
 # Remove temporary files
-apt-get clean -y
 rm -rf /tmp/*
 
 # Remove machine ID
