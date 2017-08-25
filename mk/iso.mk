@@ -105,3 +105,18 @@ $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
 
 
 	mv "$@.partial" "$@"
+
+$(BUILD)/$(DISTRO_CODE).iso.zsync: $(BUILD)/$(DISTRO_CODE).iso
+	cd "$(BUILD)" && zsyncmake -o "`basename "$@.partial"`" "`basename "$<"`"
+
+	mv "$@.partial" "$@"
+
+$(BUILD)/SHA256SUMS: $(BUILD)/$(DISTRO_CODE).iso
+	cd "$(BUILD)" && sha256sum -b "`basename "$<"`" > "`basename "$@.partial"`"
+
+	mv "$@.partial" "$@"
+
+$(BUILD)/SHA256SUMS.gpg: $(BUILD)/SHA256SUMS
+	cd "$(BUILD)" && gpg --batch --yes --output "`basename "$@.partial"`" --detach-sig "`basename "$<"`"
+
+	mv "$@.partial" "$@"

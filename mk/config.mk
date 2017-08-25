@@ -1,34 +1,37 @@
-DISTRO_VERSION?=17.10
+DISTRO_VERSION?=16.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 
 DISTRO_DATE?=$(shell date +%Y%M%d)
 
-DISTRO_NAME=Pop_OS
+DISTRO_NAME=elementary
 
-DISTRO_CODE=pop-os
+DISTRO_CODE=elementary
 
-# Repositories to be present in installed system
-DISTRO_REPOS=\
-	main \
-	universe \
-	restricted \
-	multiverse \
-	ppa:system76/pop
+# Include automatic variables
+include mk/automatic.mk
 
-# Packages to install
-DISTRO_PKGS=\
-	ubuntu-minimal \
-	ubuntu-standard \
-	pop-desktop
+# Include Ubuntu definitions
+include mk/ubuntu.mk
 
 # Language packages
 include mk/language.mk
 
+# Repositories to be present in installed system
+DISTRO_REPOS=\
+	$(UBUNTU_REPOS) \
+	ppa:elementary-os/os-patches \
+	ppa:elementary-os/stable
+
+# Packages to install
+DISTRO_PKGS=\
+	elementary-minimal \
+	elementary-standard \
+	elementary-desktop
+
 # Packages to have in live instance
 LIVE_PKGS=\
 	casper \
-	jfsutils \
 	linux-generic \
 	linux-signed-generic \
 	lupin-casper \
@@ -36,7 +39,6 @@ LIVE_PKGS=\
 	mtools \
 	reiserfsprogs \
 	ubiquity-frontend-gtk \
-	ubiquity-slideshow-pop \
 	xfsprogs \
 	$(LANGUAGE_PKGS)
 
@@ -71,18 +73,3 @@ RESTRICTED_POOL=\
 	bcmwl-kernel-source \
 	intel-microcode \
 	iucode-tool
-
-# Description of upstream Ubuntu
-ifeq ($(DISTRO_VERSION),16.04)
-	UBUNTU_CODE=xenial
-	UBUNTU_NAME=Xenial Xerus
-	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/16.04/release/ubuntu-gnome-16.04-desktop-amd64.iso
-else ifeq ($(DISTRO_VERSION),17.04)
-	UBUNTU_CODE=zesty
-	UBUNTU_NAME=Zesty Zapus
-	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu-gnome/releases/17.04/release/ubuntu-gnome-17.04-desktop-amd64.iso
-else ifeq ($(DISTRO_VERSION),17.10)
-	UBUNTU_CODE=artful
-	UBUNTU_NAME=Artful Aardvark
-	UBUNTU_ISO=http://cdimage.ubuntu.com/ubuntu/daily-live/current/artful-desktop-amd64.iso
-endif
