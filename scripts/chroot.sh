@@ -7,12 +7,15 @@ export HOME=/root
 export LC_ALL=C
 
 # Generate a machine ID
-dbus-uuidgen > /var/lib/dbus/machine-id
+if [ -n "$(which dbus-uuidgen)" ]
+then
+    dbus-uuidgen > /var/lib/dbus/machine-id
+fi
 
 # Add all distro PPAs
-if [ -n "${REPOS}" ]
+if [ $# -gt 0 ]
 then
-    for repo in ${REPOS}
+    for repo in "$@"
     do
         echo "Adding repository '$repo'"
         add-apt-repository -y "$repo"
@@ -87,4 +90,4 @@ fi
 rm -rf /tmp/*
 
 # Remove machine ID
-rm /var/lib/dbus/machine-id
+rm -f /var/lib/dbus/machine-id

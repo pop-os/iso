@@ -31,14 +31,14 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
-		"REPOS=\"$(DISTRO_REPOS)\" \
-		UPDATE=1 \
+		"UPDATE=1 \
 		UPGRADE=1 \
 		INSTALL=\"$(DISTRO_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
 		CLEAN=1 \
-		/iso/chroot.sh"
+		/iso/chroot.sh \
+		$(DISTRO_REPOS)"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
