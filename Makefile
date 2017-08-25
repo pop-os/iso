@@ -563,7 +563,7 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 
 	touch "$@"
 
-$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/iso_casper.tag $(BUILD)/iso_pool.tag
+$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag
 	git submodule update --init data/default-settings
 
 	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
@@ -593,7 +593,7 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/iso_casper.tag $(BUILD)/
 
 	touch "$@"
 
-$(BUILD)/iso_sum.tag: $(BUILD)/iso_data.tag
+$(BUILD)/iso_sum.tag: $(BUILD)/iso_casper.tag $(BUILD)/iso_pool.tag $(BUILD)/iso_data.tag
 	# Calculate md5sum
 	cd "$(BUILD)/iso" && \
 	rm -f md5sum.txt && \
