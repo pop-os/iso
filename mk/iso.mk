@@ -44,12 +44,29 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 
 	# Update pool package lists
 	cd "$(BUILD)/iso" && \
+	mkdir -p "dists/$(UBUNTU_CODE)" && \
 	for pool in $$(ls -1 pool); do \
 		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
-		apt-ftparchive packages "pool/$$pool" | gzip > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages.gz" && \
+		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
+		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
 		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
 	done; \
-	apt-ftparchive release "dists/$(UBUNTU_CODE)" > "dists/$(UBUNTU_CODE)/Release"
+	apt-ftparchive \
+		-o "APT::FTPArchive::Release::Acquire-By-Hash=yes" \
+		-o "APT::FTPArchive::Release::Architectures=amd64" \
+		-o "APT::FTPArchive::Release::Codename=$(UBUNTU_CODE)" \
+		-o "APT::FTPArchive::Release::Components=$$(ls -1 pool | tr $$'\n' ' ')" \
+		-o "APT::FTPArchive::Release::Description=$(DISTRO_NAME) $(DISTRO_VERSION)" \
+		-o "APT::FTPArchive::Release::Label=Ubuntu" \
+		-o "APT::FTPArchive::Release::Origin=Ubuntu" \
+		-o "APT::FTPArchive::Release::Suite=$(UBUNTU_CODE)" \
+		-o "APT::FTPArchive::Release::Version=$(DISTRO_VERSION)" \
+		release "dists/$(UBUNTU_CODE)" \
+		> "dists/$(UBUNTU_CODE)/Release" && \
+	gpg --batch --yes --digest-algo sha512 -abs -o "dists/$(UBUNTU_CODE)/Release.gpg" "dists/$(UBUNTU_CODE)/Release" && \
+	cd "dists" && \
+	ln -s "$(UBUNTU_CODE)" stable && \
+	ln -s "$(UBUNTU_CODE)" unstable
 
 	touch "$@"
 
