@@ -12,6 +12,13 @@ then
     dbus-uuidgen > /var/lib/dbus/machine-id
 fi
 
+# Add APT key
+if [ -n "${KEY}" ]
+then
+    echo "Adding APT key: ${KEY}"
+    apt-key add "${KEY}"
+fi
+
 # Add all distro PPAs
 if [ $# -gt 0 ]
 then
@@ -60,10 +67,7 @@ then
     mkdir -p "/iso/pool/main"
     chown -R _apt "/iso/pool/main"
     pushd "/iso/pool/main"
-        for pkg in ${MAIN_POOL}
-        do
-            sudo -u _apt apt-get download "$pkg"
-        done
+        sudo -u _apt apt-get download ${MAIN_POOL}
     popd
 fi
 
@@ -73,10 +77,7 @@ then
     mkdir -p "/iso/pool/restricted"
     chown -R _apt "/iso/pool/restricted"
     pushd "/iso/pool/restricted"
-        for pkg in ${RESTRICTED_POOL}
-        do
-            sudo -u _apt apt-get download "$pkg"
-        done
+        sudo -u _apt apt-get download ${RESTRICTED_POOL}
     popd
 fi
 

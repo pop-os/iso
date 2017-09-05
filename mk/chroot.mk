@@ -71,9 +71,13 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
 
+	# Copy GPG public key for APT CDROM
+	gpg --export -a "`id -un`" | sudo tee "$@.partial/iso/apt-cdrom.key"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
-		"INSTALL=\"$(LIVE_PKGS)\" \
+		"KEY=\"/iso/apt-cdrom.key\" \
+		INSTALL=\"$(LIVE_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
 		CLEAN=1 \
