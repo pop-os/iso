@@ -70,7 +70,35 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 
 	touch "$@"
 
-$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag
+$(BUILD)/grub:
+	rm -rf "$@.partial"
+	mkdir "$@.partial"
+
+	grub-mkimage \
+		--directory /usr/lib/grub/i386-pc \
+		--prefix /boot/grub \
+		--output "$@.partial/eltorito.img" \
+		--format i386-pc-eltorito \
+		--compression auto \
+		--config data/grub/load.cfg \
+		biosdisk iso9660
+
+	mkdir -p "$@.partial/efi/boot/"
+	grub-mkimage \
+		--directory /usr/lib/grub/x86_64-efi \
+		--prefix "()/boot/grub" \
+		--output "$@.partial/efi/boot/bootx64.efi" \
+		--format x86_64-efi \
+		--compression auto \
+		--config data/grub/load.cfg \
+		part_gpt part_msdos fat part_apple iso9660
+
+	mformat -C -f 2880 -L 16 -i "$@.partial/efi.img" ::
+	mcopy -s -i "$@.partial/efi.img" "$@.partial/efi" ::/
+
+	mv "$@.partial" "$@"
+
+$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	git submodule update --init data/default-settings
 
 	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
@@ -90,9 +118,19 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag
 
 	# Update grub config
 	rm -rf "$(BUILD)/iso/boot/grub"
-	mkdir -p "$(BUILD)/iso/boot/grub"
+	mkdir -p "$(BUILD)/iso/boot/grub/"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
 	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
+	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
+
+	# Copy grub modules (BIOS)
+	mkdir -p "$(BUILD)/iso/boot/grub/i386-pc/"
+	cp "$(BUILD)/grub/eltorito.img" "/usr/lib/grub/i386-pc/"* "$(BUILD)/iso/boot/grub/i386-pc/"
+
+	# Copy grub modules (EFI)
+	cp "$(BUILD)/grub/efi.img" "$(BUILD)/iso/boot/grub"
+	mkdir -p "$(BUILD)/iso/boot/grub/x86_64-efi/"
+	cp "/usr/lib/grub/x86_64-efi/"* "$(BUILD)/iso/boot/grub/x86_64-efi/"
 
 	# Copy grub theme
 	cp -r "data/default-settings/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
@@ -116,9 +154,15 @@ $(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
 	mv "$@.partial" "$@"
 
 $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
-	grub-mkrescue -o "$@.partial" "$(BUILD)/iso" -- \
-		-volid "$(DISTRO_NAME) $(DISTRO_VERSION) amd64"
-
+	xorriso -as mkisofs \
+		-graft-points --protective-msdos-label \
+		-b boot/grub/i386-pc/eltorito.img \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		--grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
+		--efi-boot "boot/grub/efi.img" -efi-boot-part --efi-boot-image \
+		-r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
+		-o "$@.partial" "$(BUILD)/iso" -- \
+		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
 
 	mv "$@.partial" "$@"
 

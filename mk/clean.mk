@@ -20,6 +20,9 @@ clean:
 	# Remove casper
 	sudo rm -rf "$(BUILD)/casper" "$(BUILD)/casper.partial"
 
+	# Remove grub
+	sudo rm -rf "$(BUILD)/grub" "$(BUILD)/grub.partial"
+
 	# Remove ISO extract
 	sudo rm -rf "$(BUILD)/iso"
 
