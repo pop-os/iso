@@ -155,7 +155,7 @@ $(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
 
 $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
 	xorriso -as mkisofs \
-		-graft-points --protective-msdos-label \
+		--protective-msdos-label \
 		-b boot/grub/i386-pc/eltorito.img \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		--grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
