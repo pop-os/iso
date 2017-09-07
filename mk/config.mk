@@ -8,6 +8,8 @@ DISTRO_NAME=Pop_OS
 
 DISTRO_CODE=pop-os
 
+DISTRO_USER=pop_os
+
 # Include automatic variables
 include mk/automatic.mk
 
