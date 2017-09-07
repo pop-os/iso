@@ -5,8 +5,6 @@ DISTRO_DATE?=$(shell date +%Y%M%d)
 
 DISTRO_NAME=Pop_OS
 DISTRO_CODE=pop-os
-DISTRO_USER=pop_os
-DISTRO_XSESSION=pop-xorg
 
 # Include automatic variables
 include mk/automatic.mk

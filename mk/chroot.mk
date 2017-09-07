@@ -102,8 +102,6 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
-	sed "$(SED)" "data/user" | sudo tee "$@.partial/var/lib/AccountsService/users/$(DISTRO_USER)"
-
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/squashfs.tag: $(BUILD)/squashfs
