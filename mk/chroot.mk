@@ -102,9 +102,6 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
-	# Set default xsession
-	sudo sed -i 's|^XSession=.*|XSession=pop-xorg|' "$@.partial/var/lib/AccountsService/users/$(DISTRO_USER)"
-
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/squashfs.tag: $(BUILD)/squashfs
