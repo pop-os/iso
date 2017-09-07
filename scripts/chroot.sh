@@ -12,6 +12,9 @@ then
     dbus-uuidgen > /var/lib/dbus/machine-id
 fi
 
+# Correctly specify resolv.conf
+ln -sf ../run/resolvconf/resolv.conf /etc/resolv.conf
+
 # Add APT key
 if [ -n "${KEY}" ]
 then
