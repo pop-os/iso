@@ -7,7 +7,7 @@ $(BUILD)/iso_create.tag:
 
 	touch "$@"
 
-$(BUILD)/iso_casper.tag: $(BUILD)/squashfs $(BUILD)/chroot.tag $(BUILD)/squashfs.tag $(BUILD)/iso_create.tag
+$(BUILD)/iso_casper.tag: $(BUILD)/squashfs $(BUILD)/chroot.tag $(BUILD)/live.tag $(BUILD)/iso_create.tag
 	# Remove old casper directory
 	sudo rm -rf "$(BUILD)/iso/casper"
 
@@ -21,8 +21,8 @@ $(BUILD)/iso_casper.tag: $(BUILD)/squashfs $(BUILD)/chroot.tag $(BUILD)/squashfs
 	sudo cp "$(BUILD)/squashfs/initrd.img" "$(BUILD)/iso/casper/initrd.gz"
 
 	# Update manifest
-	cp "$(BUILD)/squashfs.tag" "$(BUILD)/iso/casper/filesystem.manifest"
-	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/squashfs.tag" | cut -f1 > "$(BUILD)/iso/casper/filesystem.manifest-remove"
+	cp "$(BUILD)/live.tag" "$(BUILD)/iso/casper/filesystem.manifest"
+	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/live.tag" | cut -f1 > "$(BUILD)/iso/casper/filesystem.manifest-remove"
 
 	# Update filesystem size
 	sudo du -sx --block-size=1 "$(BUILD)/squashfs" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"

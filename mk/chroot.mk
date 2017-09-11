@@ -51,7 +51,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 $(BUILD)/chroot.tag: $(BUILD)/chroot
 	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
-$(BUILD)/squashfs: $(BUILD)/chroot
+$(BUILD)/live: $(BUILD)/chroot
 	# Unmount chroot if mounted
 	scripts/unmount.sh "$@.partial"
 
@@ -89,23 +89,35 @@ $(BUILD)/squashfs: $(BUILD)/chroot
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
+	sudo mv "$@.partial" "$@"
+
+$(BUILD)/live.tag: $(BUILD)/live
+	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
+
+$(BUILD)/squashfs: $(BUILD)/live
+	# Unmount chroot if mounted
+	scripts/unmount.sh "$@.partial"
+
+	# Remove old chroot
+	sudo rm -rf "$@" "$@.partial"
+
+	# Copy chroot
+	sudo cp -a "$<" "$@.partial"
+
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
 	# Patch ubiquity by removing plugins and updating order
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
+	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
+	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
+	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
 	sudo mv "$@.partial" "$@"
-
-$(BUILD)/squashfs.tag: $(BUILD)/squashfs
-	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
 $(BUILD)/pool: $(BUILD)/chroot
 	# Unmount chroot if mounted
