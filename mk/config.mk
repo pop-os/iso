@@ -22,14 +22,19 @@ DISTRO_REPOS=\
 
 # Packages to install
 DISTRO_PKGS=\
-	linux-generic \
-	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop
 
+# Packages to have in chroot
+CHROOT_PKGS=\
+	$(DISTRO_PKGS) \
+	linux-generic \
+	linux-signed-generic
+
 # Packages to have in live instance
 LIVE_PKGS=\
+	$(LANGUAGE_PKGS) \
 	casper \
 	jfsutils \
 	lupin-casper \
@@ -38,8 +43,7 @@ LIVE_PKGS=\
 	reiserfsprogs \
 	ubiquity-frontend-gtk \
 	ubiquity-slideshow-pop \
-	xfsprogs \
-	$(LANGUAGE_PKGS)
+	xfsprogs
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\

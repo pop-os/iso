@@ -33,7 +33,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"UPDATE=1 \
 		UPGRADE=1 \
-		INSTALL=\"$(DISTRO_PKGS)\" \
+		INSTALL=\"$(CHROOT_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
 		CLEAN=1 \
