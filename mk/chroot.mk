@@ -108,14 +108,14 @@ $(BUILD)/squashfs: $(BUILD)/live
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
 	# Patch ubiquity by removing plugins and updating order
-	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
-	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
-	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
-	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
-	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
-	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
-	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
+	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
+	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
 	sudo mv "$@.partial" "$@"
 
