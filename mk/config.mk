@@ -22,6 +22,8 @@ DISTRO_REPOS=\
 
 # Packages to install
 DISTRO_PKGS=\
+	linux-generic \
+	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop
@@ -30,8 +32,6 @@ DISTRO_PKGS=\
 LIVE_PKGS=\
 	casper \
 	jfsutils \
-	linux-generic \
-	linux-signed-generic \
 	lupin-casper \
 	mokutil \
 	mtools \
