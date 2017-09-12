@@ -96,6 +96,7 @@ $(BUILD)/grub:
 	mformat -C -f 2880 -L 16 -i "$@.partial/efi.img" ::
 	mcopy -s -i "$@.partial/efi.img" "$@.partial/efi" ::/
 
+	touch "$@.partial"
 	mv "$@.partial" "$@"
 
 $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub

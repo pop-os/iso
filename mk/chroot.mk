@@ -7,6 +7,7 @@ $(BUILD)/debootstrap:
 	# Install using debootstrap
 	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial"
 
+	touch "$@.partial"
 	mv "$@.partial" "$@"
 
 $(BUILD)/chroot: $(BUILD)/debootstrap
@@ -46,6 +47,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
+	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/chroot.tag: $(BUILD)/chroot
@@ -89,6 +91,7 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
+	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/live.tag: $(BUILD)/live
@@ -117,6 +120,7 @@ $(BUILD)/squashfs: $(BUILD)/live
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
+	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/pool: $(BUILD)/chroot
@@ -155,4 +159,5 @@ $(BUILD)/pool: $(BUILD)/chroot
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
+	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"

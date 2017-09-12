@@ -5,8 +5,8 @@ update-chroot update-live update-squashfs: update-%: $(BUILD)/%
 	# Remove old chroot
 	sudo rm -rf "$<.partial"
 
-	# Copy chroot
-	sudo cp -a "$<" "$<.partial"
+	# Move chroot
+	sudo mv "$<" "$<.partial"
 
 	# Make temp directory for modifications
 	sudo rm -rf "$<.partial/iso"
@@ -36,4 +36,5 @@ update-chroot update-live update-squashfs: update-%: $(BUILD)/%
 	# Remove temp directory for modifications
 	sudo rm -rf "$<.partial/iso"
 
+	sudo touch "$<.partial"
 	sudo mv "$<.partial" "$<"
