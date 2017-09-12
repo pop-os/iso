@@ -16,6 +16,9 @@ include mk/qemu.mk
 # Chroot targets
 include mk/chroot.mk
 
+# Update targets
+include mk/update.mk
+
 # ISO targets
 include mk/iso.mk
 
