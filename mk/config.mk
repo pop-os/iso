@@ -20,11 +20,21 @@ DISTRO_REPOS=\
 	$(UBUNTU_REPOS) \
 	ppa:system76/pop
 
+ifeq ($(STAGING),1)
+DISTRO_REPOS+=\
+	ppa:system76/pop-staging
+endif
+
 # Packages to install
 DISTRO_PKGS=\
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop
+
+ifeq ($(NVIDIA),1)
+DISTRO_PKGS+=\
+	nvidia-375
+endif
 
 # Packages to have in chroot
 CHROOT_PKGS=\

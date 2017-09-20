@@ -1,22 +1,11 @@
-clean:
+clean-chroot clean-squashfs clean-pool: clean-%:
 	# Unmount chroot if mounted
-	scripts/unmount.sh "$(BUILD)/chroot.partial" || true
-
-	# Unmount squashfs if mounted
-	scripts/unmount.sh "$(BUILD)/squashfs.partial" || true
-
-	# Unmount pool if mounted
-	scripts/unmount.sh "$(BUILD)/pool.partial" || true
+	scripts/unmount.sh "$(BUILD)/$*.partial" || true
 
 	# Remove chroot
-	sudo rm -rf "$(BUILD)/chroot" "$(BUILD)/chroot.partial"
+	sudo rm -rf "$(BUILD)/$*" "$(BUILD)/$*.partial"
 
-	# Remove squashfs
-	sudo rm -rf "$(BUILD)/squashfs" "$(BUILD)/squashfs.partial"
-
-	# Remove pool
-	sudo rm -rf "$(BUILD)/pool" "$(BUILD)/pool.partial"
-
+clean: clean-chroot clean-squashfs clean-pool
 	# Remove casper
 	sudo rm -rf "$(BUILD)/casper" "$(BUILD)/casper.partial"
 
