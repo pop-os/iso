@@ -120,8 +120,8 @@ $(BUILD)/squashfs: $(BUILD)/live
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
-	# Disable splash on NVIDIA systems
 ifeq ($(NVIDIA),1)
+	# Disable splash on NVIDIA systems
 	sudo mkdir -p "$@.partial/etc/default/grub.d"
 	sudo cp "data/no-splash.cfg" "$@.partial/etc/default/grub.d/"
 endif
