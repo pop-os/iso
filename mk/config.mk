@@ -57,7 +57,8 @@ LIVE_PKGS=\
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
-	imagemagick-6.q16
+	imagemagick-6.q16 \
+	xul-ext-ubufox
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
