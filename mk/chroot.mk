@@ -7,8 +7,8 @@ $(BUILD)/debootstrap:
 	# Install using debootstrap
 	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial"
 
-	touch "$@.partial"
-	mv "$@.partial" "$@"
+	sudo touch "$@.partial"
+	sudo mv "$@.partial" "$@"
 
 $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Unmount chroot if mounted
