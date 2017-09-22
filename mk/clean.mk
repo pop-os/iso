@@ -1,11 +1,11 @@
-clean-chroot clean-squashfs clean-pool: clean-%:
+clean-chroot clean-live clean-squashfs clean-pool: clean-%:
 	# Unmount chroot if mounted
 	scripts/unmount.sh "$(BUILD)/$*.partial" || true
 
 	# Remove chroot
 	sudo rm -rf "$(BUILD)/$*" "$(BUILD)/$*.partial"
 
-clean: clean-chroot clean-squashfs clean-pool
+clean: clean-chroot clean-live clean-squashfs clean-pool
 	# Remove partial debootstrap
 	sudo rm -rf "$(BUILD)/debootstrap.partial"
 
