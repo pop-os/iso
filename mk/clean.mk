@@ -6,6 +6,9 @@ clean-chroot clean-squashfs clean-pool: clean-%:
 	sudo rm -rf "$(BUILD)/$*" "$(BUILD)/$*.partial"
 
 clean: clean-chroot clean-squashfs clean-pool
+	# Remove partial debootstrap
+	sudo rm -rf "$(BUILD)/debootstrap.partial"
+
 	# Remove casper
 	sudo rm -rf "$(BUILD)/casper" "$(BUILD)/casper.partial"
 
