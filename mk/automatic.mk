@@ -1,5 +1,7 @@
 BUILD=build/$(DISTRO_VERSION)
 
+ISO=$(BUILD)/$(ISO_NAME).iso
+
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \
 	s|DISTRO_CODE|$(DISTRO_CODE)|g; \

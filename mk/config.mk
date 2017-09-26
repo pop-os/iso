@@ -6,6 +6,8 @@ DISTRO_DATE?=$(shell date +%Y%M%d)
 DISTRO_NAME=Pop_OS
 DISTRO_CODE=pop-os
 
+ISO_NAME?=$(DISTRO_CODE)
+
 # Include automatic variables
 include mk/automatic.mk
 

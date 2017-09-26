@@ -2,10 +2,10 @@
 include mk/config.mk
 
 # Standard target - build the ISO
-iso: $(BUILD)/$(DISTRO_CODE).iso
+iso: $(ISO)
 
 # Complete target - build zsync file, SHA256SUMS, and GPG signature
-all: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/$(DISTRO_CODE).iso.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
+all: $(ISO) $(ISO).zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 # Clean target
 include mk/clean.mk

@@ -4,7 +4,7 @@ $(BUILD)/%.img:
 
 	mv "$@.partial" "$@"
 
-qemu_bios: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu.img
+qemu_bios: $(ISO) $(BUILD)/qemu.img
 	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) BIOS" \
 		-enable-kvm -m 2048 -vga qxl \
 		-hda $(BUILD)/qemu.img \
@@ -15,7 +15,7 @@ qemu_bios_hd: $(BUILD)/qemu.img
 		-enable-kvm -m 2048 -vga qxl \
 		-hda $(BUILD)/qemu.img
 
-qemu_uefi: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
+qemu_uefi: $(ISO) $(BUILD)/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
 	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) UEFI" \
 		-enable-kvm -m 2048 -vga qxl \
@@ -24,7 +24,7 @@ qemu_uefi: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
 		-hda $(BUILD)/qemu_uefi.img \
 		-boot d -cdrom "$<"
 
-qemu_uefi_usb: $(BUILD)/$(DISTRO_CODE).iso $(BUILD)/qemu_uefi.img
+qemu_uefi_usb: $(ISO) $(BUILD)/qemu_uefi.img
 	cp /usr/share/OVMF/OVMF_VARS.fd $(BUILD)/OVMF_VARS.fd
 	qemu-system-x86_64 -name "$(DISTRO_NAME) $(DISTRO_VERSION) UEFI" \
 		-enable-kvm -m 2048 -vga qxl \

@@ -146,7 +146,7 @@ $(BUILD)/iso_sum.tag: $(BUILD)/iso_casper.tag $(BUILD)/iso_pool.tag $(BUILD)/iso
 
 	touch "$@"
 
-$(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
+$(BUILD)/$(ISO_NAME).tar: $(BUILD)/iso_sum.tag
 	tar --create \
 		--mtime="@$(DISTRO_EPOCH)" --sort=name \
 	    --owner=0 --group=0 --numeric-owner --mode='a=,u+rX' \
@@ -154,7 +154,7 @@ $(BUILD)/$(DISTRO_CODE).tar: $(BUILD)/iso_sum.tag
 
 	mv "$@.partial" "$@"
 
-$(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
+$(ISO): $(BUILD)/iso_sum.tag
 	xorriso -as mkisofs \
 		--protective-msdos-label \
 		-b boot/grub/i386-pc/eltorito.img \
@@ -167,12 +167,12 @@ $(BUILD)/$(DISTRO_CODE).iso: $(BUILD)/iso_sum.tag
 
 	mv "$@.partial" "$@"
 
-$(BUILD)/$(DISTRO_CODE).iso.zsync: $(BUILD)/$(DISTRO_CODE).iso
+$(ISO).zsync: $(ISO)
 	cd "$(BUILD)" && zsyncmake -o "`basename "$@.partial"`" "`basename "$<"`"
 
 	mv "$@.partial" "$@"
 
-$(BUILD)/SHA256SUMS: $(BUILD)/$(DISTRO_CODE).iso
+$(BUILD)/SHA256SUMS: $(ISO)
 	cd "$(BUILD)" && sha256sum -b "`basename "$<"`" > "`basename "$@.partial"`"
 
 	mv "$@.partial" "$@"
