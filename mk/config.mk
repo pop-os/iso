@@ -8,6 +8,8 @@ DISTRO_CODE=pop-os
 
 ISO_NAME?=$(DISTRO_CODE)
 
+GPG_NAME?=`id -un`
+
 # Include automatic variables
 include mk/automatic.mk
 

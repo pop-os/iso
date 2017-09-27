@@ -63,7 +63,7 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 		-o "APT::FTPArchive::Release::Version=$(DISTRO_VERSION)" \
 		release "dists/$(UBUNTU_CODE)" \
 		> "dists/$(UBUNTU_CODE)/Release" && \
-	gpg --batch --yes --digest-algo sha512 -abs -o "dists/$(UBUNTU_CODE)/Release.gpg" "dists/$(UBUNTU_CODE)/Release" && \
+	gpg --batch --yes --digest-algo sha512 --sign --detach-sign --armor --local-user "$(GPG_NAME)" -o "dists/$(UBUNTU_CODE)/Release.gpg" "dists/$(UBUNTU_CODE)/Release" && \
 	cd "dists" && \
 	ln -s "$(UBUNTU_CODE)" stable && \
 	ln -s "$(UBUNTU_CODE)" unstable

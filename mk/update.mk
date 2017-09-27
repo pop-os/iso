@@ -18,9 +18,6 @@ update-chroot update-live update-squashfs: update-%: $(BUILD)/%
 	# Mount chroot
 	"scripts/mount.sh" "$<.partial"
 
-	# Copy GPG public key for APT CDROM
-	gpg --export -a "`id -un`" | sudo tee "$<.partial/iso/apt-cdrom.key"
-
 	# Run chroot script
 	sudo chroot "$<.partial" /bin/bash -e -c \
 		"UPDATE=1 \
