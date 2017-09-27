@@ -18,11 +18,14 @@ clean: clean-chroot clean-live clean-squashfs clean-pool
 	# Remove ISO extract
 	sudo rm -rf "$(BUILD)/iso"
 
-	# Remove tag files, partial files, and build artifacts
-	rm -f $(BUILD)/*.tag $(BUILD)/*.partial $(BUILD)/$(DISTRO_CODE).tar $(ISO) $(ISO).zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
+	# Remove tag files, partial files
+	rm -f $(BUILD)/*.tag $(BUILD)/*.partial
 
 	# Remove QEMU files
 	rm -f $(BUILD)/*.img $(BUILD)/OVMF_VARS.fd
+
+	# Remove build artifacts
+	rm -f $(BUILD)/*.tar $(BUILD)/*.iso $(BUILD)/*.zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
 distclean:
 	# Remove debootstrap
