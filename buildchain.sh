@@ -24,7 +24,7 @@ DIR="$(realpath "$1")"
 mkdir -p "$DIR"
 
 export DISTRO_EPOCH="${SOURCE_DATE_EPOCH}"
-export DISTRO_DATE="$(date --date=@"${SOURCE_DATE_EPOCH}" +%Y%M%d)"
+export DISTRO_DATE="$(date --date=@"${SOURCE_DATE_EPOCH}" +%Y%m%d)"
 export DISTRO_VERSION=17.10
 
 msg "clean"

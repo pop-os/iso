@@ -1,7 +1,7 @@
 DISTRO_VERSION?=17.10
 
 DISTRO_EPOCH?=$(shell date +%s)
-DISTRO_DATE?=$(shell date +%Y%M%d)
+DISTRO_DATE?=$(shell date +%Y%m%d)
 
 DISTRO_NAME=Pop_OS
 DISTRO_CODE=pop-os
