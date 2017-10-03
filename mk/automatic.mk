@@ -1,6 +1,8 @@
 BUILD=build/$(DISTRO_VERSION)
 
 ISO=$(BUILD)/$(ISO_NAME).iso
+TAR=$(BUILD)/$(ISO_NAME).tar
+USB=$(BUILD)/$(ISO_NAME).img
 
 SED=\
 	s|DISTRO_NAME|$(DISTRO_NAME)|g; \

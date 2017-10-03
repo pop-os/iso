@@ -4,6 +4,10 @@ include mk/config.mk
 # Standard target - build the ISO
 iso: $(ISO)
 
+tar: $(TAR)
+
+usb: $(USB)
+
 # Complete target - build zsync file, SHA256SUMS, and GPG signature
 all: $(ISO) $(ISO).zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 

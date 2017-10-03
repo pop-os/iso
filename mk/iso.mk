@@ -146,11 +146,16 @@ $(BUILD)/iso_sum.tag: $(BUILD)/iso_casper.tag $(BUILD)/iso_pool.tag $(BUILD)/iso
 
 	touch "$@"
 
-$(BUILD)/$(ISO_NAME).tar: $(BUILD)/iso_sum.tag
+$(TAR): $(BUILD)/iso_sum.tag
 	tar --create \
 		--mtime="@$(DISTRO_EPOCH)" --sort=name \
 	    --owner=0 --group=0 --numeric-owner --mode='a=,u+rX' \
 	    --file "$@.partial" --directory "$(BUILD)/iso" .
+
+	mv "$@.partial" "$@"
+
+$(USB): $(BUILD)/iso_sum.tag
+	scripts/usb.sh "$(BUILD)" "$@.partial"
 
 	mv "$@.partial" "$@"
 
