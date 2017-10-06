@@ -1,6 +1,6 @@
 {
     "name": "pop-distro",
-    "base": "ubuntu:17.10",
+    "base": "ubuntu-daily:17.10",
     "source": {
         "kind": "git",
         "url": "."
