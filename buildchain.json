@@ -13,7 +13,7 @@
     "build": [
         ["bash", "-c", "cd source && ./buildchain.sh"]
     ],
-    "prepare": [
+    "publish": [
         ["mv", "source/build/17.10/pop-os.tar", "artifacts"]
     ]
 }
