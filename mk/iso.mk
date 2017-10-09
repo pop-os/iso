@@ -56,7 +56,7 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 		-o "APT::FTPArchive::Release::Architectures=amd64" \
 		-o "APT::FTPArchive::Release::Codename=$(UBUNTU_CODE)" \
 		-o "APT::FTPArchive::Release::Components=$$(ls -1 pool | tr $$'\n' ' ')" \
-		-o "APT::FTPArchive::Release::Description=$(DISTRO_NAME) $(DISTRO_VERSION)" \
+		-o "APT::FTPArchive::Release::Description=$(DISTRO_CODE) $(DISTRO_VERSION)" \
 		-o "APT::FTPArchive::Release::Label=Ubuntu" \
 		-o "APT::FTPArchive::Release::Origin=Ubuntu" \
 		-o "APT::FTPArchive::Release::Suite=$(UBUNTU_CODE)" \
@@ -117,20 +117,27 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	mkdir -p "$(BUILD)/iso/preseed"
 	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
 
+	# Copy isolinux files
+	rm -rf "$(BUILD)/iso/isolinux"
+	mkdir -p "$(BUILD)/iso/isolinux"
+	cp /usr/lib/ISOLINUX/isolinux.bin "$(BUILD)/iso/isolinux/isolinux.bin"
+	cp /usr/lib/syslinux/modules/bios/ldlinux.c32 "$(BUILD)/iso/isolinux/ldlinux.c32"
+	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
+
 	# Update grub config
 	rm -rf "$(BUILD)/iso/boot/grub"
-	mkdir -p "$(BUILD)/iso/boot/grub/"
+	mkdir -p "$(BUILD)/iso/boot/grub"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
 	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
 
 	# Copy grub modules (BIOS)
-	mkdir -p "$(BUILD)/iso/boot/grub/i386-pc/"
+	mkdir -p "$(BUILD)/iso/boot/grub/i386-pc"
 	cp "$(BUILD)/grub/eltorito.img" "/usr/lib/grub/i386-pc/"* "$(BUILD)/iso/boot/grub/i386-pc/"
 
 	# Copy grub modules (EFI)
 	cp "$(BUILD)/grub/efi.img" "$(BUILD)/iso/boot/grub"
-	mkdir -p "$(BUILD)/iso/boot/grub/x86_64-efi/"
+	mkdir -p "$(BUILD)/iso/boot/grub/x86_64-efi"
 	cp "/usr/lib/grub/x86_64-efi/"* "$(BUILD)/iso/boot/grub/x86_64-efi/"
 
 	# Copy grub theme
@@ -160,6 +167,7 @@ $(USB): $(BUILD)/iso_sum.tag
 	mv "$@.partial" "$@"
 
 $(ISO): $(BUILD)/iso_sum.tag
+ifeq ($(GRUB_BIOS),1)
 	xorriso -as mkisofs \
 		--protective-msdos-label \
 		-b boot/grub/i386-pc/eltorito.img \
@@ -169,6 +177,17 @@ $(ISO): $(BUILD)/iso_sum.tag
 		-r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
 		-o "$@.partial" "$(BUILD)/iso" -- \
 		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+else
+	xorriso -as mkisofs \
+		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+		-c isolinux/boot.cat -b isolinux/isolinux.bin \
+		-no-emul-boot -boot-load-size 4 -boot-info-table \
+		-eltorito-alt-boot -e boot/grub/efi.img \
+		-no-emul-boot -isohybrid-gpt-basdat \
+		-r -V "$(DISTRO_NAME) $(DISTRO_VERSION) amd64" \
+		-o "$@.partial" "$(BUILD)/iso" -- \
+		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+endif
 
 	mv "$@.partial" "$@"
 

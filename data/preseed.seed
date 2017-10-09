@@ -1,4 +1,4 @@
-# Install the DISTRO_NAME desktop.
+# Install the DISTRO_CODE desktop.
 tasksel	tasksel/first multiselect DISTRO_PKGS
 
 # Preseed prepare so it can be skipped

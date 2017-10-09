@@ -1,1 +1,1 @@
-http://www.ubuntu.com/getubuntu/releasenotes?os=ubuntu&ver=17.10&lang=${LANG}
+http://www.ubuntu.com/getubuntu/releasenotes?os=ubuntu&ver=DISTRO_VERSION&lang=${LANG}
