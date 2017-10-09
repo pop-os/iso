@@ -8,7 +8,7 @@
     "prepare": [
         ["add-apt-repository", "-y", "ppa:system76/pop"],
         ["apt-get", "update"],
-        ["apt-get", "install", "-y", "make", "ovmf", "qemu-efi", "qemu-kvm", "squashfs-tools", "xorriso", "zsync"]
+        ["apt-get", "install", "-y", "debootstrap", "make", "ovmf", "qemu-efi", "qemu-kvm", "squashfs-tools", "xorriso", "zsync"]
     ],
     "build": [
         ["bash", "-c", "cd source && ./buildchain.sh"]
