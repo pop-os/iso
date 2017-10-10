@@ -3,7 +3,7 @@ If this is a bug, please use the template below. If this is a feature request, q
 **Reporter info**
 
 ```
- * Distribution - (run ```lsb_release -a```)
+ * Distribution - (run ```cat /etc/os-release```)
  * Related Application and/or Package Version - apt policy $PACKAGE NAME
 ```
 
