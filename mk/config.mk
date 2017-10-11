@@ -37,7 +37,7 @@ DISTRO_PKGS=\
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
-	nvidia-375
+	nvidia-384
 endif
 
 # Packages to have in chroot
