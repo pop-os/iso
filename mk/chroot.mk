@@ -120,10 +120,6 @@ $(BUILD)/squashfs: $(BUILD)/live
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
 	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
-	# Disable splash
-	sudo mkdir -p "$@.partial/etc/default/grub.d"
-	sudo cp "data/no-splash.cfg" "$@.partial/etc/default/grub.d/"
-
 	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
 
