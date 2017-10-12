@@ -105,7 +105,6 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	sed "$(SED)" "data/disk/base_installable" > "$(BUILD)/iso/.disk/base_installable"
 	sed "$(SED)" "data/disk/cd_type" > "$(BUILD)/iso/.disk/cd_type"
 	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
-	sed "$(SED)" "data/disk/release_notes_url" > "$(BUILD)/iso/.disk/release_notes_url"
 
 	# Replace preseeds
 	rm -rf "$(BUILD)/iso/preseed"
