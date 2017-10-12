@@ -85,8 +85,8 @@ $(BUILD)/grub:
 
 	rm -rf "$(BUILD)/iso/efi"
 	mkdir -p "$(BUILD)/iso/efi/boot/"
-	cp -r "/usr/lib/shim/shimx64.efi.signed" "$(BUILD)/iso/efi/boot/bootx64.efi"
-	cp -r "/usr/lib/grub/x86_64-efi-signed/gcdx64.efi.signed" "$(BUILD)/iso/efi/boot/grubx64.efi"
+	cp -r "data/efi/shimx64.efi.signed" "$(BUILD)/iso/efi/boot/bootx64.efi"
+	cp -r "data/efi/gcdx64.efi.signed" "$(BUILD)/iso/efi/boot/grubx64.efi"
 
 	mformat -C -f 2880 -L 16 -i "$@.partial/efi.img" ::
 	mcopy -s -i "$@.partial/efi.img" "$(BUILD)/iso/efi" ::/
