@@ -83,18 +83,13 @@ $(BUILD)/grub:
 		--config data/grub/load.cfg \
 		biosdisk iso9660
 
-	mkdir -p "$@.partial/efi/boot/"
-	grub-mkimage \
-		--directory /usr/lib/grub/x86_64-efi \
-		--prefix "()/boot/grub" \
-		--output "$@.partial/efi/boot/bootx64.efi" \
-		--format x86_64-efi \
-		--compression auto \
-		--config data/grub/load.cfg \
-		part_gpt part_msdos fat part_apple iso9660
+	rm -rf "$(BUILD)/iso/efi"
+	mkdir -p "$(BUILD)/iso/efi/boot/"
+	cp -r "/usr/lib/shim/shimx64.efi.signed" "$(BUILD)/iso/efi/boot/bootx64.efi"
+	cp -r "/usr/lib/grub/x86_64-efi-signed/gcdx64.efi.signed" "$(BUILD)/iso/efi/boot/grubx64.efi"
 
 	mformat -C -f 2880 -L 16 -i "$@.partial/efi.img" ::
-	mcopy -s -i "$@.partial/efi.img" "$@.partial/efi" ::/
+	mcopy -s -i "$@.partial/efi.img" "$(BUILD)/iso/efi" ::/
 
 	touch "$@.partial"
 	mv "$@.partial" "$@"
