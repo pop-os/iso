@@ -33,8 +33,7 @@ endif
 DISTRO_PKGS=\
 	ubuntu-minimal \
 	ubuntu-standard \
-	pop-desktop \
-	grub-pop-disable-splash
+	pop-desktop
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
