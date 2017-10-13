@@ -1,4 +1,3 @@
-[submodule "data/default-settings"]
-	path = data/default-settings
-	url = https://github.com/system76/pop-default-settings.git
-	branch = master
+[submodule "data/grub-theme"]
+	path = data/grub-theme
+	url = https://github.com/system76/pop-grub-theme.git
