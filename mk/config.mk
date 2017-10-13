@@ -50,7 +50,7 @@ CHROOT_PKGS=\
 # Packages to have in live instance
 LIVE_PKGS=\
 	$(LANGUAGE_PKGS) \
-	casper=1.385pop0 \
+	casper \
 	jfsutils \
 	lupin-casper \
 	mokutil \
