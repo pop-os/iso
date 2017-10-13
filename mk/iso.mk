@@ -95,7 +95,7 @@ $(BUILD)/grub:
 	mv "$@.partial" "$@"
 
 $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
-	git submodule update --init data/default-settings
+	git submodule update --init data/grub-theme
 
 	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
 
