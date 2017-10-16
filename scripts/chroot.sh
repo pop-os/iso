@@ -55,7 +55,8 @@ if [ -n "${LANGUAGES}" ]
 then
     for language in ${LANGUAGES}
     do
-        pkgs="$(check-language-support -l "$language")"
+        echo "Adding language '$language'"
+        pkgs="$(check-language-support --show-installed --language="$language")"
         if [ -n "$pkgs" ]
         then
             apt-get install -y $pkgs

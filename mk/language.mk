@@ -8,7 +8,9 @@ LANGUAGES=\
 	ja \
 	pt \
 	ru \
-	zh
+	zh \
+	zh-hans \
+	zh-hant
 
 LANGUAGE_PKGS=\
 	fcitx \
