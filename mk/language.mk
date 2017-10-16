@@ -13,14 +13,6 @@ LANGUAGES=\
 	zh-hant
 
 LANGUAGE_PKGS=\
-	fcitx \
-	fcitx-hangul \
-	fcitx-module-cloudpinyin \
-	fcitx-mozc \
-	fcitx-pinyin \
-	fcitx-table \
-	fcitx-unikey \
-	fcitx-ui-qimpanel \
 	fonts-arphic-ukai \
 	fonts-arphic-uming \
 	fonts-dejavu-core \
@@ -74,6 +66,4 @@ LANGUAGE_PKGS=\
 	gnome-getting-started-docs \
 	gnome-user-docs \
 	ibus-gtk \
-	ibus-gtk3 \
-	mozc-utils-gui \
-	onboard
+	ibus-gtk3
