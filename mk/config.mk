@@ -31,24 +31,20 @@ endif
 
 # Packages to install
 DISTRO_PKGS=\
+	linux-generic \
+	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
-	pop-desktop
+	pop-desktop \
+	$(LANGUAGE_PKGS)
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
 	nvidia-384
 endif
 
-# Packages to have in chroot
-CHROOT_PKGS=\
-	$(DISTRO_PKGS) \
-	linux-generic \
-	linux-signed-generic
-
 # Packages to have in live instance
 LIVE_PKGS=\
-	$(LANGUAGE_PKGS) \
 	casper \
 	jfsutils \
 	lupin-casper \
@@ -104,7 +100,6 @@ MAIN_POOL=\
 	shim-signed \
 	user-setup \
 	wvdial
-
 
 # Additional pool packages from the restricted set of packages
 RESTRICTED_POOL=\
