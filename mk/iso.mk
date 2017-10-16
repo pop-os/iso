@@ -110,6 +110,7 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	rm -rf "$(BUILD)/iso/preseed"
 	mkdir -p "$(BUILD)/iso/preseed"
 	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
+	sed "$(SED)" "data/preseed.sh" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).sh"
 
 	# Copy isolinux files
 	rm -rf "$(BUILD)/iso/isolinux"
