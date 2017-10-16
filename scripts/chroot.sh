@@ -51,6 +51,18 @@ then
     apt-get install -y ${INSTALL}
 fi
 
+if [ -n "${LANGUAGES}" ]
+then
+    for language in ${LANGUAGES}
+    do
+        pkgs="$(check-language-support -l "$language")"
+        if [ -n "$pkgs" ]
+        then
+            apt-get install -y $pkgs
+        fi
+    done
+fi
+
 # Remove packages
 if [ -n "${PURGE}" ]
 then
