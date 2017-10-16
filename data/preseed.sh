@@ -1,1 +1,3 @@
-logger preseed.sh
+#!/bin/bash
+
+set -e -x
