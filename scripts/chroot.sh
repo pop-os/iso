@@ -53,15 +53,16 @@ fi
 
 if [ -n "${LANGUAGES}" ]
 then
+    pkgs=""
     for language in ${LANGUAGES}
     do
         echo "Adding language '$language'"
-        pkgs="$(check-language-support --show-installed --language="$language")"
-        if [ -n "$pkgs" ]
-        then
-            apt-get install -y $pkgs
-        fi
+        pkgs+=" $(XDG_CURRENT_DESKTOP=GNOME check-language-support --show-installed --language="$language")"
     done
+    if [ -n "$pkgs" ]
+    then
+        apt-get install -y --no-install-recommends $pkgs
+    fi
 fi
 
 # Remove packages

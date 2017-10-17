@@ -64,6 +64,4 @@ LANGUAGE_PKGS=\
 	fonts-tlwg-waree \
 	fonts-tlwg-waree-ttf \
 	gnome-getting-started-docs \
-	gnome-user-docs \
-	ibus-gtk \
-	ibus-gtk3
+	gnome-user-docs
