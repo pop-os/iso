@@ -51,6 +51,20 @@ then
     apt-get install -y ${INSTALL}
 fi
 
+if [ -n "${LANGUAGES}" ]
+then
+    pkgs=""
+    for language in ${LANGUAGES}
+    do
+        echo "Adding language '$language'"
+        pkgs+=" $(XDG_CURRENT_DESKTOP=GNOME check-language-support --show-installed --language="$language")"
+    done
+    if [ -n "$pkgs" ]
+    then
+        apt-get install -y --no-install-recommends $pkgs
+    fi
+fi
+
 # Remove packages
 if [ -n "${PURGE}" ]
 then

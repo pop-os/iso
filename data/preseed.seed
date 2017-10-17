@@ -1,6 +1,3 @@
-# Install the DISTRO_CODE desktop.
-tasksel	tasksel/first multiselect DISTRO_PKGS
-
 # Preseed prepare so it can be skipped
 ubiquity ubiquity/download_updates boolean false
 ubiquity ubiquity/install/nonfree boolean false

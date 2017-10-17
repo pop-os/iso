@@ -34,7 +34,8 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"UPDATE=1 \
 		UPGRADE=1 \
-		INSTALL=\"$(CHROOT_PKGS)\" \
+		INSTALL=\"$(DISTRO_PKGS)\" \
+		LANGUAGES=\"$(LANGUAGES)\" \
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
 		CLEAN=1 \
@@ -109,9 +110,6 @@ $(BUILD)/squashfs: $(BUILD)/live
 
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
-
-	# Remove locale, casper will generate
-	sudo rm "$@.partial/etc/default/locale"
 
 	# Patch ubiquity by removing plugins and updating order
 	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
