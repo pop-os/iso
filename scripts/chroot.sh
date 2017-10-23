@@ -12,6 +12,12 @@ then
     dbus-uuidgen > /var/lib/dbus/machine-id
 fi
 
+if [ ! -f /run/resolvconf/resolv.conf ]
+then
+    mkdir -p /run/resolvconf/
+    echo "nameserver 8.8.8.8" > /run/resolvconf/resolv.conf
+fi
+
 # Correctly specify resolv.conf
 ln -sf ../run/resolvconf/resolv.conf /etc/resolv.conf
 
