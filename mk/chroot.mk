@@ -5,7 +5,11 @@ $(BUILD)/debootstrap:
 	sudo rm -rf "$@" "$@.partial"
 
 	# Install using debootstrap
-	sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial"
+	if ! sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial"; \
+	then \
+		cat "$@.partial/debootstrap/debootstrap.log"; \
+		false; \
+	fi
 
 	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
