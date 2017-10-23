@@ -9,8 +9,8 @@ CHROOT="$(realpath "$1")"
 
 if [ -d "$CHROOT" ]
 then
-    sudo mount -o bind /dev "$CHROOT/dev"
-    sudo mount -o bind /run "$CHROOT/run"
-    sudo mount -t proc proc "$CHROOT/proc"
-    sudo mount -t sysfs sys "$CHROOT/sys"
+    sudo mount --bind /dev "$CHROOT/dev"
+    sudo mount --bind /run "$CHROOT/run"
+    sudo mount --bind /proc "$CHROOT/proc"
+    sudo mount --bind /sys "$CHROOT/sys"
 fi
