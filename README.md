@@ -13,6 +13,7 @@ Pop!\_OS packages are hosted [on Launchpad](https://launchpad.net/~system76/+arc
 - [gnome-shell-extension-always-show-workspaces](https://github.com/system76/gnome-shell-extension-always-show-workspaces)
 - [gnome-shell-extension-pop-shop-details](https://github.com/system76/gnome-shell-extension-pop-shop-details)
 - [gnome-shell-extension-pop-suspend-button](https://github.com/system76/gnome-shell-extension-suspend-button)
+- [muff](https://github.com/system76/muff)
 - [pop-default-settings](https://github.com/system76/pop-default-settings)
 - [pop-desktop](https://github.com/system76/pop-desktop)
 - [pop-fonts](https://github.com/system76/pop-fonts)
