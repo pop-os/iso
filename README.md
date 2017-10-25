@@ -6,7 +6,7 @@ Pop!\_OS’s first release was on October 19th, 2017. For more information, [vis
 
 ## Sources
 
-The ISO contains a few changes, controlled by the configuration in `mk/config.mk`. Pop!\_OS packages are hosted [on Launchpad](https://launchpad.net/~system76/+archive/ubuntu/pop/+packages). Many Pop!\_OS packages have source on Github, under the [System76 organization](https://github.com/system76).
+Pop!\_OS packages are hosted [on Launchpad](https://launchpad.net/~system76/+archive/ubuntu/pop/+packages). Many Pop!\_OS packages have source on Github, under the [System76 organization](https://github.com/system76).
 
 - [com.github.donadigo.eddy](https://github.com/system76/eddy)
 - [gnome-shell-extension-alt-tab-raise-first-window](https://github.com/system76/gnome-shell-extension-alt-tab-raise-first-window)
@@ -36,5 +36,7 @@ The build is controlled by the Makefile. The following commands can be used:
 - `make qemu_uefi` - Run the ISO in UEFI mode
 - `make clean` - Remove the build files, keeping the debootstrap
 - `make distclean` - Remove the debootstrap and other build files
+
+The configuration can be changed in `mk/config.mk`. 
 
 To rebuild the ISO when you have made changes, you can use `make clean && make`
