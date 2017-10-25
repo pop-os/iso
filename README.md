@@ -16,7 +16,7 @@ Pop!\_OS packages are hosted [on Launchpad](https://launchpad.net/~system76/+arc
 - [muff](https://github.com/system76/muff) - Multiple USB File Flasher
 - [pop-default-settings](https://github.com/system76/pop-default-settings) - Distribution default settings
 - [pop-desktop](https://github.com/system76/pop-desktop) - Desktop metapackage including all other packages
-- [pop-fonts](https://github.com/system76/pop-fonts) - Fonts for the System76 Pop look, Fira and Roboto Slab
+- [pop-fonts](https://github.com/system76/pop-fonts) - Default fonts, Fira and Roboto Slab
 - [pop-gnome-control-center](https://github.com/system76/gnome-control-center) - GNOME Control Center
 - [pop-gnome-initial-setup](https://github.com/system76/gnome-initial-setup) - GNOME Initial Setup
 - [pop-grub-theme](https://github.com/system76/pop-grub-theme) - Grub bootloader theme
@@ -26,7 +26,7 @@ Pop!\_OS packages are hosted [on Launchpad](https://launchpad.net/~system76/+arc
 - [pop-session](https://github.com/system76/pop-session) - Session default settings
 - [pop-shop](https://github.com/system76/pop-shop) - AppStream package installer
 - [pop-theme](https://github.com/system76/pop-theme) - A metapackage including pop-fonts, pop-gtk-theme, and pop-icon-theme
-- [pop-wallpapers](https://github.com/system76/pop-wallpapers) - Wallpapers
+- [pop-wallpapers](https://github.com/system76/pop-wallpapers) - Default wallpapers
 - [ubiquity-slideshow-pop](https://github.com/system76/ubiquity-slideshow-pop) - Ubiquity installation slideshow
 
 ## Building
