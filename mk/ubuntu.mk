@@ -8,6 +8,9 @@ else ifeq ($(DISTRO_VERSION),17.04)
 else ifeq ($(DISTRO_VERSION),17.10)
 	UBUNTU_CODE=artful
 	UBUNTU_NAME=Artful Aardvark
+else ifeq ($(DISTRO_VERSION),18.04)
+	UBUNTU_CODE=bionic
+	UBUNTU_NAME=Bionic Beaver
 endif
 
 UBUNTU_REPOS=\
