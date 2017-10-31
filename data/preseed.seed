@@ -5,3 +5,6 @@ ubiquity ubiquity/install/nonfree boolean false
 # Skip timezone
 ubiquity ubiquity/automatic/timezone boolean true
 ubiquity time/zone select America/Denver
+
+# Run post-installation script
+ubiquity ubiquity/success_command string cp -a /cdrom/preseed/DISTRO_CODE.sh /target/root/preseed.sh; chroot /target /bin/bash /root/preseed.sh; rm /target/root/preseed.sh
