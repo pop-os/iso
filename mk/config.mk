@@ -10,6 +10,9 @@ ISO_NAME?=$(DISTRO_CODE)
 
 GPG_NAME?=`id -un`
 
+PROPOSED?=0
+NVIDIA?=0
+
 # Include automatic variables
 include mk/automatic.mk
 
