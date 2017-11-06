@@ -24,9 +24,9 @@ DISTRO_REPOS=\
 	$(UBUNTU_REPOS) \
 	ppa:system76/pop
 
-ifeq ($(STAGING),1)
+ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
-	ppa:system76/pop-staging
+	ppa:system76/proposed
 endif
 
 # Packages to install
