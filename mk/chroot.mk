@@ -34,9 +34,13 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
 
+	# Copy GPG public key for Pop staging repositories
+	gpg --batch --yes --export --armor "204DD8AEC33A7AFF" | sudo tee "$@.partial/iso/pop.key"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
-		"UPDATE=1 \
+		"KEY=\"/iso/pop.key\" \
+		UPDATE=1 \
 		UPGRADE=1 \
 		INSTALL=\"$(DISTRO_PKGS)\" \
 		LANGUAGES=\"$(LANGUAGES)\" \
@@ -116,14 +120,14 @@ $(BUILD)/squashfs: $(BUILD)/live
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
 	# Patch ubiquity by removing plugins and updating order
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
+	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
+	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
+	# sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
+	# sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
 
 	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"

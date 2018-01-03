@@ -1,4 +1,4 @@
-DISTRO_VERSION?=17.10
+DISTRO_VERSION?=18.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
@@ -10,7 +10,7 @@ ISO_NAME?=$(DISTRO_CODE)
 
 GPG_NAME?=`id -un`
 
-PROPOSED?=0
+PROPOSED?=1
 NVIDIA?=0
 
 # Include automatic variables
@@ -29,7 +29,8 @@ DISTRO_REPOS=\
 
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
-	ppa:system76/proposed
+	ppa:system76/proposed \
+	'deb [arch=amd64] ftp://10.17.75.74/repos/develop artful main'
 endif
 
 # Packages to install
@@ -49,18 +50,14 @@ endif
 # Packages to have in live instance
 LIVE_PKGS=\
 	casper \
-	jfsutils \
-	lupin-casper \
-	mokutil \
-	mtools \
-	reiserfsprogs \
-	ubiquity-frontend-gtk \
-	ubiquity-slideshow-pop \
-	xfsprogs
+	distinst \
+	io.elementary.installer \
+	lupin-casper
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	imagemagick-6.q16 \
+    io.elementary.installer-session \
 	xul-ext-ubufox
 
 # Packages not installed, but that may need to be discovered by the installer
@@ -95,9 +92,6 @@ MAIN_POOL=\
 	make \
 	manpages-dev \
 	mouseemu \
-	oem-config \
-	oem-config-gtk \
-	oem-config-slideshow-ubuntu \
 	setserial \
 	shim \
 	shim-signed \
