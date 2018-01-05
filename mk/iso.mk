@@ -97,21 +97,6 @@ $(BUILD)/grub:
 $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	git submodule update --init data/grub-theme
 
-	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
-
-	# Replace disk info
-	rm -rf "$(BUILD)/iso/.disk"
-	mkdir -p "$(BUILD)/iso/.disk"
-	sed "$(SED)" "data/disk/base_installable" > "$(BUILD)/iso/.disk/base_installable"
-	sed "$(SED)" "data/disk/cd_type" > "$(BUILD)/iso/.disk/cd_type"
-	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
-
-	# Replace preseeds
-	rm -rf "$(BUILD)/iso/preseed"
-	mkdir -p "$(BUILD)/iso/preseed"
-	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
-	sed "$(SED)" "data/preseed.sh" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).sh"
-
 	# Copy isolinux files
 	rm -rf "$(BUILD)/iso/isolinux"
 	mkdir -p "$(BUILD)/iso/isolinux"
@@ -123,7 +108,6 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
-	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
 
 	# Copy grub modules (BIOS)
