@@ -29,8 +29,7 @@ DISTRO_REPOS=\
 
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
-	ppa:system76/proposed \
-	'deb [arch=amd64] ftp://10.17.75.74/repos/develop artful main'
+	ppa:system76/proposed
 endif
 
 # Packages to install
@@ -51,12 +50,11 @@ endif
 LIVE_PKGS=\
 	casper \
 	distinst \
-	io.elementary.installer
+	pop-installer
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	imagemagick-6.q16 \
-	io.elementary.installer-session \
 	xul-ext-ubufox
 
 # Packages not installed, but that may need to be discovered by the installer
