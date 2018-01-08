@@ -29,7 +29,8 @@ DISTRO_REPOS=\
 
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
-	ppa:system76/proposed
+	ppa:system76/proposed \
+	'deb [arch=amd64] ftp://10.17.75.74/repos/develop artful main'
 endif
 
 # Packages to install
