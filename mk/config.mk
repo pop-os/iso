@@ -49,6 +49,7 @@ endif
 # Packages to have in live instance
 LIVE_PKGS=\
 	casper \
+	gparted \
 	jfsutils \
 	lupin-casper \
 	mokutil \
