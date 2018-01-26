@@ -50,6 +50,7 @@ endif
 LIVE_PKGS=\
 	casper \
 	distinst \
+	gparted \
 	pop-installer
 
 # Packages to remove from installed system (usually installed as Recommends)
