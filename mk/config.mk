@@ -51,7 +51,8 @@ LIVE_PKGS=\
 	casper \
 	distinst \
 	gparted \
-	pop-installer
+	pop-installer \
+	pop-shop-casper
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
@@ -62,7 +63,8 @@ RM_PKGS=\
 MAIN_POOL=\
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
-	grub-efi-amd64-signed
+	grub-efi-amd64-signed \
+	kernelstub
 
 # Additional pool packages from the restricted set of packages
 RESTRICTED_POOL=\
