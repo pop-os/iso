@@ -116,8 +116,14 @@ $(BUILD)/squashfs: $(BUILD)/live
 	# Copy chroot
 	sudo cp -a "$<" "$@.partial"
 
+	# Mount chroot
+	"scripts/mount.sh" "$@.partial"
+
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
+
+	# Unmount chroot
+	"scripts/unmount.sh" "$@.partial"
 
 	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
