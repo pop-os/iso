@@ -57,6 +57,7 @@ LIVE_PKGS=\
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	imagemagick-6.q16 \
+	pop-installer-session \
 	tracker \
 	xul-ext-ubufox
 
