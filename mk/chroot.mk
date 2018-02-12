@@ -116,6 +116,13 @@ $(BUILD)/squashfs: $(BUILD)/live
 	# Copy chroot
 	sudo cp -a "$<" "$@.partial"
 
+	# Make temp directory for modifications
+	sudo rm -rf "$@.partial/iso"
+	sudo mkdir -p "$@.partial/iso"
+
+	# Copy chroot script
+	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
+
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
 
@@ -124,6 +131,9 @@ $(BUILD)/squashfs: $(BUILD)/live
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
+
+	# Remove temp directory for modifications
+	sudo rm -rf "$@.partial/iso"
 
 	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
