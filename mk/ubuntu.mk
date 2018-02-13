@@ -14,7 +14,10 @@ else ifeq ($(DISTRO_VERSION),18.04)
 endif
 
 UBUNTU_REPOS=\
-	main restricted universe multiverse \
+	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE) main restricted universe multiverse' \
 	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-updates main restricted universe multiverse' \
-	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-backports main restricted universe multiverse' \
-	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-security main restricted universe multiverse'
+	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-security main restricted universe multiverse' \
+	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-backports main restricted universe multiverse'
+
+UBUNTU_PROPOSED=\
+	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-proposed main restricted universe multiverse'
