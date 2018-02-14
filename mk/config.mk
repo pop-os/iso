@@ -10,7 +10,7 @@ ISO_NAME?=$(DISTRO_CODE)
 
 GPG_NAME?=`id -un`
 
-PROPOSED?=1
+PROPOSED?=0
 NVIDIA?=0
 
 # Include automatic variables
