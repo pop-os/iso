@@ -34,7 +34,7 @@ then
     for repo in "$@"
     do
         echo "Adding repository '$repo'"
-        add-apt-repository -y "$repo"
+        add-apt-repository --yes --no-update "$repo"
     done
 fi
 
