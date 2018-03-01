@@ -50,21 +50,17 @@ MAIN_POOL=\
 	dkms \
 	fakeroot \
 	gcc \
-	gcc-7 \
 	grub-efi \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
-	libasan4 \
 	libatomic1 \
 	libc6-dev \
 	libc-dev-bin \
 	libcilkrts5 \
 	libfakeroot \
-	libgcc-7-dev \
 	libitm1 \
 	liblsan0 \
-	libmpx2 \
 	libquadmath0 \
 	libtsan0 \
 	libubsan0 \
