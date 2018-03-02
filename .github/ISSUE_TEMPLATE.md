@@ -18,7 +18,7 @@ Please only use this for reporting issues with _generating the ISO images for Po
 
 
 
-**Expected behaviour**
+**Expected behavior**
 
 
 

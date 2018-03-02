@@ -110,6 +110,4 @@ LANGUAGE_PKGS=\
 	fonts-tlwg-umpush \
 	fonts-tlwg-umpush-ttf \
 	fonts-tlwg-waree \
-	fonts-tlwg-waree-ttf \
-	gnome-getting-started-docs \
-	gnome-user-docs
+	fonts-tlwg-waree-ttf
