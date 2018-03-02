@@ -1,11 +1,11 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
-DISTRO_VERSION?=17.10
+DISTRO_VERSION?=18.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
 
-ISO_NAME?=$(DISTRO_CODE)
+ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)
 
 GPG_NAME?=`id -un`
 
