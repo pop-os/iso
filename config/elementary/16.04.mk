@@ -18,8 +18,7 @@ DISTRO_PKGS=\
 	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
-	elementary-desktop \
-	$(LANGUAGE_PKGS)
+	elementary-desktop
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
