@@ -94,38 +94,6 @@ $(BUILD)/live: $(BUILD)/chroot
 		CLEAN=1 \
 		/iso/chroot.sh"
 
-	# Unmount chroot
-	"scripts/unmount.sh" "$@.partial"
-
-	# Remove temp directory for modifications
-	sudo rm -rf "$@.partial/iso"
-
-	sudo touch "$@.partial"
-	sudo mv "$@.partial" "$@"
-
-$(BUILD)/live.tag: $(BUILD)/live
-	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
-
-$(BUILD)/squashfs: $(BUILD)/live
-	# Unmount chroot if mounted
-	scripts/unmount.sh "$@.partial"
-
-	# Remove old chroot
-	sudo rm -rf "$@" "$@.partial"
-
-	# Copy chroot
-	sudo cp -a "$<" "$@.partial"
-
-	# Make temp directory for modifications
-	sudo rm -rf "$@.partial/iso"
-	sudo mkdir -p "$@.partial/iso"
-
-	# Copy chroot script
-	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
-
-	# Mount chroot
-	"scripts/mount.sh" "$@.partial"
-
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
@@ -137,6 +105,9 @@ $(BUILD)/squashfs: $(BUILD)/live
 
 	sudo touch "$@.partial"
 	sudo mv "$@.partial" "$@"
+
+$(BUILD)/live.tag: $(BUILD)/live
+	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
 $(BUILD)/pool: $(BUILD)/chroot
 	# Unmount chroot if mounted

@@ -1,4 +1,4 @@
-update-chroot update-live update-squashfs: update-%: $(BUILD)/%
+update-chroot update-live: update-%: $(BUILD)/%
 	# Unmount chroot if mounted
 	scripts/unmount.sh "$<.partial"
 
