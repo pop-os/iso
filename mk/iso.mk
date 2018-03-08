@@ -49,7 +49,7 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
 		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
 		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
-		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
+		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
 	done; \
 	apt-ftparchive \
 		-o "APT::FTPArchive::Release::Acquire-By-Hash=yes" \
