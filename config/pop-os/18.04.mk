@@ -30,6 +30,7 @@ LIVE_PKGS=\
 	distinst \
 	gparted \
 	pop-installer \
+	pop-installer-casper \
 	pop-shop-casper
 
 # Packages to remove from installed system (usually installed as Recommends)
