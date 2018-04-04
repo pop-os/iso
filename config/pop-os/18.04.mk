@@ -38,8 +38,10 @@ RM_PKGS=\
 	fonts-noto-cjk \
 	fonts-noto-cjk-extra \
 	imagemagick-6.q16 \
+	plymouth \
 	pop-installer-session \
 	tracker \
+	unattended-upgrades \
 	xul-ext-ubufox
 
 # Packages not installed, but that may need to be discovered by the installer
