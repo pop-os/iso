@@ -5,7 +5,12 @@ $(BUILD)/debootstrap:
 	sudo rm -rf "$@" "$@.partial"
 
 	# Install using debootstrap
-	if ! sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial" "$(UBUNTU_MIRROR)"; \
+	if ! sudo debootstrap \
+		--arch=amd64 \
+		--include=gnupg,software-properties-common \
+		"$(UBUNTU_CODE)" \
+		"$@.partial" \
+		"$(UBUNTU_MIRROR)"; \
 	then \
 		cat "$@.partial/debootstrap/debootstrap.log"; \
 		false; \
