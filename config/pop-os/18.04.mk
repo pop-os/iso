@@ -35,8 +35,6 @@ LIVE_PKGS=\
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
-	fonts-noto-cjk \
-	fonts-noto-cjk-extra \
 	imagemagick-6.q16 \
 	plymouth \
 	pop-installer-session \
