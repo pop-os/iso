@@ -97,6 +97,11 @@ $(BUILD)/grub:
 $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	git submodule update --init data/grub-theme
 
+	# Replace disk info
+	rm -rf "$(BUILD)/iso/.disk"
+	mkdir -p "$(BUILD)/iso/.disk"
+	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
+
 	# Copy isolinux files
 	rm -rf "$(BUILD)/iso/isolinux"
 	mkdir -p "$(BUILD)/iso/isolinux"
