@@ -35,7 +35,6 @@ LIVE_PKGS=\
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
-	hidpi-daemon \
 	imagemagick-6.q16 \
 	plymouth \
 	pop-installer-session \
