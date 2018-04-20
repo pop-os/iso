@@ -44,12 +44,23 @@ RM_PKGS=\
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
+	ethtool \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
-	kernelstub
+	kernelstub \
+	libx86-1 \
+	pm-utils \
+	python3-evdev \
+	system76-dkms \
+	system76-driver \
+	system76-firmware-daemon \
+	system76-wallpapers \
+	vbetool \
+	xbacklight
 
 # Additional pool packages from the restricted set of packages
 RESTRICTED_POOL=\
+	amd64-microcode \
 	intel-microcode \
 	iucode-tool
