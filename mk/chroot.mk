@@ -102,6 +102,9 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
+	# Copy kernelstub configuration
+	sudo cp "data/kernelstub" "$@.partial/etc/default/kernelstub"
+
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
 
