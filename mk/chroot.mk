@@ -93,6 +93,9 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Copy GPG public key for APT CDROM
 	gpg --batch --yes --export --armor "$(GPG_NAME)" | sudo tee "$@.partial/iso/apt-cdrom.key"
 
+	# Copy kernelstub configuration
+	sudo cp "data/kernelstub" "$@.partial/etc/default/kernelstub"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/apt-cdrom.key\" \
@@ -104,9 +107,6 @@ $(BUILD)/live: $(BUILD)/chroot
 
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
-
-	# Copy kernelstub configuration
-	sudo cp "data/kernelstub" "$@.partial/etc/default/kernelstub"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
