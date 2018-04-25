@@ -42,6 +42,9 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Copy GPG public key for Pop staging repositories
 	gpg --batch --yes --export --armor "204DD8AEC33A7AFF" | sudo tee "$@.partial/iso/pop.key"
 
+	# Clean APT sources
+	sudo rm "$@.partial/etc/apt/sources.list"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
