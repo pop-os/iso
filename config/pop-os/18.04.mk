@@ -28,6 +28,7 @@ endif
 LIVE_PKGS=\
 	casper \
 	distinst \
+	expect \
 	gparted \
 	pop-installer \
 	pop-installer-casper \
