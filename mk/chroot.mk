@@ -90,9 +90,6 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
 
-	# Copy console-setup script
-	sudo cp "scripts/console-setup.sh" "$@.partial/iso/console-setup.sh"
-
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
 
@@ -110,10 +107,6 @@ $(BUILD)/live: $(BUILD)/chroot
 		AUTOREMOVE=1 \
 		CLEAN=1 \
 		/iso/chroot.sh"
-
-	# Set up console fonts
-	sudo chroot "$@.partial" /bin/bash -e -c \
-		"/iso/console-setup.sh"
 
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
