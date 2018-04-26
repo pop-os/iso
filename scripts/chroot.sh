@@ -42,9 +42,6 @@ fi
 if [ -n "${UPDATE}" ]
 then
     apt-get update -y
-
-	# Force-update appstream cache
-    appstreamcli refresh-cache --force
 fi
 
 # Upgrade installed packages

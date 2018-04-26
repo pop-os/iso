@@ -58,6 +58,9 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		/iso/chroot.sh \
 		$(DISTRO_REPOS)"
 
+	# Update appstream cache
+	sudo chroot "$@.partial" /usr/bin/appstreamcli refresh-cache --force
+
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
 
