@@ -3,14 +3,19 @@ DISTRO_NAME=Pop_OS
 # Repositories to be present in installed system
 DISTRO_REPOS=\
 	$(UBUNTU_REPOS) \
-	ppa:system76/pop \
-	'deb [arch=amd64] http://apt.pop-os.org/proprietary bionic main'
+	ppa:system76/pop
 
+# Add proposed repositories
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
 	$(UBUNTU_PROPOSED) \
 	ppa:system76/proposed
 endif
+
+# Add binary repository without source
+DISTRO_REPOS+=\
+	-- \
+	'deb [arch=amd64] http://apt.pop-os.org/proprietary bionic main'
 
 # Packages to install
 DISTRO_PKGS=\

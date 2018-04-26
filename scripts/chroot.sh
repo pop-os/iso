@@ -31,10 +31,18 @@ fi
 # Add all distro PPAs
 if [ $# -gt 0 ]
 then
+    echo "Enabling repository source"
+    ENABLE_SOURCE=--enable-source
     for repo in "$@"
     do
-        echo "Adding repository '$repo'"
-        add-apt-repository --enable-source --yes "$repo"
+        if [ "$repo" == "--" ]
+        then
+            echo "Disabling repository source"
+            ENABLE_SOURCE=
+        else
+            echo "Adding repository '$repo'"
+            add-apt-repository ${ENABLE_SOURCE} --yes "$repo"
+        fi
     done
 fi
 
