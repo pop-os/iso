@@ -12,7 +12,6 @@ CHROOT="$(realpath "$1")"
 if [ -d "$CHROOT" ]
 then
     sudo mount --bind /dev "$CHROOT/dev"
-    sudo mount --bind /dev/pts "$CHROOT/dev/pts"
     sudo mount --bind /run "$CHROOT/run"
     sudo mount --bind /proc "$CHROOT/proc"
     sudo mount --bind /sys "$CHROOT/sys"
