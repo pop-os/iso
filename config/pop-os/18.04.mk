@@ -3,7 +3,8 @@ DISTRO_NAME=Pop_OS
 # Repositories to be present in installed system
 DISTRO_REPOS=\
 	$(UBUNTU_REPOS) \
-	ppa:system76/pop
+	ppa:system76/pop \
+	'deb [arch=amd64] http://apt.pop-os.org/proprietary bionic main'
 
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
