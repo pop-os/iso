@@ -1,5 +1,7 @@
 #!/bin/bash -e
 
+set -e -x
+
 if [ -z "$1" ]
 then
     echo "$0 [chroot directory]"
