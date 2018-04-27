@@ -27,9 +27,6 @@ update-chroot update-live: update-%: $(BUILD)/%
 		CLEAN=1 \
 		/iso/chroot.sh"
 
-	# Update appstream cache
-	sudo chroot "$<.partial" /usr/bin/appstreamcli refresh-cache --force
-
 	# Unmount chroot
 	"scripts/unmount.sh" "$<.partial"
 
