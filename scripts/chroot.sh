@@ -21,6 +21,9 @@ fi
 # Correctly specify resolv.conf
 ln -sf ../run/resolvconf/resolv.conf /etc/resolv.conf
 
+# Enable i386 so that steam is installable out of the box
+dpkg --add-architecture i386
+
 # Add APT key
 if [ -n "${KEY}" ]
 then
