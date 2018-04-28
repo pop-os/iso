@@ -15,7 +15,7 @@ endif
 # Add binary repository without source
 DISTRO_REPOS+=\
 	-- \
-	'deb [arch=amd64] http://apt.pop-os.org/proprietary bionic main'
+	'deb http://apt.pop-os.org/proprietary bionic main'
 
 # Packages to install
 DISTRO_PKGS=\
