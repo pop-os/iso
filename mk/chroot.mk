@@ -108,6 +108,9 @@ $(BUILD)/live: $(BUILD)/chroot
 		CLEAN=1 \
 		/iso/chroot.sh"
 
+	# Update apt cache
+	sudo chroot "$@.partial" /usr/bin/apt-get update
+
 	# Update appstream cache
 	sudo chroot "$@.partial" /usr/bin/appstreamcli refresh-cache --force
 
