@@ -1,16 +1,21 @@
-DISTRO_NAME=elementary
+DISTRO_NAME=Pop_OS
 
 # Repositories to be present in installed system
 DISTRO_REPOS=\
 	$(UBUNTU_REPOS) \
-	ppa:elementary-os/os-patches \
-	ppa:elementary-os/stable
+	ppa:system76/pop
 
+# Add proposed repositories
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
 	$(UBUNTU_PROPOSED) \
-	ppa:elementary-os/daily
+	ppa:system76/proposed
 endif
+
+# Add binary repository without source
+DISTRO_REPOS+=\
+	-- \
+	'deb http://apt.pop-os.org/proprietary $(UBUNTU_CODE) main'
 
 # Packages to install
 DISTRO_PKGS=\
@@ -18,70 +23,51 @@ DISTRO_PKGS=\
 	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
-	elementary-desktop
+	pop-desktop
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
-	nvidia-384
+	nvidia-driver-390
 endif
 
 # Packages to have in live instance
 LIVE_PKGS=\
 	casper \
+	distinst \
+	expect \
 	gparted \
-	jfsutils \
-	lupin-casper \
-	mokutil \
-	mtools \
-	reiserfsprogs \
-	ubiquity-frontend-gtk \
-	ubiquity-slideshow-ubuntu \
-	xfsprogs
+	pop-installer \
+	pop-installer-casper \
+	pop-shop-casper
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	imagemagick-6.q16 \
+	plymouth \
+	pop-installer-session \
+	tracker \
+	unattended-upgrades \
 	xul-ext-ubufox
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
-	b43-fwcutter \
-	dkms \
-	fakeroot \
-	gcc \
-	grub-efi \
+	ethtool \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
-	libatomic1 \
-	libc6-dev \
-	libc-dev-bin \
-	libcilkrts5 \
-	libfakeroot \
-	libitm1 \
-	liblsan0 \
-	libquadmath0 \
-	libtsan0 \
-	libubsan0 \
-	libuniconf4.6 \
-	libwvstreams4.6-base \
-	libwvstreams4.6-extras \
-	linux-libc-dev \
-	lupin-support \
-	make \
-	manpages-dev \
-	mouseemu \
-	oem-config \
-	oem-config-gtk \
-	oem-config-slideshow-ubuntu \
-	setserial \
-	shim \
-	shim-signed \
-	user-setup \
-	wvdial
+	kernelstub \
+	libx86-1 \
+	pm-utils \
+	python3-evdev \
+	system76-dkms \
+	system76-driver \
+	system76-firmware-daemon \
+	system76-wallpapers \
+	vbetool \
+	xbacklight
 
 # Additional pool packages from the restricted set of packages
 RESTRICTED_POOL=\
-	bcmwl-kernel-source \
+	amd64-microcode \
 	intel-microcode \
 	iucode-tool

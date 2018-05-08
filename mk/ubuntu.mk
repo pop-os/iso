@@ -11,6 +11,9 @@ else ifeq ($(DISTRO_VERSION),17.10)
 else ifeq ($(DISTRO_VERSION),18.04)
 	UBUNTU_CODE=bionic
 	UBUNTU_NAME=Bionic Beaver
+else ifeq ($(DISTRO_VERSION),18.10)
+	UBUNTU_CODE=cosmic
+	UBUNTU_NAME=Cosmic
 endif
 
 UBUNTU_MIRROR=http://us.archive.ubuntu.com/ubuntu/
