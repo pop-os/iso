@@ -7,7 +7,7 @@ $(BUILD)/iso_create.tag:
 
 	touch "$@"
 
-$(BUILD)/iso_casper.tag: $(BUILD)/squashfs $(BUILD)/chroot.tag $(BUILD)/live.tag $(BUILD)/iso_create.tag
+$(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(BUILD)/iso_create.tag
 	# Remove old casper directory
 	sudo rm -rf "$(BUILD)/iso/casper"
 
@@ -15,20 +15,20 @@ $(BUILD)/iso_casper.tag: $(BUILD)/squashfs $(BUILD)/chroot.tag $(BUILD)/live.tag
 	mkdir -p "$(BUILD)/iso/casper"
 
 	# Copy vmlinuz
-	sudo cp "$(BUILD)/squashfs/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
+	sudo cp "$(BUILD)/live/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
 
 	# Copy initrd
-	sudo cp "$(BUILD)/squashfs/initrd.img" "$(BUILD)/iso/casper/initrd.gz"
+	sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/casper/initrd.gz"
 
 	# Update manifest
 	cp "$(BUILD)/live.tag" "$(BUILD)/iso/casper/filesystem.manifest"
 	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/live.tag" | cut -f1 > "$(BUILD)/iso/casper/filesystem.manifest-remove"
 
 	# Update filesystem size
-	sudo du -sx --block-size=1 "$(BUILD)/squashfs" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
+	sudo du -sx --block-size=1 "$(BUILD)/live" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
 
 	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/squashfs" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
+	sudo mksquashfs "$(BUILD)/live" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
 
 	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/casper"
 
@@ -49,7 +49,7 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
 		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
 		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
-		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
+		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
 	done; \
 	apt-ftparchive \
 		-o "APT::FTPArchive::Release::Acquire-By-Hash=yes" \
@@ -97,20 +97,10 @@ $(BUILD)/grub:
 $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	git submodule update --init data/grub-theme
 
-	sed "$(SED)" "data/README.diskdefines" > "$(BUILD)/iso/README.diskdefines"
-
 	# Replace disk info
 	rm -rf "$(BUILD)/iso/.disk"
 	mkdir -p "$(BUILD)/iso/.disk"
-	sed "$(SED)" "data/disk/base_installable" > "$(BUILD)/iso/.disk/base_installable"
-	sed "$(SED)" "data/disk/cd_type" > "$(BUILD)/iso/.disk/cd_type"
 	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
-
-	# Replace preseeds
-	rm -rf "$(BUILD)/iso/preseed"
-	mkdir -p "$(BUILD)/iso/preseed"
-	sed "$(SED)" "data/preseed.seed" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).seed"
-	sed "$(SED)" "data/preseed.sh" > "$(BUILD)/iso/preseed/$(DISTRO_CODE).sh"
 
 	# Copy isolinux files
 	rm -rf "$(BUILD)/iso/isolinux"
@@ -123,7 +113,6 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
-	sed "$(SED)" "data/grub/loopback.cfg" > "$(BUILD)/iso/boot/grub/loopback.cfg"
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
 
 	# Copy grub modules (BIOS)

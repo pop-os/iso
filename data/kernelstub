@@ -1,0 +1,11 @@
+{
+  "default": {
+    "kernel_options": "quiet loglevel=0 vga=current systemd.show_status=false",
+    "esp_path": "/boot/efi",
+    "setup_loader": true,
+    "manage_mode": true,
+    "force_update": false,
+    "live_mode": true,
+    "config_rev": 2
+  }
+}

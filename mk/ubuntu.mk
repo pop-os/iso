@@ -13,8 +13,13 @@ else ifeq ($(DISTRO_VERSION),18.04)
 	UBUNTU_NAME=Bionic Beaver
 endif
 
+UBUNTU_MIRROR=http://us.archive.ubuntu.com/ubuntu/
+
 UBUNTU_REPOS=\
-	main restricted universe multiverse \
-	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-updates main restricted universe multiverse' \
-	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-backports main restricted universe multiverse' \
-	'deb http://us.archive.ubuntu.com/ubuntu/ $(UBUNTU_CODE)-security main restricted universe multiverse'
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE) main restricted universe multiverse' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-updates main restricted universe multiverse' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-security main restricted universe multiverse' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-backports main restricted universe multiverse'
+
+UBUNTU_PROPOSED=\
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-proposed main restricted universe multiverse'

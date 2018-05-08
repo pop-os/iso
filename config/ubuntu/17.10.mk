@@ -1,35 +1,12 @@
-DISTRO_VERSION?=17.10
-
-DISTRO_EPOCH?=$(shell date +%s)
-DISTRO_DATE?=$(shell date +%Y%m%d)
-
-DISTRO_NAME=Pop_OS
-DISTRO_CODE=pop-os
-
-ISO_NAME?=$(DISTRO_CODE)
-
-GPG_NAME?=`id -un`
-
-PROPOSED?=0
-NVIDIA?=0
-
-# Include automatic variables
-include mk/automatic.mk
-
-# Include Ubuntu definitions
-include mk/ubuntu.mk
-
-# Language packages
-include mk/language.mk
+DISTRO_NAME=Ubuntu
 
 # Repositories to be present in installed system
 DISTRO_REPOS=\
-	$(UBUNTU_REPOS) \
-	ppa:system76/pop
+	$(UBUNTU_REPOS)
 
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
-	ppa:system76/proposed
+	$(UBUNTU_PROPOSED)
 endif
 
 # Packages to install
@@ -38,8 +15,7 @@ DISTRO_PKGS=\
 	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
-	pop-desktop \
-	$(LANGUAGE_PKGS)
+	ubuntu-desktop
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
@@ -56,13 +32,12 @@ LIVE_PKGS=\
 	mtools \
 	reiserfsprogs \
 	ubiquity-frontend-gtk \
-	ubiquity-slideshow-pop \
+	ubiquity-slideshow-ubuntu \
 	xfsprogs
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
-	imagemagick-6.q16 \
-	xul-ext-ubufox
+	imagemagick-6.q16
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\

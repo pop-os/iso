@@ -5,7 +5,12 @@ $(BUILD)/debootstrap:
 	sudo rm -rf "$@" "$@.partial"
 
 	# Install using debootstrap
-	if ! sudo debootstrap --arch=amd64 --include=software-properties-common "$(UBUNTU_CODE)" "$@.partial"; \
+	if ! sudo debootstrap \
+		--arch=amd64 \
+		--include=gnupg,software-properties-common \
+		"$(UBUNTU_CODE)" \
+		"$@.partial" \
+		"$(UBUNTU_MIRROR)"; \
 	then \
 		cat "$@.partial/debootstrap/debootstrap.log"; \
 		false; \
@@ -34,9 +39,16 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
 
+	# Copy GPG public key for Pop staging repositories
+	gpg --batch --yes --export --armor "204DD8AEC33A7AFF" | sudo tee "$@.partial/iso/pop.key"
+
+	# Clean APT sources
+	sudo truncate --size=0 "$@.partial/etc/apt/sources.list"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
-		"UPDATE=1 \
+		"KEY=\"/iso/pop.key\" \
+		UPDATE=1 \
 		UPGRADE=1 \
 		INSTALL=\"$(DISTRO_PKGS)\" \
 		LANGUAGES=\"$(LANGUAGES)\" \
@@ -75,11 +87,17 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
 
+	# Copy console-setup script
+	sudo cp "scripts/console-setup.sh" "$@.partial/iso/console-setup.sh"
+
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
 
 	# Copy GPG public key for APT CDROM
 	gpg --batch --yes --export --armor "$(GPG_NAME)" | sudo tee "$@.partial/iso/apt-cdrom.key"
+
+	# Copy kernelstub configuration
+	sudo cp "data/kernelstub" "$@.partial/etc/default/kernelstub"
 
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
@@ -89,6 +107,19 @@ $(BUILD)/live: $(BUILD)/chroot
 		AUTOREMOVE=1 \
 		CLEAN=1 \
 		/iso/chroot.sh"
+
+	# Update apt cache
+	sudo chroot "$@.partial" /usr/bin/apt-get update
+
+	# Update appstream cache
+	sudo chroot "$@.partial" /usr/bin/appstreamcli refresh-cache --force
+
+	# Run console-setup script
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"/iso/console-setup.sh"
+
+	# Create missing network-manager file
+	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
@@ -101,32 +132,6 @@ $(BUILD)/live: $(BUILD)/chroot
 
 $(BUILD)/live.tag: $(BUILD)/live
 	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
-
-$(BUILD)/squashfs: $(BUILD)/live
-	# Unmount chroot if mounted
-	scripts/unmount.sh "$@.partial"
-
-	# Remove old chroot
-	sudo rm -rf "$@" "$@.partial"
-
-	# Copy chroot
-	sudo cp -a "$<" "$@.partial"
-
-	# Create missing network-manager file
-	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
-
-	# Patch ubiquity by removing plugins and updating order
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'language'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-console-setup.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'console_setup'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-partman.py"
-	sudo sed -i "s/^AFTER = .*\$$/AFTER = 'partman'/" "$@.partial/usr/lib/ubiquity/plugins/ubi-timezone.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-prepare.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-network.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-tasks.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-usersetup.py"
-	sudo rm -f "$@.partial/usr/lib/ubiquity/plugins/ubi-wireless.py"
-
-	sudo touch "$@.partial"
-	sudo mv "$@.partial" "$@"
 
 $(BUILD)/pool: $(BUILD)/chroot
 	# Unmount chroot if mounted
