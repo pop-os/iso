@@ -43,7 +43,6 @@ LIVE_PKGS=\
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	imagemagick-6.q16 \
-	plymouth \
 	pop-installer-session \
 	tracker \
 	unattended-upgrades \
