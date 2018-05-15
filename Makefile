@@ -34,6 +34,10 @@ usb: $(USB)
 # Complete target - build zsync file, SHA256SUMS, and GPG signature
 all: $(ISO) $(ISO).zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
+# Popsicle target
+popsicle: $(ISO)
+	sudo popsicle-gtk "$(ISO)"
+
 # Clean target
 include mk/clean.mk
 
