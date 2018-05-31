@@ -18,6 +18,9 @@ clean: clean-chroot clean-live clean-pool
 	# Remove ISO extract
 	sudo rm -rf "$(BUILD)/iso"
 
+	# Remove germinate
+	rm -rf "$(BUILD)/germinate"
+
 	# Remove tag files, partial files
 	rm -f $(BUILD)/*.tag $(BUILD)/*.partial
 

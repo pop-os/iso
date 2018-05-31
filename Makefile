@@ -41,6 +41,9 @@ popsicle: $(ISO)
 # Clean target
 include mk/clean.mk
 
+# Germinate target
+include mk/germinate.mk
+
 # QEMU targets
 include mk/qemu.mk
 
@@ -52,3 +55,6 @@ include mk/update.mk
 
 # ISO targets
 include mk/iso.mk
+
+# Force target
+FORCE:
