@@ -62,6 +62,7 @@ MAIN_POOL=\
 	python3-evdev \
 	system76-dkms \
 	system76-driver \
+	system76-driver-nvidia \
 	system76-firmware-daemon \
 	system76-wallpapers \
 	vbetool \
