@@ -16,13 +16,19 @@ else ifeq ($(DISTRO_VERSION),18.10)
 	UBUNTU_NAME=Cosmic
 endif
 
+UBUNTU_COMPONENTS=\
+	main \
+	restricted \
+	universe \
+	multiverse
+
 UBUNTU_MIRROR=http://us.archive.ubuntu.com/ubuntu/
 
 UBUNTU_REPOS=\
-	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE) main restricted universe multiverse' \
-	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-updates main restricted universe multiverse' \
-	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-security main restricted universe multiverse' \
-	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-backports main restricted universe multiverse'
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE) $(UBUNTU_COMPONENTS)' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_COMPONENTS)' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_COMPONENTS)' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-backports $(UBUNTU_COMPONENTS)'
 
 UBUNTU_PROPOSED=\
-	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-proposed main restricted universe multiverse'
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-proposed $(UBUNTU_COMPONENTS)'
