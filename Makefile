@@ -34,6 +34,9 @@ usb: $(USB)
 # Complete target - build zsync file, SHA256SUMS, and GPG signature
 all: $(ISO) $(ISO).zsync $(BUILD)/SHA256SUMS $(BUILD)/SHA256SUMS.gpg
 
+serve: all
+	cd $(BUILD) && python3 -m http.server 8909
+
 # Popsicle target
 popsicle: $(ISO)
 	sudo popsicle-gtk "$(ISO)"
