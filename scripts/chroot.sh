@@ -43,8 +43,14 @@ then
             echo "Disabling repository source"
             ENABLE_SOURCE=
         else
-            echo "Adding repository '$repo'"
-            add-apt-repository ${ENABLE_SOURCE} --yes "$repo"
+            if [[ "${repo:0:1}" == "-" ]]
+            then
+                echo "Adding temporary repository '${repo:1}'"
+                add-apt-repository ${ENABLE_SOURCE} --yes "${repo:1}"
+            else
+                echo "Adding repository '$repo'"
+                add-apt-repository ${ENABLE_SOURCE} --yes "$repo"
+            fi
         fi
     done
 fi
@@ -113,6 +119,29 @@ then
     pushd "/iso/pool/restricted"
         sudo -u _apt apt-get download ${RESTRICTED_POOL}
     popd
+fi
+
+# Remove temporary distro PPAs
+if [ $# -gt 0 ]
+then
+    echo "Enabling repository source"
+    ENABLE_SOURCE=--enable-source
+    for repo in "$@"
+    do
+        if [ "$repo" == "--" ]
+        then
+            echo "Disabling repository source"
+            ENABLE_SOURCE=
+        else
+            if [[ "${repo:0:1}" == "-" ]]
+            then
+                echo "Removing temporary repository '${repo:1}'"
+                add-apt-repository --remove ${ENABLE_SOURCE} --yes "${repo:1}"
+            else
+                echo "Keeping repository '$repo'"
+            fi
+        fi
+    done
 fi
 
 # Remove apt files
