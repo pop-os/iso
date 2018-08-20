@@ -50,6 +50,7 @@ RM_PKGS=\
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
+	dkms \
 	ethtool \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
@@ -57,14 +58,20 @@ MAIN_POOL=\
 	kernelstub \
 	libx86-1 \
 	pm-utils \
+	powermgmt-base \
 	python3-evdev \
+	python3-systemd \
 	system76-dkms \
 	system76-driver \
-	system76-driver-nvidia \
 	system76-firmware-daemon \
 	system76-wallpapers \
 	vbetool \
 	xbacklight
+
+ifeq ($(NVIDIA),1)
+DISTRO_PKGS+=\
+	system76-driver-nvidia
+endif
 
 # Additional pool packages from the restricted set of packages
 RESTRICTED_POOL=\

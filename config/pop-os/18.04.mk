@@ -60,13 +60,18 @@ MAIN_POOL=\
 	pm-utils \
 	powermgmt-base \
 	python3-evdev \
+	python3-systemd \
 	system76-dkms \
 	system76-driver \
-	system76-driver-nvidia \
 	system76-firmware-daemon \
 	system76-wallpapers \
 	vbetool \
 	xbacklight
+
+ifeq ($(NVIDIA),1)
+DISTRO_PKGS+=\
+	system76-driver-nvidia
+endif
 
 # Additional pool packages from the restricted set of packages
 RESTRICTED_POOL=\
