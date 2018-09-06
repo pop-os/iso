@@ -9,7 +9,8 @@ export LC_ALL=C
 # Generate a machine ID
 if [ -n "$(which dbus-uuidgen)" ]
 then
-    dbus-uuidgen > /var/lib/dbus/machine-id
+    dbus-uuidgen > /etc/machine-id
+    ln -sf /etc/machine-id /var/lib/dbus/machine-id
 fi
 
 if [ ! -f /run/resolvconf/resolv.conf ]
