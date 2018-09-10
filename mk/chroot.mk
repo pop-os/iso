@@ -97,7 +97,8 @@ $(BUILD)/live: $(BUILD)/chroot
 	gpg --batch --yes --export --armor "$(GPG_NAME)" | sudo tee "$@.partial/iso/apt-cdrom.key"
 
 	# Copy kernelstub configuration
-	sudo cp "data/kernelstub" "$@.partial/etc/default/kernelstub"
+	sudo mkdir "$@.partial/etc/kernelstub"
+	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
