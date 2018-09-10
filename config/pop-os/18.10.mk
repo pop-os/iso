@@ -69,7 +69,7 @@ MAIN_POOL=\
 	xbacklight
 
 ifeq ($(NVIDIA),1)
-DISTRO_PKGS+=\
+MAIN_POOL+=\
 	system76-driver-nvidia
 endif
 
