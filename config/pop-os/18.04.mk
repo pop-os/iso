@@ -23,7 +23,8 @@ DISTRO_PKGS=\
 	linux-signed-generic \
 	ubuntu-minimal \
 	ubuntu-standard \
-	pop-desktop
+	pop-desktop \
+	system76-dkms
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
@@ -50,7 +51,6 @@ RM_PKGS=\
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
-	dkms \
 	ethtool \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
@@ -61,7 +61,6 @@ MAIN_POOL=\
 	powermgmt-base \
 	python3-evdev \
 	python3-systemd \
-	system76-dkms \
 	system76-driver \
 	system76-firmware-daemon \
 	system76-wallpapers \
