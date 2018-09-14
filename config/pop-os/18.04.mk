@@ -51,6 +51,7 @@ RM_PKGS=\
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
+	at \
 	ethtool \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
