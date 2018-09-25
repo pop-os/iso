@@ -13,14 +13,14 @@ then
     ln -sf /etc/machine-id /var/lib/dbus/machine-id
 fi
 
-if [ ! -f /run/resolvconf/resolv.conf ]
+if [ ! -f /run/systemd/resolve/stub-resolv.conf ]
 then
-    mkdir -p /run/resolvconf/
-    echo "nameserver 8.8.8.8" > /run/resolvconf/resolv.conf
+    mkdir -p /run/systemd/resolve
+    echo "nameserver 1.1.1.1" > /run/systemd/resolve/stub-resolv.conf
 fi
 
 # Correctly specify resolv.conf
-ln -sf ../run/resolvconf/resolv.conf /etc/resolv.conf
+ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
 # Enable i386 so that steam is installable out of the box
 dpkg --add-architecture i386
