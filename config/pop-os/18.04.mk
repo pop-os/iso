@@ -24,7 +24,8 @@ DISTRO_PKGS=\
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop \
-	system76-dkms
+	system76-dkms \
+	system76-io-dkms
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
