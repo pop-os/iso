@@ -19,8 +19,8 @@ DISTRO_REPOS+=\
 
 # Packages to install
 DISTRO_PKGS=\
-	linux-generic \
-	linux-signed-generic \
+	linux-generic-hwe-18.04 \
+	linux-signed-generic-hwe-18.04 \
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop \
