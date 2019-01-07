@@ -14,6 +14,9 @@ else ifeq ($(DISTRO_VERSION),18.04)
 else ifeq ($(DISTRO_VERSION),18.10)
 	UBUNTU_CODE=cosmic
 	UBUNTU_NAME=Cosmic
+else ifeq ($(DISTRO_VERSION),19.04)
+	UBUNTU_CODE=disco
+	UBUNTU_NAME=Disco
 endif
 
 UBUNTU_COMPONENTS=\
