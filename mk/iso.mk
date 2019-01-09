@@ -117,12 +117,12 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 
 	# Copy grub modules (BIOS)
 	mkdir -p "$(BUILD)/iso/boot/grub/i386-pc"
-	cp "$(BUILD)/grub/eltorito.img" "/usr/lib/grub/i386-pc/"* "$(BUILD)/iso/boot/grub/i386-pc/"
+	cp "$(BUILD)/grub/eltorito.img" "/usr/lib/grub/i386-pc/"*.mod "$(BUILD)/iso/boot/grub/i386-pc/"
 
 	# Copy grub modules (EFI)
 	cp "$(BUILD)/grub/efi.img" "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub/x86_64-efi"
-	cp "/usr/lib/grub/x86_64-efi/"* "$(BUILD)/iso/boot/grub/x86_64-efi/"
+	cp "/usr/lib/grub/x86_64-efi/"*.mod "$(BUILD)/iso/boot/grub/x86_64-efi/"
 
 	# Copy grub theme
 	cp -r "data/grub-theme/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
