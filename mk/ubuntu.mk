@@ -19,21 +19,24 @@ else ifeq ($(DISTRO_VERSION),19.04)
 	UBUNTU_NAME=Disco
 endif
 
+UBUNTU_MIRROR=http://us.archive.ubuntu.com/ubuntu/
+
 UBUNTU_COMPONENTS=\
 	main \
 	restricted \
 	universe \
 	multiverse
 
-UBUNTU_MIRROR=http://us.archive.ubuntu.com/ubuntu/
+UBUNTU_FAST_MIRROR=[arch=amd64] ftp://209.212.58.90/ubuntu/
 
-UBUNTU_FAST_MIRROR=http://mirror.math.princeton.edu/pub/ubuntu/
+UBUNTU_FAST_COMPONENTS=\
+	main
 
 UBUNTU_REPOS=\
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE) $(UBUNTU_COMPONENTS)' \
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_COMPONENTS)' \
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_COMPONENTS)' \
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-backports $(UBUNTU_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE) $(UBUNTU_FAST_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_FAST_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_FAST_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-backports $(UBUNTU_FAST_COMPONENTS)' \
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE) $(UBUNTU_COMPONENTS)' \
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_COMPONENTS)' \
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_COMPONENTS)' \
