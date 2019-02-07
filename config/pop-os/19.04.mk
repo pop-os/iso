@@ -47,7 +47,6 @@ RM_PKGS=\
 	imagemagick-6.q16 \
 	pop-installer-session \
 	snapd \
-	tracker \
 	unattended-upgrades \
 	xul-ext-ubufox
 
