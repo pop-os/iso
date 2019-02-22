@@ -7,7 +7,6 @@ DISTRO_REPOS=\
 
 ifeq ($(PROPOSED),1)
 DISTRO_REPOS+=\
-	$(UBUNTU_PROPOSED) \
 	ppa:system76/proposed
 endif
 
