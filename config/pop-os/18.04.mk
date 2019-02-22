@@ -18,16 +18,17 @@ DISTRO_REPOS+=\
 
 # Packages to install
 DISTRO_PKGS=\
-	linux-generic \
-	linux-signed-generic \
+	linux-generic-hwe-18.04 \
+	linux-signed-generic-hwe-18.04 \
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop \
-	system76-dkms
+	system76-dkms \
+	system76-io-dkms
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
-	nvidia-driver-390
+	nvidia-driver-410
 endif
 
 # Packages to have in live instance
