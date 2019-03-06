@@ -28,7 +28,7 @@ DISTRO_PKGS=\
 
 ifeq ($(NVIDIA),1)
 DISTRO_PKGS+=\
-	nvidia-driver-410
+	nvidia-driver-418
 endif
 
 # Packages to have in live instance
