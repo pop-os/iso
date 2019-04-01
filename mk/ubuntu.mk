@@ -1,46 +1,53 @@
 # Description of upstream Ubuntu
 ifeq ($(DISTRO_VERSION),16.04)
-	UBUNTU_CODE=xenial
-	UBUNTU_NAME=Xenial Xerus
+	UBUNTU_CODE:=xenial
+	UBUNTU_NAME:=Xenial Xerus
 else ifeq ($(DISTRO_VERSION),17.04)
-	UBUNTU_CODE=zesty
-	UBUNTU_NAME=Zesty Zapus
+	UBUNTU_CODE:=zesty
+	UBUNTU_NAME:=Zesty Zapus
 else ifeq ($(DISTRO_VERSION),17.10)
-	UBUNTU_CODE=artful
-	UBUNTU_NAME=Artful Aardvark
+	UBUNTU_CODE:=artful
+	UBUNTU_NAME:=Artful Aardvark
 else ifeq ($(DISTRO_VERSION),18.04)
-	UBUNTU_CODE=bionic
-	UBUNTU_NAME=Bionic Beaver
+	UBUNTU_CODE:=bionic
+	UBUNTU_NAME:=Bionic Beaver
 else ifeq ($(DISTRO_VERSION),18.10)
-	UBUNTU_CODE=cosmic
-	UBUNTU_NAME=Cosmic
+	UBUNTU_CODE:=cosmic
+	UBUNTU_NAME:=Cosmic
 else ifeq ($(DISTRO_VERSION),19.04)
-	UBUNTU_CODE=disco
-	UBUNTU_NAME=Disco
+	UBUNTU_CODE:=disco
+	UBUNTU_NAME:=Disco
 endif
 
-UBUNTU_MIRROR=http://us.archive.ubuntu.com/ubuntu/
+UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
 
-UBUNTU_COMPONENTS=\
+UBUNTU_COMPONENTS:=\
 	main \
 	restricted \
 	universe \
 	multiverse
 
-UBUNTU_FAST_MIRROR=[arch=amd64] ftp://209.212.58.90/ubuntu/
-
-UBUNTU_FAST_COMPONENTS=$(UBUNTU_COMPONENTS)
-
-UBUNTU_REPOS=\
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE) $(UBUNTU_FAST_COMPONENTS)' \
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_FAST_COMPONENTS)' \
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_FAST_COMPONENTS)' \
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-backports $(UBUNTU_FAST_COMPONENTS)' \
+UBUNTU_REPOS:=\
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE) $(UBUNTU_COMPONENTS)' \
-	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_COMPONENTS)' \
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_COMPONENTS)' \
+	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_COMPONENTS)' \
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-backports $(UBUNTU_COMPONENTS)'
 
-UBUNTU_PROPOSED=\
-	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-proposed $(UBUNTU_FAST_COMPONENTS)' \
+UBUNTU_PROPOSED:=\
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-proposed $(UBUNTU_COMPONENTS)'
+
+#UBUNTU_FAST_MIRROR:=http://apt.pop-os.org/ubuntu/
+UBUNTU_FAST_MIRROR:=http://repos.forethought.net/ubuntu/
+
+UBUNTU_FAST_COMPONENTS:=$(UBUNTU_COMPONENTS)
+
+UBUNTU_REPOS:=\
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE) $(UBUNTU_FAST_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-security $(UBUNTU_FAST_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-updates $(UBUNTU_FAST_COMPONENTS)' \
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-backports $(UBUNTU_FAST_COMPONENTS)' \
+	$(UBUNTU_REPOS)
+
+UBUNTU_PROPOSED:=\
+	-'deb $(UBUNTU_FAST_MIRROR) $(UBUNTU_CODE)-proposed $(UBUNTU_FAST_COMPONENTS)' \
+	$(UBUNTU_PROPOSED)
