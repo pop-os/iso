@@ -57,6 +57,7 @@ MAIN_POOL=\
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
 	kernelstub \
+	libfl2 \
 	libx86-1 \
 	pm-utils \
 	powermgmt-base \
