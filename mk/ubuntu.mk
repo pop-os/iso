@@ -36,7 +36,11 @@ UBUNTU_REPOS:=\
 UBUNTU_PROPOSED:=\
 	'deb $(UBUNTU_MIRROR) $(UBUNTU_CODE)-proposed $(UBUNTU_COMPONENTS)'
 
-UBUNTU_FAST_MIRROR:=http://apt.pop-os.org/ubuntu/
+ifeq ($(FAST_MIRROR),1)
+	UBUNTU_FAST_MIRROR=http://apt.pop-os.org/ubuntu/
+else
+	UBUNTU_FAST_MIRROR=$(UBUNTU_MIRROR)
+endif
 
 UBUNTU_FAST_COMPONENTS:=$(UBUNTU_COMPONENTS)
 
