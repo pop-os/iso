@@ -1,5 +1,5 @@
 GERMINATE=$(BUILD)/germinate
-SEEDS=$(GERMINATE)/seeds/ubuntu.bionic
+SEEDS=$(GERMINATE)/seeds/ubuntu.$(UBUNTU_CODE)
 
 $(SEEDS)/distro: FORCE
 	mkdir -p $(SEEDS)
@@ -36,10 +36,10 @@ germinate: $(SEEDS)/distro $(SEEDS)/live $(SEEDS)/pool $(SEEDS)/STRUCTURE
 	cd $(GERMINATE) && \
 	germinate \
 	    -S seeds \
-	    -s ubuntu.bionic \
+	    -s ubuntu.$(UBUNTU_CODE) \
 	    -m http://archive.ubuntu.com/ubuntu \
 	    -m http://ppa.launchpad.net/system76/pop/ubuntu \
-	    -d bionic,bionic-updates \
+	    -d $(UBUNTU_CODE),$(UBUNTU_CODE)-updates \
 	    -a amd64 \
 	    -c main,restricted,universe,multiverse \
 	    --no-rdepends
