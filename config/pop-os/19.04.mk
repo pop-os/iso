@@ -47,8 +47,11 @@ RM_PKGS=\
 	mozc-utils-gui \
 	pop-installer-session \
 	snapd \
+	ubuntu-session \
+	ubuntu-wallpapers \
 	unattended-upgrades \
-	xul-ext-ubufox
+	xul-ext-ubufox \
+	yaru-theme-gnome-shell
 
 # Packages not installed, but that may need to be discovered by the installer
 MAIN_POOL=\
