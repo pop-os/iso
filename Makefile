@@ -12,6 +12,9 @@ GPG_NAME?=`id -un`
 PROPOSED?=0
 NVIDIA?=0
 
+# Enable local (pop_os hosted) apt mirror
+FAST_MIRROR?=1
+
 # Include automatic variables
 include mk/automatic.mk
 
