@@ -1,6 +1,6 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
-DISTRO_VERSION?=18.04
+DISTRO_VERSION?=19.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
