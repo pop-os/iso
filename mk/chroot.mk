@@ -100,6 +100,9 @@ $(BUILD)/live: $(BUILD)/chroot
 	sudo mkdir "$@.partial/etc/kernelstub"
 	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
+	# Copy system76-power default modprobe.d configuration
+	sudo cp "data/system76-power.conf" "$@.partial/etc/modprobe.d/system76-power.conf"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/apt-cdrom.key\" \
