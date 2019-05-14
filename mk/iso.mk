@@ -9,28 +9,28 @@ $(BUILD)/iso_create.tag:
 
 $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(BUILD)/iso_create.tag
 	# Remove old casper directory
-	sudo rm -rf "$(BUILD)/iso/casper"
+	sudo rm -rf "$(BUILD)/iso/casper"*
 
 	# Create new casper directory
-	mkdir -p "$(BUILD)/iso/casper"
+	mkdir -p "$(BUILD)/iso/$(CASPER_PATH)"
 
 	# Copy vmlinuz
-	sudo cp "$(BUILD)/live/vmlinuz" "$(BUILD)/iso/casper/vmlinuz.efi"
+	sudo cp "$(BUILD)/live/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"
 
 	# Copy initrd
-	sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/casper/initrd.gz"
+	sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"
 
 	# Update manifest
-	cp "$(BUILD)/live.tag" "$(BUILD)/iso/casper/filesystem.manifest"
-	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/live.tag" | cut -f1 > "$(BUILD)/iso/casper/filesystem.manifest-remove"
+	cp "$(BUILD)/live.tag" "$(BUILD)/iso/$(CASPER_PATH)/filesystem.manifest"
+	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/live.tag" | cut -f1 > "$(BUILD)/iso/$(CASPER_PATH)/filesystem.manifest-remove"
 
 	# Update filesystem size
-	sudo du -sx --block-size=1 "$(BUILD)/live" | cut -f1 > "$(BUILD)/iso/casper/filesystem.size"
+	sudo du -sx --block-size=1 "$(BUILD)/live" | cut -f1 > "$(BUILD)/iso/$(CASPER_PATH)/filesystem.size"
 
 	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/live" "$(BUILD)/iso/casper/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
+	sudo mksquashfs "$(BUILD)/live" "$(BUILD)/iso/$(CASPER_PATH)/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
 
-	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/casper"
+	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/$(CASPER_PATH)"
 
 	touch "$@"
 

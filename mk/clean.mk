@@ -9,9 +9,6 @@ clean: clean-chroot clean-live clean-pool
 	# Remove partial debootstrap
 	sudo rm -rf "$(BUILD)/debootstrap.partial"
 
-	# Remove casper
-	sudo rm -rf "$(BUILD)/casper" "$(BUILD)/casper.partial"
-
 	# Remove grub
 	sudo rm -rf "$(BUILD)/grub" "$(BUILD)/grub.partial"
 
