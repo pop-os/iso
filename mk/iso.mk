@@ -32,6 +32,8 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 
 	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/$(CASPER_PATH)"
 
+	ln -sf "$(CASPER_PATH)" "$(BUILD)/iso/casper"
+
 	touch "$@"
 
 $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
