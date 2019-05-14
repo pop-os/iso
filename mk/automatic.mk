@@ -4,7 +4,7 @@ ISO=$(BUILD)/$(ISO_NAME).iso
 TAR=$(BUILD)/$(ISO_NAME).tar
 USB=$(BUILD)/$(ISO_NAME).img
 
-CASPER_PATH=casper_$(ISO_NAME)
+CASPER_PATH=casper
 
 SED=\
 	s|CASPER_PATH|$(CASPER_PATH)|g; \
