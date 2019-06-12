@@ -45,6 +45,9 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Clean APT sources
 	sudo truncate --size=0 "$@.partial/etc/apt/sources.list"
 
+	# Temporarily set apt preferences
+	sudo cp "data/apt-preferences" "$@.partial/etc/apt/preferences.d/pop-iso"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
@@ -57,6 +60,9 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		CLEAN=1 \
 		/iso/chroot.sh \
 		$(DISTRO_REPOS)"
+
+	# Remove apt preferences
+	sudo rm "$@.partial/etc/apt/preferences.d/pop-iso"
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
