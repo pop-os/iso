@@ -13,10 +13,13 @@ else ifeq ($(DISTRO_VERSION),18.04)
 	UBUNTU_NAME:=Bionic Beaver
 else ifeq ($(DISTRO_VERSION),18.10)
 	UBUNTU_CODE:=cosmic
-	UBUNTU_NAME:=Cosmic
+	UBUNTU_NAME:=Cosmic Cuttlefish
 else ifeq ($(DISTRO_VERSION),19.04)
 	UBUNTU_CODE:=disco
-	UBUNTU_NAME:=Disco
+	UBUNTU_NAME:=Disco Dingo
+else ifeq ($(DISTRO_VERSION),19.10)
+	UBUNTU_CODE:=eoan
+	UBUNTU_NAME:=Eoan Ermine
 endif
 
 UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
