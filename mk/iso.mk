@@ -15,10 +15,18 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 	mkdir -p "$(BUILD)/iso/$(CASPER_PATH)"
 
 	# Copy vmlinuz
-	sudo cp "$(BUILD)/live/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"
+	if [ -e "$(BUILD)/live/boot/vmlinuz" ]; then \
+		sudo cp "$(BUILD)/live/boot/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
+	else \
+		sudo cp "$(BUILD)/live/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
+	fi
 
 	# Copy initrd
-	sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"
+	if [ -e "$(BUILD)/live/boot/initrd.img" ]; then \
+		sudo cp "$(BUILD)/live/boot/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
+	else \
+		sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
+	fi
 
 	# Update manifest
 	cp "$(BUILD)/live.tag" "$(BUILD)/iso/$(CASPER_PATH)/filesystem.manifest"
