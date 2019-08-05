@@ -70,6 +70,7 @@ MAIN_POOL=\
 	python3-systemd \
 	system76-driver \
 	system76-firmware-daemon \
+	system76-oled \
 	system76-wallpapers \
 	vbetool \
 	xbacklight
