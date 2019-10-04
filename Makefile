@@ -1,6 +1,6 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
-DISTRO_VERSION?=19.04
+DISTRO_VERSION?=19.10
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
@@ -13,7 +13,7 @@ PROPOSED?=0
 NVIDIA?=0
 
 # Enable local (pop_os hosted) apt mirror
-FAST_MIRROR?=1
+FAST_MIRROR?=0
 
 # Include automatic variables
 include mk/automatic.mk
