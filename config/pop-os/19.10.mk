@@ -57,6 +57,7 @@ RM_PKGS=\
 MAIN_POOL=\
 	at \
 	dfu-programmer \
+	efibootmgr \
 	ethtool \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
