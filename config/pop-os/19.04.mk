@@ -23,6 +23,7 @@ DISTRO_PKGS=\
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop \
+	system76-acpi-dkms \
 	system76-dkms \
 	system76-io-dkms
 

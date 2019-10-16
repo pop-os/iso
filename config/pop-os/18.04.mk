@@ -18,11 +18,12 @@ DISTRO_REPOS+=\
 
 # Packages to install
 DISTRO_PKGS=\
-	linux-generic-hwe-18.04-edge \
-	linux-signed-generic-hwe-18.04-edge \
+	linux-generic-hwe-18.04 \
+	linux-signed-generic-hwe-18.04 \
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop \
+	system76-acpi-dkms \
 	system76-dkms \
 	system76-io-dkms
 
