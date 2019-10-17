@@ -131,6 +131,9 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Create missing network-manager file
 	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
 
+	# Mask systemd-time-wait-sync.service
+	sudo ln -sf /dev/null "$@.partial/etc/systemd/system/systemd-time-wait-sync.service"
+
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
 
