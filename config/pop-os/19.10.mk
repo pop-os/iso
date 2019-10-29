@@ -18,8 +18,7 @@ DISTRO_REPOS+=\
 
 # Packages to install
 DISTRO_PKGS=\
-	linux-generic \
-	linux-signed-generic \
+	linux-system76 \
 	ubuntu-minimal \
 	ubuntu-standard \
 	pop-desktop \
