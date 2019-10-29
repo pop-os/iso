@@ -61,6 +61,14 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		/iso/chroot.sh \
 		$(DISTRO_REPOS)"
 
+	# Rerun chroot script to install POST_DISTRO_PKGS
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"INSTALL=\"$(POST_DISTRO_PKGS)\" \
+		PURGE=\"$(RM_PKGS)\" \
+		AUTOREMOVE=1 \
+		CLEAN=1 \
+		/iso/chroot.sh"
+
 	# Remove apt preferences
 	sudo rm "$@.partial/etc/apt/preferences.d/pop-iso"
 

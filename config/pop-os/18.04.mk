@@ -21,13 +21,16 @@ DISTRO_PKGS=\
 	linux-system76 \
 	ubuntu-minimal \
 	ubuntu-standard \
-	pop-desktop \
+	pop-desktop
+
+# Packages to install after (to avoid dependency issues)
+POST_DISTRO_PKGS=\
 	system76-acpi-dkms \
 	system76-dkms \
 	system76-io-dkms
 
 ifeq ($(NVIDIA),1)
-DISTRO_PKGS+=\
+POST_DISTRO_PKGS+=\
 	nvidia-driver-435
 endif
 
