@@ -48,6 +48,10 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Temporarily set apt preferences
 	sudo cp "data/apt-preferences" "$@.partial/etc/apt/preferences.d/pop-iso"
 
+	# Copy kernelstub configuration
+	sudo mkdir "$@.partial/etc/kernelstub"
+	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
@@ -109,10 +113,6 @@ $(BUILD)/live: $(BUILD)/chroot
 
 	# Copy GPG public key for APT CDROM
 	gpg --batch --yes --export --armor "$(GPG_NAME)" | sudo tee "$@.partial/iso/apt-cdrom.key"
-
-	# Copy kernelstub configuration
-	sudo mkdir "$@.partial/etc/kernelstub"
-	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
 	# Copy system76-power default modprobe.d configuration
 	sudo cp "data/system76-power.conf" "$@.partial/etc/modprobe.d/system76-power.conf"
