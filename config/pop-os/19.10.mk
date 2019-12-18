@@ -65,6 +65,9 @@ MAIN_POOL=\
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
+	grub-pc \
+	grub-pc-bin \
+	grub-gfxpayload-lists \
 	kernelstub \
 	libfl2 \
 	libx86-1 \
