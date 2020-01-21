@@ -20,6 +20,9 @@ else ifeq ($(DISTRO_VERSION),19.04)
 else ifeq ($(DISTRO_VERSION),19.10)
 	UBUNTU_CODE:=eoan
 	UBUNTU_NAME:=Eoan Ermine
+else ifeq ($(DISTRO_VERSION),20.04)
+	UBUNTU_CODE:=focal
+	UBUNTU_NAME:=Focal Fossa
 endif
 
 UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
