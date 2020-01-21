@@ -12,10 +12,9 @@ DISTRO_REPOS+=\
 endif
 
 # Add binary repository without source
-#TODO
-#DISTRO_REPOS+=\
-#	-- \
-#	'deb http://apt.pop-os.org/proprietary $(UBUNTU_CODE) main'
+DISTRO_REPOS+=\
+	-- \
+	'deb http://apt.pop-os.org/proprietary $(UBUNTU_CODE) main'
 
 # Packages to install
 DISTRO_PKGS=\
