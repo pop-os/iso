@@ -7,7 +7,6 @@ $(BUILD)/debootstrap:
 	# Install using debootstrap
 	if ! sudo debootstrap \
 		--arch=amd64 \
-		--include=gnupg,software-properties-common \
 		"$(UBUNTU_CODE)" \
 		"$@.partial" \
 		"$(UBUNTU_MIRROR)"; \
@@ -38,6 +37,15 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
+
+	# Install dependencies of chroot script
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"UPDATE=1 \
+		UPGRADE=1 \
+		INSTALL=\"--no-install-recommends gnupg software-properties-common\" \
+		AUTOREMOVE=1 \
+		CLEAN=1 \
+		/iso/chroot.sh"
 
 	# Copy GPG public key for Pop staging repositories
 	gpg --batch --yes --export --armor "204DD8AEC33A7AFF" | sudo tee "$@.partial/iso/pop.key"
