@@ -147,7 +147,9 @@ $(BUILD)/live: $(BUILD)/chroot
 		"/iso/console-setup.sh"
 
 	# Create missing network-manager file
-	sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"
+	if [ -e "$@.partial/etc/NetworkManager/conf.d" ]; then \
+		sudo touch "$@.partial/etc/NetworkManager/conf.d/10-globally-managed-devices.conf"; \
+	fi
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
