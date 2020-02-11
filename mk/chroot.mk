@@ -173,6 +173,9 @@ $(BUILD)/pool: $(BUILD)/chroot
 	sudo rm -rf "$@.partial/iso"
 	sudo mkdir -p "$@.partial/iso"
 
+	# Create pool directory
+	sudo mkdir -p "$@.partial/iso/pool"
+
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
 
