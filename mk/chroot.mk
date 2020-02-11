@@ -138,7 +138,9 @@ $(BUILD)/live: $(BUILD)/chroot
 	sudo chroot "$@.partial" /usr/bin/apt-get update
 
 	# Update appstream cache
-	sudo chroot "$@.partial" /usr/bin/appstreamcli refresh-cache --force
+	if [ -e "$@.partial/usr/bin/appstreamcli" ]; then \
+		sudo chroot "$@.partial" /usr/bin/appstreamcli refresh-cache --force; \
+	fi
 
 	# Run console-setup script
 	sudo chroot "$@.partial" /bin/bash -e -c \
