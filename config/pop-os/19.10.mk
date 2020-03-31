@@ -31,7 +31,7 @@ POST_DISTRO_PKGS=\
 
 ifeq ($(NVIDIA),1)
 POST_DISTRO_PKGS+=\
-	nvidia-driver-435
+	nvidia-driver-440
 endif
 
 # Packages to have in live instance
