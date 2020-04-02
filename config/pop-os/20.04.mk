@@ -74,6 +74,7 @@ MAIN_POOL=\
 	pm-utils \
 	powermgmt-base \
 	python3-debian \
+	python3-distro \
 	python3-evdev \
 	python3-systemd \
 	system76-driver \
