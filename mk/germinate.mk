@@ -7,6 +7,10 @@ $(SEEDS)/distro: FORCE
 	for package in $(DISTRO_PKGS); do \
 		echo " * $$package" >> $@; \
 	done
+	echo "# POST_DISTRO_PKGS" >> $@
+	for package in $(POST_DISTRO_PKGS); do \
+		echo " * $$package" >> $@; \
+	done
 
 $(SEEDS)/live: FORCE
 	mkdir -p $(SEEDS)
