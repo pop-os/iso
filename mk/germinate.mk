@@ -47,3 +47,11 @@ germinate: $(SEEDS)/distro $(SEEDS)/live $(SEEDS)/pool $(SEEDS)/STRUCTURE
 	    -a amd64 \
 	    -c main,restricted,universe,multiverse \
 	    --no-rdepends
+	cd $(GERMINATE) && \
+	missing=$$(cut -d ' ' -f1 pool.depends | tail -n +3 | head -n -2); \
+	if [ "$$missing" != "" ]; \
+	then \
+		echo "ERROR: packages missing from pool:"; \
+		echo "$$missing"; \
+		exit 1; \
+	fi
