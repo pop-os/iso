@@ -62,6 +62,9 @@ MAIN_POOL=\
 	dfu-programmer \
 	efibootmgr \
 	ethtool \
+	firmware-manager \
+	firmware-manager-notify \
+	firmware-manager-shared \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
