@@ -31,7 +31,7 @@ POST_DISTRO_PKGS=\
 
 ifeq ($(NVIDIA),1)
 POST_DISTRO_PKGS+=\
-	nvidia-driver-435
+	nvidia-driver-440
 endif
 
 # Packages to have in live instance
@@ -62,9 +62,6 @@ MAIN_POOL=\
 	dfu-programmer \
 	efibootmgr \
 	ethtool \
-	firmware-manager \
-	firmware-manager-notify \
-	firmware-manager-shared \
 	grub-efi-amd64 \
 	grub-efi-amd64-bin \
 	grub-efi-amd64-signed \
