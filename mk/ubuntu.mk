@@ -25,7 +25,8 @@ else ifeq ($(DISTRO_VERSION),20.04)
 	UBUNTU_NAME:=Focal Fossa
 endif
 
-UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
+DEBOOTSTRAP_MIRROR=http://us.archive.ubuntu.com/ubuntu/
+UBUNTU_MIRROR:=mirror://mirrors.ubuntu.com/mirrors.txt
 
 UBUNTU_COMPONENTS:=\
 	main \
