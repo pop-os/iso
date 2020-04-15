@@ -134,6 +134,11 @@ $(BUILD)/live: $(BUILD)/chroot
 		CLEAN=1 \
 		/iso/chroot.sh"
 
+	# Remove undesired casper script
+	if [ -e "$@.partial/usr/share/initramfs-tools/scripts/casper-bottom/01integrity_check" ]; then \
+		sudo rm -f "$@.partial/usr/share/initramfs-tools/scripts/casper-bottom/01integrity_check"; \
+	fi
+
 	# Update apt cache
 	sudo chroot "$@.partial" /usr/bin/apt-get update
 
