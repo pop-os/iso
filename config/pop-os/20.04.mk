@@ -84,6 +84,12 @@ MAIN_POOL=\
 	vbetool \
 	xbacklight
 
+# Packages added to the pool due to germinate not supporting apt preferences
+MAIN_POOL+=\
+	firmware-manager \
+	firmware-manager-notify \
+	firmware-manager-shared
+
 ifeq ($(NVIDIA),1)
 MAIN_POOL+=\
 	system76-driver-nvidia
