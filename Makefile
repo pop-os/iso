@@ -5,6 +5,8 @@ DISTRO_VERSION?=20.04
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
 
+DISTRO_PARAMS?=
+
 ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)
 
 GPG_NAME?=`id -un`

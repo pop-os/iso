@@ -30,6 +30,7 @@ POST_DISTRO_PKGS=\
 	system76-io-dkms
 
 ifeq ($(NVIDIA),1)
+DISTRO_PARAMS+=modules_load=nvidia
 POST_DISTRO_PKGS+=\
 	nvidia-driver-440
 endif
