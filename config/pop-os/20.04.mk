@@ -32,6 +32,7 @@ POST_DISTRO_PKGS=\
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 POST_DISTRO_PKGS+=\
+	amd-ppt-bin \
 	nvidia-driver-440
 endif
 
