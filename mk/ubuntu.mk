@@ -23,6 +23,9 @@ else ifeq ($(DISTRO_VERSION),19.10)
 else ifeq ($(DISTRO_VERSION),20.04)
 	UBUNTU_CODE:=focal
 	UBUNTU_NAME:=Focal Fossa
+else ifeq ($(DISTRO_VERSION),20.10)
+	UBUNTU_CODE:=groovy
+	UBUNTU_NAME:=Groovy Gorilla
 endif
 
 UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
