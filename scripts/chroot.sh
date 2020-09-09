@@ -44,13 +44,16 @@ then
             echo "Disabling repository source"
             ENABLE_SOURCE=
         else
-            if [[ "${repo:0:1}" == "-" ]]
+            echo "Adding repository '$repo'"
+            if [[ "${repo}" == "deb "* ]]
             then
-                echo "Adding temporary repository '${repo:1}'"
-                add-apt-repository ${ENABLE_SOURCE} --yes "${repo:1}"
+                echo "${repo}" >> /etc/apt/sources.list
+                if [ -n "${ENABLE_SOURCE}" ]
+                then
+                    echo "${repo}" | sed 's/^deb /deb-src /' >> /etc/apt/sources.list
+                fi
             else
-                echo "Adding repository '$repo'"
-                add-apt-repository ${ENABLE_SOURCE} --yes "$repo"
+                add-apt-repository ${ENABLE_SOURCE} --yes "${repo}"
             fi
         fi
     done
@@ -120,29 +123,6 @@ then
     pushd "/iso/pool/restricted"
         sudo -u _apt apt-get download ${RESTRICTED_POOL}
     popd
-fi
-
-# Remove temporary distro PPAs
-if [ $# -gt 0 ]
-then
-    echo "Enabling repository source"
-    ENABLE_SOURCE=--enable-source
-    for repo in "$@"
-    do
-        if [ "$repo" == "--" ]
-        then
-            echo "Disabling repository source"
-            ENABLE_SOURCE=
-        else
-            if [[ "${repo:0:1}" == "-" ]]
-            then
-                echo "Removing temporary repository '${repo:1}'"
-                add-apt-repository --remove ${ENABLE_SOURCE} --yes "${repo:1}"
-            else
-                echo "Keeping repository '$repo'"
-            fi
-        fi
-    done
 fi
 
 # Remove apt files
