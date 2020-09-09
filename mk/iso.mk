@@ -163,6 +163,7 @@ $(USB): $(BUILD)/iso_sum.tag
 $(ISO): $(BUILD)/iso_sum.tag
 ifeq ($(GRUB_BIOS),1)
 	xorriso -as mkisofs \
+		-J \
 		--protective-msdos-label \
 		-b boot/grub/i386-pc/eltorito.img \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
@@ -173,6 +174,7 @@ ifeq ($(GRUB_BIOS),1)
 		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
 else
 	xorriso -as mkisofs \
+		-J \
 		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
 		-c isolinux/boot.cat -b isolinux/isolinux.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
