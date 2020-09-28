@@ -3,6 +3,8 @@ DISTRO_NAME=PXEstick
 # Repositories to be present in installed system
 DISTRO_REPOS=$(UBUNTU_REPOS)
 
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64
+
 # Packages to install
 DISTRO_PKGS=\
 	linux-generic \
