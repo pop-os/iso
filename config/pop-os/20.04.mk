@@ -1,5 +1,7 @@
 DISTRO_NAME=Pop_OS
 
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64
+
 # Repositories to be present in installed system
 DISTRO_REPOS=\
 	$(UBUNTU_REPOS) \

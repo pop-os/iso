@@ -1,5 +1,11 @@
 DISTRO_NAME=Pop_OS
 
+ifeq ($(NVIDIA),1)
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 Nvidia
+else
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 Intel
+endif
+
 # DEB822 format system repositories, comment out to disable
 DEB822:=1
 APPS_URI:=http://apt.pop-os.org/proprietary
