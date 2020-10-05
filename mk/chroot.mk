@@ -34,6 +34,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 
 	# Copy chroot script
 	sudo cp "scripts/chroot.sh" "$@.partial/iso/chroot.sh"
+	sudo cp "scripts/repos.sh" "$@.partial/iso/repos.sh"
 
 	# Mount chroot
 	"scripts/mount.sh" "$@.partial"
@@ -60,6 +61,24 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo mkdir "$@.partial/etc/kernelstub"
 	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
+	# Workaround bug caused by first run of add-apt-repository being blank
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"add-apt-repository --yes -n ppa:system76/pop"
+	sudo chroot "$@.partial" /bin/bash -e -c \
+		"rm -rf /etc/apt/sources.list.d/system76-ubuntu-pop-$(UBUNTU_CODE).list"
+
+	# Setup DEB822 format repos on 20.10 or later
+	if [ -n "${DEB822}" ]; then \
+		sudo chroot "$@.partial" /bin/bash -e -c \
+			"FILENAME=\"/etc/apt/sources.list.d/system.sources\" \
+			NAME=\"${DISTRO_NAME} System Sources\" \
+			TYPES=\"deb deb-src\" \
+			URIS=\"${UBUNTU_MIRROR}\" \
+			SUITES=\"$(UBUNTU_CODE) $(UBUNTU_CODE)-security $(UBUNTU_CODE)-updates $(UBUNTU_CODE)-backports\" \
+			COMPONENTS=\"main restricted universe multiverse\" \
+			/iso/repos.sh"; \
+	fi
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
@@ -72,6 +91,18 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		CLEAN=1 \
 		/iso/chroot.sh \
 		$(DISTRO_REPOS)"
+	
+	# Add extra URIS
+	if [ -n "${APPS_URI}" ]; then \
+		sudo chroot "$@.partial" /bin/bash -e -c \
+			"FILENAME=\"/etc/apt/sources.list.d/${DISTRO_CODE}-apps.sources\" \
+			NAME=\"${DISTRO_NAME} Applications\" \
+			TYPES=\"deb\" \
+			URIS=\"${APPS_URI}\" \
+			SUITES=\"${UBUNTU_CODE}\" \
+			COMPONENTS=\"main\" \
+			/iso/repos.sh"; \
+	fi
 
 	# Rerun chroot script to install POST_DISTRO_PKGS
 	sudo chroot "$@.partial" /bin/bash -e -c \

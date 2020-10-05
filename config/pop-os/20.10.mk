@@ -6,9 +6,12 @@ else
 DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 Intel
 endif
 
+# DEB822 format system repositories, comment out to disable
+DEB822:=1
+APPS_URI:=http://apt.pop-os.org/proprietary
+
 # Repositories to be present in installed system
 DISTRO_REPOS=\
-	$(UBUNTU_REPOS) \
 	ppa:system76/pop
 
 # Add proposed repositories
@@ -17,10 +20,8 @@ DISTRO_REPOS+=\
 	ppa:system76/proposed
 endif
 
-# Add binary repository without source
-DISTRO_REPOS+=\
-	-- \
-	'deb http://apt.pop-os.org/proprietary $(UBUNTU_CODE) main'
+# Add repositories without source
+DISTRO_REPOS+=--
 
 # Packages to install
 DISTRO_PKGS=\
