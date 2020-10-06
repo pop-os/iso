@@ -35,7 +35,7 @@ ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 POST_DISTRO_PKGS+=\
 	amd-ppt-bin \
-	nvidia-driver-440
+	nvidia-driver-455
 endif
 
 # Packages to have in live instance
