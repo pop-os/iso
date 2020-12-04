@@ -1,11 +1,11 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
-DISTRO_VERSION?=20.10
+DISTRO_VERSION?=20.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
 
-DISTRO_PARAMS?=pci=nommconf
+DISTRO_PARAMS?=
 
 ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)
 
