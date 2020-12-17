@@ -156,6 +156,9 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Copy system76-power default modprobe.d configuration
 	sudo cp "data/system76-power.conf" "$@.partial/etc/modprobe.d/system76-power.conf"
 
+	# Copy ubuntu-drivers-common default prime-discrete configuration
+	sudo cp "data/prime-discrete" "$@.partial/etc/prime-discrete"
+
 	# Run chroot script
 	sudo chroot "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/apt-cdrom.key\" \
