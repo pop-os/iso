@@ -40,7 +40,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	"scripts/mount.sh" "$@.partial"
 
 	# Install dependencies of chroot script
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"UPDATE=1 \
 		UPGRADE=1 \
 		INSTALL=\"--no-install-recommends gnupg software-properties-common\" \
@@ -62,14 +62,14 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
 	# Workaround bug caused by first run of add-apt-repository being blank
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"add-apt-repository --yes -n ppa:system76/pop"
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"rm -rf /etc/apt/sources.list.d/system76-ubuntu-pop-$(UBUNTU_CODE).list"
 
 	# Setup DEB822 format repos on 20.10 or later
 	if [ -n "${DEB822}" ]; then \
-		sudo chroot "$@.partial" /bin/bash -e -c \
+		sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 			"FILENAME=\"/etc/apt/sources.list.d/system.sources\" \
 			NAME=\"${DISTRO_NAME} System Sources\" \
 			TYPES=\"deb deb-src\" \
@@ -80,7 +80,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	fi
 
 	# Run chroot script
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
 		UPDATE=1 \
 		UPGRADE=1 \
@@ -94,7 +94,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	
 	# Add extra URIS
 	if [ -n "${APPS_URI}" ]; then \
-		sudo chroot "$@.partial" /bin/bash -e -c \
+		sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 			"FILENAME=\"/etc/apt/sources.list.d/${DISTRO_CODE}-apps.sources\" \
 			NAME=\"${DISTRO_NAME} Applications\" \
 			TYPES=\"deb\" \
@@ -105,7 +105,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	fi
 
 	# Rerun chroot script to install POST_DISTRO_PKGS
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"INSTALL=\"$(POST_DISTRO_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
@@ -125,7 +125,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/chroot.tag: $(BUILD)/chroot
-	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
+	sudo $(CHROOT) "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
 $(BUILD)/live: $(BUILD)/chroot
 	# Unmount chroot if mounted
@@ -160,7 +160,7 @@ $(BUILD)/live: $(BUILD)/chroot
 	sudo cp "data/prime-discrete" "$@.partial/etc/prime-discrete"
 
 	# Run chroot script
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/apt-cdrom.key\" \
 		INSTALL=\"$(LIVE_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
@@ -174,15 +174,15 @@ $(BUILD)/live: $(BUILD)/chroot
 	fi
 
 	# Update apt cache
-	sudo chroot "$@.partial" /usr/bin/apt-get update
+	sudo $(CHROOT) "$@.partial" /usr/bin/apt-get update
 
 	# Update appstream cache
 	if [ -e "$@.partial/usr/bin/appstreamcli" ]; then \
-		sudo chroot "$@.partial" /usr/bin/appstreamcli refresh-cache --force; \
+		sudo $(CHROOT) "$@.partial" /usr/bin/appstreamcli refresh-cache --force; \
 	fi
 
 	# Run console-setup script
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"/iso/console-setup.sh"
 
 	# Create missing network-manager file
@@ -200,7 +200,7 @@ $(BUILD)/live: $(BUILD)/chroot
 	sudo mv "$@.partial" "$@"
 
 $(BUILD)/live.tag: $(BUILD)/live
-	sudo chroot "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
+	sudo $(CHROOT) "$<" /bin/bash -e -c "dpkg-query -W --showformat='\$${Package}\t\$${Version}\n'" > "$@"
 
 $(BUILD)/pool: $(BUILD)/chroot
 	# Unmount chroot if mounted
@@ -226,7 +226,7 @@ $(BUILD)/pool: $(BUILD)/chroot
 	"scripts/mount.sh" "$@.partial"
 
 	# Run chroot script
-	sudo chroot "$@.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
 		CLEAN=1 \
