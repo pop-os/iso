@@ -19,7 +19,7 @@ update-chroot update-live: update-%: $(BUILD)/%
 	"scripts/mount.sh" "$<.partial"
 
 	# Run chroot script
-	sudo chroot "$<.partial" /bin/bash -e -c \
+	sudo $(CHROOT) "$<.partial" /bin/bash -e -c \
 		"UPDATE=1 \
 		UPGRADE=1 \
 		PURGE=\"$(RM_PKGS)\" \

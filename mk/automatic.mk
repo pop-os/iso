@@ -19,6 +19,8 @@ SED=\
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
 	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
 
+CHROOT=env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin chroot
+
 XORRISO=$(shell command -v xorriso 2> /dev/null)
 ZSYNC=$(shell command -v zsync 2> /dev/null)
 SQUASHFS=$(shell command -v mksquashfs 2> /dev/null)
