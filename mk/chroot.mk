@@ -118,6 +118,8 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
 
+	sudo rm -rf "$@.partial"/root/.launchpadlib
+
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
@@ -193,6 +195,8 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
 
+	sudo rm -rf "$@.partial"/root/.launchpadlib
+
 	# Remove temp directory for modifications
 	sudo rm -rf "$@.partial/iso"
 
@@ -234,6 +238,8 @@ $(BUILD)/pool: $(BUILD)/chroot
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
+
+	sudo rm -rf "$@.partial"/root/.launchpadlib
 
 	# Save package pool
 	sudo mv "$@.partial/iso/pool" "$@.partial/pool"
