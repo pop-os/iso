@@ -75,6 +75,7 @@ MAIN_POOL=\
 	kernelstub \
 	libfl2 \
 	libx86-1 \
+	lm-sensors \
 	pm-utils \
 	powermgmt-base \
 	python3-debian \
