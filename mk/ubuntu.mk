@@ -26,6 +26,9 @@ else ifeq ($(DISTRO_VERSION),20.04)
 else ifeq ($(DISTRO_VERSION),20.10)
 	UBUNTU_CODE:=groovy
 	UBUNTU_NAME:=Groovy Gorilla
+else ifeq ($(DISTRO_VERSION),21.04)
+	UBUNTU_CODE:=hirsute
+	UBUNTU_NAME:=Hirsute Hippo
 endif
 
 UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
