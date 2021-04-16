@@ -52,6 +52,9 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 	sudo cp -r "$</pool" "$(BUILD)/iso/pool"
 	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/pool"
 
+	# Fix pool paths
+	./scripts/pool.sh "$(BUILD)/iso/pool/"*
+
 	# Update pool package lists
 	cd "$(BUILD)/iso" && \
 	mkdir -p "dists/$(UBUNTU_CODE)" && \
