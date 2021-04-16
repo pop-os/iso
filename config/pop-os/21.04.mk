@@ -55,6 +55,7 @@ LIVE_PKGS=\
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
+	ibus-mozc \
 	imagemagick-6.q16 \
 	mozc-utils-gui \
 	pop-installer-session \
