@@ -29,6 +29,9 @@ else ifeq ($(DISTRO_VERSION),20.10)
 else ifeq ($(DISTRO_VERSION),21.04)
 	UBUNTU_CODE:=hirsute
 	UBUNTU_NAME:=Hirsute Hippo
+else ifeq ($(DISTRO_VERSION),21.10)
+	UBUNTU_CODE:=impish
+	UBUNTU_NAME:=Impish Indri
 endif
 
 UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
