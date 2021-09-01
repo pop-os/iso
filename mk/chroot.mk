@@ -79,6 +79,18 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 			/iso/repos.sh"; \
 	fi
 
+	# Add release URIs
+	if [ -n "${RELEASE_URI}" ]; then \
+		sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
+			"FILENAME=\"/etc/apt/sources.list.d/${DISTRO_CODE}-release.sources\" \
+			NAME=\"${DISTRO_NAME} Release Sources\" \
+			TYPES=\"deb deb-src\" \
+			URIS=\"${RELEASE_URI}\" \
+			SUITES=\"${UBUNTU_CODE}\" \
+			COMPONENTS=\"main\" \
+			/iso/repos.sh"; \
+	fi
+
 	# Run chroot script
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
@@ -91,7 +103,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		CLEAN=1 \
 		/iso/chroot.sh \
 		$(DISTRO_REPOS)"
-	
+
 	# Add extra URIS
 	if [ -n "${APPS_URI}" ]; then \
 		sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
