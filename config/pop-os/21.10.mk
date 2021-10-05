@@ -6,6 +6,8 @@ else
 DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 Intel
 endif
 
+GNOME_INITIAL_SETUP_STAMP=21.04
+
 # DEB822 format system repositories, comment out to disable
 DEB822:=1
 APPS_URI:=http://apt.pop-os.org/proprietary

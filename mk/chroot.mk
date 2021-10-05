@@ -187,6 +187,13 @@ $(BUILD)/live: $(BUILD)/chroot
 		sudo rm -f "$@.partial/usr/share/initramfs-tools/scripts/casper-bottom/01integrity_check"; \
 	fi
 
+	# Make casper script for initial setup set the version
+	if [ -n "$(GNOME_INITIAL_SETUP_STAMP)" ]; then \
+		sudo sed -i \
+		's|touch /root/home/$$USERNAME/.config/gnome-initial-setup-done|echo -n "$(GNOME_INITIAL_SETUP_STAMP)" > /root/home/$$USERNAME/.config/gnome-initial-setup-done|' \
+		"$@.partial/usr/share/initramfs-tools/scripts/casper-bottom/52gnome_initial_setup"; \
+	fi
+
 	# Update apt cache
 	sudo $(CHROOT) "$@.partial" /usr/bin/apt-get update
 
