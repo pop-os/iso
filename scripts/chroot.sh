@@ -68,7 +68,7 @@ fi
 # Upgrade installed packages
 if [ -n "${UPGRADE}" ]
 then
-    apt-get dist-upgrade -y --allow-downgrades
+    apt-get upgrade -y --allow-downgrades
 fi
 
 # Install packages
