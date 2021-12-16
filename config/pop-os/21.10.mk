@@ -17,7 +17,7 @@ RELEASE_URI:=http://apt.pop-os.org/release
 
 # Add proposed repositories
 ifeq ($(PROPOSED),1)
-RELEASE_URI+=deb http://apt.pop-os.org/staging/master
+RELEASE_URI+=deb http://apt.pop-os.org/staging/main
 endif
 
 # Packages to install
