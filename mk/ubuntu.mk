@@ -32,6 +32,9 @@ else ifeq ($(DISTRO_VERSION),21.04)
 else ifeq ($(DISTRO_VERSION),21.10)
 	UBUNTU_CODE:=impish
 	UBUNTU_NAME:=Impish Indri
+else ifeq ($(DISTRO_VERSION),22.04)
+	UBUNTU_CODE:=jammy
+	UBUNTU_NAME:=Jammy Jellyfish
 endif
 
 UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
