@@ -54,6 +54,7 @@ LIVE_PKGS=\
 RM_PKGS=\
 	ibus-mozc \
 	imagemagick-6.q16 \
+	irqbalance \
 	mozc-utils-gui \
 	pop-installer-session \
 	snapd \
