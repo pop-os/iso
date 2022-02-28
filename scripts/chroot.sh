@@ -111,7 +111,7 @@ then
     mkdir -p "/iso/pool/main"
     chown -R _apt "/iso/pool/main"
     pushd "/iso/pool/main"
-        sudo -u _apt apt-get download ${MAIN_POOL}
+        apt-get download ${MAIN_POOL}
     popd
 fi
 
@@ -121,7 +121,7 @@ then
     mkdir -p "/iso/pool/restricted"
     chown -R _apt "/iso/pool/restricted"
     pushd "/iso/pool/restricted"
-        sudo -u _apt apt-get download ${RESTRICTED_POOL}
+        apt-get download ${RESTRICTED_POOL}
     popd
 fi
 
