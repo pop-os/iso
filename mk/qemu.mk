@@ -1,6 +1,7 @@
 QEMUFLAGS=\
 	-enable-kvm \
 	-m 4G \
+	-smp 8 \
 	-vga qxl
 
 $(BUILD)/%.img:
