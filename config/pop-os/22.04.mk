@@ -81,6 +81,7 @@ MAIN_POOL=\
 	libx86-1 \
 	lm-sensors \
 	pm-utils \
+	postfix \
 	powermgmt-base \
 	python3-debian \
 	python3-distro \
