@@ -36,10 +36,7 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 	sudo du -sx --block-size=1 "$(BUILD)/live" | cut -f1 > "$(BUILD)/iso/$(CASPER_PATH)/filesystem.size"
 
 	# Rebuild filesystem image
-	sudo mksquashfs "$(BUILD)/live" \
-		"$(BUILD)/iso/$(CASPER_PATH)/filesystem.squashfs" \
-		-noappend -fstime "$(DISTRO_EPOCH)" \
-		-comp zstd -b 1M -Xcompression-level 22
+	sudo mksquashfs "$(BUILD)/live" "$(BUILD)/iso/$(CASPER_PATH)/filesystem.squashfs" -noappend -fstime "$(DISTRO_EPOCH)"
 
 	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/$(CASPER_PATH)"
 
