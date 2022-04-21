@@ -1,6 +1,6 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
-DISTRO_VERSION?=21.10
+DISTRO_VERSION?=22.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
@@ -13,6 +13,7 @@ GPG_NAME?=`id -un`
 
 PROPOSED?=0
 NVIDIA?=0
+HP?=0
 
 # Include automatic variables
 include mk/automatic.mk

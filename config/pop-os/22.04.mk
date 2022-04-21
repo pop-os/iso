@@ -104,3 +104,15 @@ RESTRICTED_POOL=\
 	amd64-microcode \
 	intel-microcode \
 	iucode-tool
+
+ifeq ($(HP),1)
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 HP
+POST_DISTRO_PKGS+=\
+	pop-hp-vendor \
+	pop-hp-vendor-dkms \
+	pop-hp-wallpapers
+RM_PKGS+=\
+	pop-wallpapers
+LIVE_PKGS+=\
+	dbus-x11
+endif
