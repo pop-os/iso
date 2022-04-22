@@ -202,6 +202,11 @@ $(BUILD)/live: $(BUILD)/chroot
 		sudo $(CHROOT) "$@.partial" /usr/bin/appstreamcli refresh-cache --force; \
 	fi
 
+	# Update fwupd cache
+	if [ -e "$@.partial/usr/bin/fwupdtool" ]; then \
+		sudo $(CHROOT) "$@.partial" /usr/bin/fwupdtool refresh --force; \
+	fi
+
 	# Run console-setup script
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"/iso/console-setup.sh"
