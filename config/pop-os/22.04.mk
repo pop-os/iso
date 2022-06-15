@@ -81,6 +81,9 @@ MAIN_POOL=\
 	libx86-1 \
 	lm-sensors \
 	pm-utils \
+	pop-hp-vendor \
+	pop-hp-vendor-dkms \
+	pop-hp-wallpapers \
 	postfix \
 	powermgmt-base \
 	python3-debian \
