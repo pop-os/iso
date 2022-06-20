@@ -37,7 +37,7 @@ ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 POST_DISTRO_PKGS+=\
 	amd-ppt-bin \
-	nvidia-driver-510
+	nvidia-driver-515
 endif
 
 # Packages to have in live instance
