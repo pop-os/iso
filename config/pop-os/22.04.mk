@@ -35,6 +35,7 @@ POST_DISTRO_PKGS=\
 
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
+DISTRO_PARAMS+=nvidia-drm.modeset=0
 POST_DISTRO_PKGS+=\
 	amd-ppt-bin \
 	nvidia-driver-515
