@@ -9,7 +9,7 @@ $(BUILD)/debootstrap:
 		--arch=amd64 \
 		"$(UBUNTU_CODE)" \
 		"$@.partial" \
-		"$(UBUNTU_MIRROR)"; \
+		"$(DEBOOTSTRAP_MIRROR)"; \
 	then \
 		cat "$@.partial/debootstrap/debootstrap.log"; \
 		false; \
