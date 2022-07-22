@@ -37,7 +37,7 @@ else ifeq ($(DISTRO_VERSION),22.04)
 	UBUNTU_NAME:=Jammy Jellyfish
 endif
 
-UBUNTU_MIRROR:=http://us.archive.ubuntu.com/ubuntu/
+UBUNTU_MIRROR:=http://apt.pop-os.org/ubuntu
 
 UBUNTU_COMPONENTS:=\
 	main \
