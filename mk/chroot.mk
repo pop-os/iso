@@ -180,7 +180,7 @@ $(BUILD)/live: $(BUILD)/chroot
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
 		CLEAN=1 \
-		/iso/chroot.sh"
+		/iso/chroot.sh debug"
 
 	# Remove undesired casper script
 	if [ -e "$@.partial/usr/share/initramfs-tools/scripts/casper-bottom/01integrity_check" ]; then \

@@ -30,33 +30,38 @@ if [ -n "${KEY}" ]
 then
     echo "Adding APT key: ${KEY}"
     apt-key add "${KEY}"
+    echo $KEY
 fi
 
 # Add all distro PPAs
 if [ $# -gt 0 ]
 then
     echo "Enabling repository source"
-    ENABLE_SOURCE=--enable-source
-    for repo in "$@"
-    do
-        if [ "$repo" == "--" ]
-        then
-            echo "Disabling repository source"
-            ENABLE_SOURCE=
-        else
-            echo "Adding repository '$repo'"
-            if [[ "${repo}" == "deb "* ]]
-            then
-                echo "${repo}" >> /etc/apt/sources.list
-                if [ -n "${ENABLE_SOURCE}" ]
-                then
-                    echo "${repo}" | sed 's/^deb /deb-src /' >> /etc/apt/sources.list
-                fi
-            else
-                add-apt-repository ${ENABLE_SOURCE} --yes "${repo}"
-            fi
-        fi
+    UBUNTU_CODENAME=jammy
+    REPOS="http://apt.pop-os.org/staging/"
+		for newrepo in "$@"
+		do
+		    echo "Adding preference for '$newrepo'"
+			  tee "/etc/apt/preferences.d/pop-os-staging-${newrepo//./_}" > /dev/null <<-EOF
+Package: *
+Pin: release o=pop-os-staging-$newrepo
+Pin-Priority: 1002
+EOF
+
+			  echo "Adding repository for '$newrepo'"
+			  LINE="deb ${REPOS}$newrepo ${UBUNTU_CODENAME} main"
+			  if command -v apt-manage
+			  then
+				    apt-manage add "${LINE}" \
+					       --source-code \
+					       --ident "popdev-${LOCALREMOTE}${newrepo//./-}" \
+					       --name "Pop Development Branch $newrepo"
+			  else
+				    add-apt-repository --enable-source --no-update "${LINE}"
+			  fi
     done
+    cat /etc/apt/sources.list.d/popdev-debug.list
+    apt-get update
 fi
 
 # Update package definitions
