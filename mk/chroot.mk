@@ -178,9 +178,11 @@ $(BUILD)/live: $(BUILD)/chroot
 		"KEY=\"/iso/apt-cdrom.key\" \
 		INSTALL=\"$(LIVE_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
+    LIVEBRANCHES='\"$(LIVE_STAGING_BRANCHES)\" \
+    CODENAME='\"$(UBUNTU_CODE)\" \
 		AUTOREMOVE=1 \
 		CLEAN=1 \
-		/iso/chroot.sh debug"
+		/iso/chroot.sh"
 
 	# Remove undesired casper script
 	if [ -e "$@.partial/usr/share/initramfs-tools/scripts/casper-bottom/01integrity_check" ]; then \

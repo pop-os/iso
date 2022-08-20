@@ -51,6 +51,9 @@ LIVE_PKGS=\
 	pop-installer-casper \
 	pop-shop-casper
 
+# Staging Branches to have in the live instance (these package must alse be installed)
+LIVE_STAGING_BRANCHES=
+
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	ibus-mozc \

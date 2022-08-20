@@ -34,12 +34,10 @@ then
 fi
 
 # Add all distro PPAs
-if [ $# -gt 0 ]
+if [ -n "${LIVEBRANCHES}" ] && [-n "${CODENAME}"]
 then
     echo "Enabling repository source"
-    UBUNTU_CODENAME=jammy
-    REPOS="http://apt.pop-os.org/staging/"
-		for newrepo in "$@"
+		for newrepo in $LIVEBRANCHES
 		do
 		    echo "Adding preference for '$newrepo'"
 			  tee "/etc/apt/preferences.d/pop-os-staging-${newrepo//./_}" > /dev/null <<-EOF
@@ -49,7 +47,7 @@ Pin-Priority: 1002
 EOF
 
 			  echo "Adding repository for '$newrepo'"
-			  LINE="deb ${REPOS}$newrepo ${UBUNTU_CODENAME} main"
+			  LINE="deb http://apt.pop-os.org/staging/$newrepo ${CODENAME} main"
 			  if command -v apt-manage
 			  then
 				    apt-manage add "${LINE}" \
