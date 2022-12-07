@@ -38,7 +38,7 @@ DISTRO_PARAMS+=modules_load=nvidia
 DISTRO_PARAMS+=nvidia-drm.modeset=0
 POST_DISTRO_PKGS+=\
 	amd-ppt-bin \
-	nvidia-driver-515
+	nvidia-driver-525
 endif
 
 # Packages to have in live instance
