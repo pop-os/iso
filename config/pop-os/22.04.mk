@@ -25,6 +25,7 @@ DISTRO_PKGS=\
 	linux-system76 \
 	ubuntu-minimal \
 	ubuntu-standard \
+	systemd \
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
