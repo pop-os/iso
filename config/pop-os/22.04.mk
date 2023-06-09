@@ -42,6 +42,11 @@ POST_DISTRO_PKGS+=\
 	nvidia-driver-525
 endif
 
+# Staging branches to use when building ISO.
+# No values is the same as building from release
+# `branch-name` is equivalent to `apt-manage add popdev:branch-name -y`
+STAGING_BRANCHES=
+
 # Packages to have in live instance
 LIVE_PKGS=\
 	casper \

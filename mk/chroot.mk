@@ -94,6 +94,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Run chroot script
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/pop.key\" \
+		STAGING_BRANCHES=\"$(STAGING_BRANCHES)\" \
 		UPDATE=1 \
 		UPGRADE=1 \
 		INSTALL=\"$(DISTRO_PKGS)\" \
@@ -176,6 +177,7 @@ $(BUILD)/live: $(BUILD)/chroot
 	# Run chroot script
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"KEY=\"/iso/apt-cdrom.key\" \
+		STAGING_BRANCHES=\"$(STAGING_BRANCHES)\" \
 		INSTALL=\"$(LIVE_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
 		AUTOREMOVE=1 \
