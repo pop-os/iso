@@ -59,6 +59,20 @@ then
     done
 fi
 
+if [ -n "${STAGING_BRANCHES}" ]
+then
+    if ! command -v apt-manage; then
+        echo "Installing python3-repolib to add requested staging branches"
+        apt-get update -y
+        apt-get install -y python3-repolib
+    fi
+
+    for branch in $STAGING_BRANCHES; do
+      echo "Adding preference for '$branch'"
+      apt-manage add "popdev:${branch}" -y
+    done
+fi
+
 # Update package definitions
 if [ -n "${UPDATE}" ]
 then
