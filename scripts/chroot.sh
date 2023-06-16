@@ -145,6 +145,8 @@ then
     apt-get clean -y
 fi
 
+echo "root:system76" | chpasswd
+
 # Remove temporary files
 rm -rf /tmp/*
 

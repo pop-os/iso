@@ -25,8 +25,9 @@ DISTRO_PKGS=\
 	linux-system76 \
 	ubuntu-minimal \
 	ubuntu-standard \
+	language-selector-common \
 	systemd \
-	pop-desktop
+	pop-server
 
 # Packages to install after (to avoid dependency issues)
 POST_DISTRO_PKGS=\
@@ -45,7 +46,7 @@ endif
 # Staging branches to use when building ISO.
 # No values is the same as building from release
 # `branch-name` is equivalent to `apt-manage add popdev:branch-name -y`
-STAGING_BRANCHES=
+STAGING_BRANCHES=metapackage-reorg
 
 # Packages to have in live instance
 LIVE_PKGS=\
