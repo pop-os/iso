@@ -101,6 +101,7 @@ MAIN_POOL=\
 	system76-firmware-daemon \
 	system76-oled \
 	system76-wallpapers \
+	systemd-hwe-hwdb \
 	vbetool \
 	xbacklight
 
