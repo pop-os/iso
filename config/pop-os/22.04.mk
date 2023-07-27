@@ -22,6 +22,7 @@ endif
 
 # Packages to install
 DISTRO_PKGS=\
+	systemd \
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
