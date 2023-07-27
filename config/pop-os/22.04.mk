@@ -22,10 +22,6 @@ endif
 
 # Packages to install
 DISTRO_PKGS=\
-	linux-system76 \
-	ubuntu-minimal \
-	ubuntu-standard \
-	systemd \
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
@@ -83,6 +79,7 @@ MAIN_POOL=\
 	grub-pc \
 	grub-pc-bin \
 	grub-gfxpayload-lists \
+	hdparm \
 	kernelstub \
 	libfl2 \
 	libx86-1 \
