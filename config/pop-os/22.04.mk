@@ -62,6 +62,8 @@ RM_PKGS=\
 	mozc-utils-gui \
 	pop-installer-session \
 	snapd \
+        ubuntu-advantage-tools \
+        ubuntu-minimal \
 	ubuntu-session \
 	ubuntu-wallpapers \
 	unattended-upgrades \
