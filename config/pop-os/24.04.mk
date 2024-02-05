@@ -6,6 +6,9 @@ else
 DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 Intel
 endif
 
+# Show splash screen
+DISTRO_PARAMS+=quiet splash
+
 GNOME_INITIAL_SETUP_STAMP=21.04
 
 # DEB822 format system repositories, comment out to disable
@@ -42,7 +45,8 @@ endif
 # Staging branches to use when building ISO.
 # No values is the same as building from release
 # `branch-name` is equivalent to `apt-manage add popdev:branch-name -y`
-STAGING_BRANCHES=
+#TODO: REMOVE AFTER https://github.com/pop-os/distinst-v2/pull/3 IS MERGED
+STAGING_BRANCHES=master distinst-v2-dependencies
 
 # Packages to have in live instance
 LIVE_PKGS=\
@@ -51,8 +55,7 @@ LIVE_PKGS=\
 	expect \
 	gparted \
 	pop-installer \
-	pop-installer-casper \
-	pop-shop-casper
+	pop-installer-casper
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
