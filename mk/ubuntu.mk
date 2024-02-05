@@ -35,6 +35,9 @@ else ifeq ($(DISTRO_VERSION),21.10)
 else ifeq ($(DISTRO_VERSION),22.04)
 	UBUNTU_CODE:=jammy
 	UBUNTU_NAME:=Jammy Jellyfish
+else ifeq ($(DISTRO_VERSION),24.04)
+	UBUNTU_CODE:=noble
+	UBUNTU_NAME:=Noble Numbat
 endif
 
 UBUNTU_MIRROR:=http://apt.pop-os.org/ubuntu

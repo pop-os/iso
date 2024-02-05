@@ -61,12 +61,6 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	sudo mkdir "$@.partial/etc/kernelstub"
 	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
-	# Workaround bug caused by first run of add-apt-repository being blank
-	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
-		"add-apt-repository --yes -n ppa:system76/pop"
-	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
-		"rm -rf /etc/apt/sources.list.d/system76-ubuntu-pop-$(UBUNTU_CODE).list"
-
 	# Setup DEB822 format repos on 20.10 or later
 	if [ -n "${DEB822}" ]; then \
 		sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
