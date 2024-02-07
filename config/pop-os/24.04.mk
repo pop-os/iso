@@ -46,7 +46,7 @@ endif
 # No values is the same as building from release
 # `branch-name` is equivalent to `apt-manage add popdev:branch-name -y`
 #TODO: REMOVE AFTER https://github.com/pop-os/distinst-v2/pull/3 IS MERGED
-STAGING_BRANCHES=master distinst-v2-dependencies
+STAGING_BRANCHES=distinst-v2-dependencies
 
 # Packages to have in live instance
 LIVE_PKGS=\
