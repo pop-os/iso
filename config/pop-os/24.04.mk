@@ -34,6 +34,10 @@ POST_DISTRO_PKGS=\
 	system76-dkms \
 	system76-io-dkms
 
+# DKMS packages on Pop try to build with gcc-12, and it needs to be installed
+#TODO: figure out why this is not already a dependency
+POST_DISTRO_PKGS+=gcc-12
+
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 DISTRO_PARAMS+=nvidia-drm.modeset=0
@@ -45,8 +49,7 @@ endif
 # Staging branches to use when building ISO.
 # No values is the same as building from release
 # `branch-name` is equivalent to `apt-manage add popdev:branch-name -y`
-#TODO: REMOVE AFTER https://github.com/pop-os/distinst-v2/pull/3 IS MERGED
-STAGING_BRANCHES=distinst-v2-dependencies
+STAGING_BRANCHES=
 
 # Packages to have in live instance
 LIVE_PKGS=\
