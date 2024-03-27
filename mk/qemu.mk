@@ -6,7 +6,7 @@ QEMUFLAGS=\
 
 $(BUILD)/%.img:
 	mkdir -p $(BUILD)
-	qemu-img create -f qcow2 "$@.partial" 32G
+	qemu-img create -f qcow2 "$@.partial" 64G
 
 	mv "$@.partial" "$@"
 
