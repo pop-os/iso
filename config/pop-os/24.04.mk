@@ -6,6 +6,9 @@ else
 DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) amd64 Intel
 endif
 
+# Show splash screen
+DISTRO_PARAMS+=quiet splash
+
 GNOME_INITIAL_SETUP_STAMP=21.04
 
 # DEB822 format system repositories, comment out to disable
@@ -31,6 +34,10 @@ POST_DISTRO_PKGS=\
 	system76-dkms \
 	system76-io-dkms
 
+# DKMS packages on Pop try to build with gcc-12, and it needs to be installed
+#TODO: figure out why this is not already a dependency
+POST_DISTRO_PKGS+=gcc-12
+
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 DISTRO_PARAMS+=nvidia-drm.modeset=0
@@ -51,8 +58,7 @@ LIVE_PKGS=\
 	expect \
 	gparted \
 	pop-installer \
-	pop-installer-casper \
-	pop-shop-casper
+	pop-installer-casper
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\

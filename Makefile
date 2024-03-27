@@ -1,6 +1,6 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
-DISTRO_VERSION?=22.04
+DISTRO_VERSION?=24.04
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
@@ -11,7 +11,7 @@ ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)
 
 GPG_NAME?=`id -un`
 
-PROPOSED?=0
+PROPOSED?=1
 NVIDIA?=0
 HP?=0
 
