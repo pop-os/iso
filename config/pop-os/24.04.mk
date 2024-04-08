@@ -24,8 +24,10 @@ RELEASE_URI:=http://apt.pop-os.org/staging/master
 endif
 
 # Packages to install
+#TODO: cosmic-term is before pop-desktop to ensure it fulfills all x-terminal-emulator depends
 DISTRO_PKGS=\
 	systemd \
+	cosmic-term \
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
@@ -37,6 +39,11 @@ POST_DISTRO_PKGS=\
 # DKMS packages on Pop try to build with gcc-12, and it needs to be installed
 #TODO: figure out why this is not already a dependency
 POST_DISTRO_PKGS+=gcc-12
+
+#TODO: rsync is added because it is not depended on by anything except distinst
+# When distinst is removed from the installation, rsync is not available for
+# syncing the recovery partition
+POST_DISTRO_PKGS+=rsync
 
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
