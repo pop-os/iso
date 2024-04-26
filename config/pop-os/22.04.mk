@@ -26,10 +26,14 @@ DISTRO_PKGS=\
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
+ifeq ($(DISTRO_ARCH),amd64)
 POST_DISTRO_PKGS=\
 	system76-acpi-dkms \
 	system76-dkms \
 	system76-io-dkms
+else
+POST_DISTRO_PKGS=
+endif
 
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
