@@ -1,13 +1,14 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
 DISTRO_VERSION?=24.04
+DISTRO_ARCH?=amd64
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
 
 DISTRO_PARAMS?=
 
-ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)
+ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)_$(DISTRO_ARCH)
 
 GPG_NAME?=`id -un`
 
