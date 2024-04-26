@@ -6,10 +6,10 @@ QEMUFLAGS=\
 	-smp 8 \
 	-vga qxl
 ifeq ($(efi),no)
-QEMUFLAGS+=-bios /usr/share/OVMF/OVMF_CODE.fd
-BOOTLOADER=UEFI
-else
 BOOTLOADER=BIOS
+else
+BOOTLOADER=UEFI
+QEMUFLAGS+=-bios /usr/share/OVMF/OVMF_CODE.fd
 endif
 else ifeq ($(DISTRO_ARCH),arm64)
 QEMU=qemu-system-aarch64
@@ -18,6 +18,7 @@ QEMUFLAGS=\
 	-smp 8 \
 	-vga qxl
 BOOTLOADER=UEFI
+QEMUFLAGS+=-bios /usr/share/AAVMF/AAVMF_CODE.fd
 else
 $(error unknown DISTRO_ARCH $(DISTRO_ARCH))
 endif
