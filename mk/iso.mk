@@ -161,11 +161,6 @@ $(TAR): $(BUILD)/iso_sum.tag
 
 	mv "$@.partial" "$@"
 
-$(USB): $(BUILD)/iso_sum.tag
-	scripts/usb.sh "$(BUILD)" "$@.partial"
-
-	mv "$@.partial" "$@"
-
 $(ISO): $(BUILD)/iso_sum.tag
 	xorriso -as mkisofs \
 		-J \
