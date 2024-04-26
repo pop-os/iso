@@ -6,7 +6,7 @@ $(BUILD)/debootstrap:
 
 	# Install using debootstrap
 	if ! sudo debootstrap \
-		--arch=amd64 \
+		--arch=$(DISTRO_ARCH) \
 		"$(UBUNTU_CODE)" \
 		"$@.partial" \
 		"$(UBUNTU_MIRROR)"; \

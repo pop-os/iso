@@ -62,14 +62,14 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 	cd "$(BUILD)/iso" && \
 	mkdir -p "dists/$(UBUNTU_CODE)" && \
 	for pool in $$(ls -1 pool); do \
-		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
-		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
-		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
-		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
+		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)" && \
+		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)/Packages" && \
+		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)/Packages" && \
+		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)/Release"; \
 	done; \
 	apt-ftparchive \
 		-o "APT::FTPArchive::Release::Acquire-By-Hash=yes" \
-		-o "APT::FTPArchive::Release::Architectures=amd64" \
+		-o "APT::FTPArchive::Release::Architectures=$(DISTRO_ARCH)" \
 		-o "APT::FTPArchive::Release::Codename=$(UBUNTU_CODE)" \
 		-o "APT::FTPArchive::Release::Components=$$(ls -1 pool | tr $$'\n' ' ')" \
 		-o "APT::FTPArchive::Release::Description=$(DISTRO_CODE) $(DISTRO_VERSION)" \
