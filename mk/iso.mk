@@ -167,18 +167,6 @@ $(USB): $(BUILD)/iso_sum.tag
 	mv "$@.partial" "$@"
 
 $(ISO): $(BUILD)/iso_sum.tag
-ifeq ($(GRUB_BIOS),1)
-	xorriso -as mkisofs \
-		-J \
-		--protective-msdos-label \
-		-b boot/grub/i386-pc/eltorito.img \
-		-no-emul-boot -boot-load-size 4 -boot-info-table \
-		--grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
-		--efi-boot "boot/grub/efi.img" -efi-boot-part --efi-boot-image \
-		-r -V "$(DISTRO_VOLUME_LABEL)" \
-		-o "$@.partial" "$(BUILD)/iso" -- \
-		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
-else
 	xorriso -as mkisofs \
 		-J \
 		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
@@ -189,7 +177,6 @@ else
 		-r -V "$(DISTRO_VOLUME_LABEL)" \
 		-o "$@.partial" "$(BUILD)/iso" -- \
 		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
-endif
 
 	mv "$@.partial" "$@"
 
