@@ -253,6 +253,7 @@ $(BUILD)/pool: $(BUILD)/chroot
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
+		INSTALL=\"$(POOL_PKGS)\" \
 		CLEAN=1 \
 		/iso/chroot.sh"
 
