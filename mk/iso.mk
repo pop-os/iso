@@ -86,9 +86,14 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 
 	touch "$@"
 
-$(BUILD)/grub:
+$(BUILD)/grub: $(BUILD)/pool
 	rm -rf "$@.partial"
 	mkdir "$@.partial"
+
+	rm -rf "$(BUILD)/iso/efi"
+	mkdir -p "$(BUILD)/iso/efi/boot/"
+
+ifeq ($(DISTRO_ARCH),amd64)
 
 	grub-mkimage \
 		--directory /usr/lib/grub/i386-pc \
@@ -99,10 +104,15 @@ $(BUILD)/grub:
 		--config data/grub/load.cfg \
 		biosdisk iso9660
 
-	rm -rf "$(BUILD)/iso/efi"
-	mkdir -p "$(BUILD)/iso/efi/boot/"
 	cp -r "data/efi/shimx64.efi.signed" "$(BUILD)/iso/efi/boot/bootx64.efi"
 	cp -r "/usr/lib/grub/x86_64-efi-signed/gcdx64.efi.signed" "$(BUILD)/iso/efi/boot/grubx64.efi"
+
+else ifeq ($(DISTRO_ARCH),arm64)
+
+	cp -v "$(BUILD)/pool/usr/lib/shim/shimaa64.efi.signed.latest" "$(BUILD)/iso/efi/boot/bootaa64.efi"
+	cp -v "$(BUILD)/pool/usr/lib/grub/arm64-efi-signed/gcdaa64.efi.signed" "$(BUILD)/iso/efi/boot/grubaa64.efi"
+
+endif
 
 	mkfs.vfat -C "$@.partial/efi.img" 4096
 	mcopy -s -i "$@.partial/efi.img" "$(BUILD)/iso/efi" ::/
@@ -110,7 +120,7 @@ $(BUILD)/grub:
 	touch "$@.partial"
 	mv "$@.partial" "$@"
 
-$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
+$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub $(BUILD)/pool
 	git submodule update --init data/grub-theme
 
 	# Replace disk info
@@ -118,18 +128,16 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	mkdir -p "$(BUILD)/iso/.disk"
 	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
 
-	# Copy isolinux files
-	rm -rf "$(BUILD)/iso/isolinux"
-	mkdir -p "$(BUILD)/iso/isolinux"
-	cp /usr/lib/ISOLINUX/isolinux.bin "$(BUILD)/iso/isolinux/isolinux.bin"
-	cp /usr/lib/syslinux/modules/bios/ldlinux.c32 "$(BUILD)/iso/isolinux/ldlinux.c32"
-	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
-
 	# Update grub config
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
+
+	# Copy grub theme
+	cp -r "data/grub-theme/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
+
+ifeq ($(DISTRO_ARCH),amd64)
 
 	# Copy grub modules (BIOS)
 	mkdir -p "$(BUILD)/iso/boot/grub/i386-pc"
@@ -140,8 +148,21 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	mkdir -p "$(BUILD)/iso/boot/grub/x86_64-efi"
 	cp "/usr/lib/grub/x86_64-efi/"*.mod "$(BUILD)/iso/boot/grub/x86_64-efi/"
 
-	# Copy grub theme
-	cp -r "data/grub-theme/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
+	# Copy isolinux files
+	rm -rf "$(BUILD)/iso/isolinux"
+	mkdir -p "$(BUILD)/iso/isolinux"
+	cp /usr/lib/ISOLINUX/isolinux.bin "$(BUILD)/iso/isolinux/isolinux.bin"
+	cp /usr/lib/syslinux/modules/bios/ldlinux.c32 "$(BUILD)/iso/isolinux/ldlinux.c32"
+	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
+
+else ifeq ($(DISTRO_ARCH),arm64)
+
+	# Copy grub modules (EFI)
+	cp "$(BUILD)/grub/efi.img" "$(BUILD)/iso/boot/grub"
+	mkdir -p "$(BUILD)/iso/boot/grub/arm64-efi"
+	cp "$(BUILD)/pool/usr/lib/grub/arm64-efi/"*.mod "$(BUILD)/iso/boot/grub/arm64-efi/"
+
+endif
 
 	touch "$@"
 

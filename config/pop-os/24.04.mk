@@ -31,10 +31,14 @@ DISTRO_PKGS=\
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
+ifeq ($(DISTRO_ARCH),amd64)
 POST_DISTRO_PKGS=\
 	system76-acpi-dkms \
 	system76-dkms \
 	system76-io-dkms
+else
+POST_DISTRO_PKGS=
+endif
 
 # DKMS packages on Pop try to build with gcc-12, and it needs to be installed
 #TODO: figure out why this is not already a dependency
@@ -89,6 +93,7 @@ RM_PKGS=\
 	yaru-theme-gnome-shell
 
 # Packages not installed, but that may need to be discovered by the installer
+ifeq ($(DISTRO_ARCH),amd64)
 MAIN_POOL=\
 	at \
 	dfu-programmer \
@@ -121,6 +126,16 @@ MAIN_POOL=\
 	system76-wallpapers \
 	vbetool \
 	xbacklight
+else ifeq ($(DISTRO_ARCH),arm64)
+MAIN_POOL=\
+	efibootmgr \
+	grub-efi-arm64 \
+	grub-efi-arm64-bin \
+	grub-efi-arm64-signed \
+	kernelstub
+else
+MAIN_POOL=
+endif
 
 ifeq ($(NVIDIA),1)
 MAIN_POOL+=\
@@ -128,10 +143,20 @@ MAIN_POOL+=\
 endif
 
 # Additional pool packages from the restricted set of packages
+ifeq ($(DISTRO_ARCH),amd64)
 RESTRICTED_POOL=\
 	amd64-microcode \
 	intel-microcode \
 	iucode-tool
+else
+RESTRICTED_POOL=
+endif
+
+# Extra packages to install in the pool for use by iso creation
+POOL_PKGS=\
+	grub-efi-$(DISTRO_ARCH)-bin \
+	grub-efi-$(DISTRO_ARCH)-signed \
+	shim-signed
 
 ifeq ($(HP),1)
 DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH) HP
