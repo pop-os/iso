@@ -14,9 +14,14 @@ endif
 else ifeq ($(DISTRO_ARCH),arm64)
 QEMU=qemu-system-aarch64
 QEMUFLAGS=\
+	-M virt \
 	-m 4G \
+	-cpu max \
 	-smp 8 \
-	-vga qxl
+	-device ramfb \
+	-device qemu-xhci -device usb-kbd -device usb-tablet \
+	-device ich9-intel-hda -device hda-output \
+	-netdev user,id=net0 -device e1000,netdev=net0
 BOOTLOADER=UEFI
 QEMUFLAGS+=-bios /usr/share/AAVMF/AAVMF_CODE.fd
 else
@@ -29,18 +34,18 @@ $(BUILD)/%.img:
 	mv "$@.partial" "$@"
 
 qemu: $(ISO) $(BUILD)/qemu.img
-	qemu-system-x86_64 $(QEMUFLAGS) \
+	$(QEMU) $(QEMUFLAGS) \
 		-name "$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH) $(BOOTLOADER) ISO" \
 		-hda $(BUILD)/qemu.img \
 		-boot d -cdrom "$<"
 
 qemu_hd: $(BUILD)/qemu.img
-	qemu-system-x86_64 $(QEMUFLAGS) \
+	$(QEMU) $(QEMUFLAGS) \
 		-name "$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH) $(BOOTLOADER) HD" \
 		-hda $(BUILD)/qemu.img
 
 qemu_usb: $(ISO) $(BUILD)/qemu.img
-	qemu-system-x86_64 $(QEMUFLAGS) \
+	$(QEMU) $(QEMUFLAGS) \
 		-name "$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH) $(BOOTLOADER) USB" \
 		-hda $(BUILD)/qemu.img \
 		-boot d -drive if=none,id=img,file="$<" \
