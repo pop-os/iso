@@ -25,9 +25,11 @@ endif
 
 # Packages to install
 #TODO: cosmic-term is before pop-desktop to ensure it fulfills all x-terminal-emulator depends
+#TODO: linux-system76 is added since pop-server depends on linux-raspi for arm64
 DISTRO_PKGS=\
 	systemd \
 	cosmic-term \
+	linux-system76 \
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
