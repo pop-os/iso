@@ -183,6 +183,7 @@ $(TAR): $(BUILD)/iso_sum.tag
 	mv "$@.partial" "$@"
 
 $(ISO): $(BUILD)/iso_sum.tag
+ifeq ($(DISTRO_ARCH),amd64)
 	xorriso -as mkisofs \
 		-J \
 		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
@@ -193,6 +194,15 @@ $(ISO): $(BUILD)/iso_sum.tag
 		-r -V "$(DISTRO_VOLUME_LABEL)" \
 		-o "$@.partial" "$(BUILD)/iso" -- \
 		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+else
+	xorriso -as mkisofs \
+		-J \
+		-eltorito-alt-boot -e boot/grub/efi.img \
+		-no-emul-boot -isohybrid-gpt-basdat \
+		-r -V "$(DISTRO_VOLUME_LABEL)" \
+		-o "$@.partial" "$(BUILD)/iso" -- \
+		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
+endif
 
 	mv "$@.partial" "$@"
 
