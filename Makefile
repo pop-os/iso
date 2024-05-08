@@ -1,7 +1,7 @@
 # Configuration settings
 DISTRO_CODE?=pop-os
 DISTRO_VERSION?=24.04
-DISTRO_ARCH?=amd64
+DISTRO_ARCH?=$(shell dpkg --print-architecture)
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
