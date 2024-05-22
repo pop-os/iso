@@ -101,6 +101,7 @@ $(BUILD)/grub:
 
 	rm -rf "$(BUILD)/iso/efi"
 	mkdir -p "$(BUILD)/iso/efi/boot/"
+	cp -r "data/efi/memtest64.efi" "$(BUILD)/iso/efi/boot/memtest64.efi"
 	cp -r "data/efi/shimx64.efi.signed" "$(BUILD)/iso/efi/boot/bootx64.efi"
 	cp -r "/usr/lib/grub/x86_64-efi-signed/gcdx64.efi.signed" "$(BUILD)/iso/efi/boot/grubx64.efi"
 
