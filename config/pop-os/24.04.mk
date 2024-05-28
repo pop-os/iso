@@ -7,7 +7,7 @@ DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH)
 endif
 
 # Show splash screen
-DISTRO_PARAMS+=quiet splash
+#DISTRO_PARAMS+=quiet splash
 
 GNOME_INITIAL_SETUP_STAMP=21.04
 
@@ -31,21 +31,6 @@ DISTRO_PKGS=\
 	cosmic-term \
 	linux-system76 \
 	pop-desktop
-
-# Packages for 
-ifeq ($(DISTRO_MACHINE),x13s)
-DISTRO_PKGS+=\
-	efibootmgr \
-	grub-efi-arm64 \
-	grub-efi-arm64-bin \
-	grub-efi-arm64-signed \
-	grub-common \
-	grub-efi \
-	grub2-common \
-	libefiboot1t64 \
-	libefivar1t64 \
-	os-prober
-endif
 
 # Packages to install after (to avoid dependency issues)
 ifeq ($(DISTRO_ARCH),amd64)

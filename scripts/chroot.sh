@@ -149,7 +149,7 @@ then
     pushd "/packages"
         dpkg -i *.deb
     popd
-    sudo systemctl enable "/usr/lib/systemd/system/copy_firmware.service"
+    # sudo systemctl enable "/usr/lib/systemd/system/copy_firmware.service"
 fi
 
 # Remove apt files

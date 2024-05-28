@@ -6,7 +6,8 @@ DISTRO_ARCH?=$(shell dpkg --print-architecture)
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
 DISTRO_MACHINE?=x13s
-DISTRO_PARAMS?=
+DISTRO_MACHINE_DTB?="sc8280xp-lenovo-thinkpad-x13s.dtb"
+DISTRO_PARAMS?=pd_ignore_unused clk_ignore_unused arm64.nopauth efi=noruntime 'dyndbg=file drivers/base/firmware_loader/main.c +p'
 
 ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)_$(DISTRO_ARCH)_$(DISTRO_MACHINE)
 

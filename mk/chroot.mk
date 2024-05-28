@@ -133,8 +133,8 @@ ifeq ($(DISTRO_MACHINE),x13s)
 	sudo mkdir -p "$@.partial/etc/initramfs-tools/"
 	sudo cp /media/jglathe/rootfs68n/etc/initramfs-tools/modules $@.partial/etc/initramfs-tools/ 
 	sudo mkdir -p "$@.partial/etc/initramfs-tools/hooks"
-	sudo cp /media/jglathe/rootfs68n/etc/initramfs-tools/hooks/x13s-firmware $@.partial/etc/initramfs-tools/hooks/
-	sudo chmod -x $@.partial/etc/initramfs-tools/hooks/x13s-firmware
+	sudo cp /home/jglathe/src/wdk2023_syshacks/etc/initramfs-tools/hooks/x13s-firmware $@.partial/etc/initramfs-tools/hooks/
+	#sudo chmod -x $@.partial/etc/initramfs-tools/hooks/x13s-firmware
 	sudo cp /media/jglathe/rootfs68n/etc/default/grub $@.partial/etc/default/
 	sudo cp /media/jglathe/rootfs68n/usr/lib/systemd/system/copy_firmware.service $@.partial/usr/lib/systemd/system/
 	sudo cp /media/jglathe/rootfs68n/usr/local/bin/fetch_sc8280xp_fw.sh $@.partial/usr/local/bin/
@@ -142,8 +142,12 @@ ifeq ($(DISTRO_MACHINE),x13s)
 	sudo cp /media/jglathe/rootfs68n/usr/bin/bootmac $@.partial/usr/bin/
 	sudo cp /media/jglathe/rootfs69p/var/spool/cron/crontabs/root $@.partial/var/spool/cron/crontabs/
 	sudo mkdir -p "$@.partial/usr/lib/firmware/updates"
-	sudo cp -R /media/jglathe/rootfs69p/usr/lib/firmware/updates/* $@.partial//usr/lib/firmware/updates/
-
+	sudo cp -R /media/jglathe/rootfs69p/usr/lib/firmware/updates/* $@.partial/usr/lib/firmware/updates/
+	# !!! copy over the Lenovo firmware files
+	sudo cp -R /home/jglathe/src/x13s_firmware/* $@.partial/usr/lib/firmware/updates/
+	if [ -e "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" ]; then \
+		sudo mv "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn.disabled"; \
+	fi
 	# add db entry and machine identifier in flash-kernel for the x13s
 	sudo mkdir -p "$@.partial/etc/flash-kernel"
 	sudo cp /media/jglathe/rootfs69p/etc/flash-kernel/db $@.partial/etc/flash-kernel/
