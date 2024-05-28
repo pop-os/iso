@@ -142,6 +142,16 @@ then
     popd
 fi
 
+# install our own kernel
+if [ -n "${OWN_KERNEL}" ]
+then
+    chown -R _apt "/packages"
+    pushd "/packages"
+        dpkg -i *.deb
+    popd
+    sudo systemctl enable "/usr/lib/systemd/system/copy_firmware.service"
+fi
+
 # Remove apt files
 if [ -n "${CLEAN}" ]
 then

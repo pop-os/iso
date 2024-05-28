@@ -14,6 +14,24 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 	# Create new casper directory
 	mkdir -p "$(BUILD)/iso/$(CASPER_PATH)"
 
+ifeq ($(DISTRO_MACHINE),x13s)
+	# copy over dtb to /efi root
+	cp -v "$(BUILD)/live/usr/lib/linux-image-6.9.1+/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb" "$(BUILD)/iso/$(CASPER_PATH)/sc8280xp-lenovo-thinkpad-x13s.dtb"
+
+	# Copy vmlinuz
+	if [ -e "$(BUILD)/live/boot/vmlinuz-6.9.1+" ]; then \
+		sudo cp "$(BUILD)/live/boot/vmlinuz-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz"; \
+	else \
+		sudo cp "$(BUILD)/live/vmlinuz-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz"; \
+	fi
+
+	# Copy initrd
+	if [ -e "$(BUILD)/live/boot/initrd.img-6.9.1+" ]; then \
+		sudo cp "$(BUILD)/live/boot/initrd.img-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/initrd.img"; \
+	else \
+		sudo cp "$(BUILD)/live/initrd.img-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/initrd.img"; \
+	fi
+else
 	# Copy vmlinuz
 	if [ -e "$(BUILD)/live/boot/vmlinuz" ]; then \
 		sudo cp "$(BUILD)/live/boot/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
@@ -27,6 +45,7 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 	else \
 		sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
 	fi
+endif
 
 	# Update manifest
 	cp "$(BUILD)/live.tag" "$(BUILD)/iso/$(CASPER_PATH)/filesystem.manifest"

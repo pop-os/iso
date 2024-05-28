@@ -5,12 +5,12 @@ DISTRO_ARCH?=$(shell dpkg --print-architecture)
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
-
+DISTRO_MACHINE?=x13s
 DISTRO_PARAMS?=
 
-ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)_$(DISTRO_ARCH)
+ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)_$(DISTRO_ARCH)_$(DISTRO_MACHINE)
 
-GPG_NAME?=`id -un`
+GPG_NAME?=jens.glathe@oldschoolsolutions.biz
 
 PROPOSED?=0
 NVIDIA?=0
@@ -64,4 +64,4 @@ include mk/update.mk
 include mk/iso.mk
 
 # Force target
-FORCE:
+FORCE: 
