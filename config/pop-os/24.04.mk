@@ -6,8 +6,19 @@ else
 DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH)
 endif
 
+ifeq ($(DISTRO_ARCH),arm64)
+DISTRO_PARAMS+=\
+	arm64.nopauth \
+	clk_ignore_unused \
+	cma=128M \
+	efi=novamap \
+	fw_devlink=off \
+	pd_ignore_unused \
+	rd.driver.blacklist=msm
+else
 # Show splash screen
 DISTRO_PARAMS+=quiet splash
+endif
 
 GNOME_INITIAL_SETUP_STAMP=21.04
 
@@ -67,7 +78,7 @@ endif
 # Staging branches to use when building ISO.
 # No values is the same as building from release
 # `branch-name` is equivalent to `apt-manage add popdev:branch-name -y`
-STAGING_BRANCHES=master
+STAGING_BRANCHES=master linux-6.9.3
 
 # Packages to have in live instance
 LIVE_PKGS=\
