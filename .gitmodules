@@ -1,3 +1,7 @@
 [submodule "data/grub-theme"]
 	path = data/grub-theme
 	url = https://github.com/system76/pop-grub-theme.git
+[submodule "data/syshacks"]
+	path = data/syshacks
+	url = git@github.com:jglathe/wdk2023_syshacks.git
+	branch = jg/x13s-pop-os-24.04

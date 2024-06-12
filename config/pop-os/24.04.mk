@@ -39,7 +39,13 @@ POST_DISTRO_PKGS=\
 	system76-dkms \
 	system76-io-dkms
 else
-POST_DISTRO_PKGS=
+ifeq ($(DISTRO_ARCH),arm64)	
+ifeq ($(DISTRO_MACHINE),x13s)	
+POST_DISTRO_PKGS=\
+	protection-domain-mapper \
+	qrtr-tools
+endif
+endif
 endif
 
 # DKMS packages on Pop try to build with gcc-12, and it needs to be installed

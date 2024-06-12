@@ -147,7 +147,7 @@ if [ -n "${OWN_KERNEL}" ]
 then
     chown -R _apt "/packages"
     pushd "/packages"
-        dpkg -i *.deb
+        dpkg -i linux-headers-6.9.3-76060903-generic_6.9.3-76060903.202405300957_arm64.deb linux-headers-6.9.3-76060903_6.9.3-76060903.202405300957_all.deb linux-image-unsigned-6.9.3-76060903-generic_6.9.3-76060903.202405300957_arm64.deb linux-libc-dev_6.9.3-76060903.202405300957_arm64.deb linux-modules-6.9.3-76060903-generic_6.9.3-76060903.202405300957_arm64.deb
     popd
     # sudo systemctl enable "/usr/lib/systemd/system/copy_firmware.service"
 fi

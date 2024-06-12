@@ -125,33 +125,31 @@ ifeq ($(DISTRO_MACHINE),x13s)
 	# Windows partition, newest WLAN firmware, bootmac support for consistent 
 	# MACs on WLAN and BT.
 
-	# /media/jglathe/rootfs68n/ has Ubuntu_Desktop_24.04_x13s_6.8.8.img mounted 
-	# /media/jglathe/rootfs69p/ has pop-os_22.04_x13s.img mounted 
 	# with all the scriptery we need
 	sudo mkdir -p "$@.partial/packages"
-	sudo cp /home/jglathe/src/kernel/6.9.1-for-pop-os24.04/*.deb $@.partial/packages/
+	sudo cp ~/src/kernel/6.9.3-pop/*.deb $@.partial/packages/
 	sudo mkdir -p "$@.partial/etc/initramfs-tools/"
-	sudo cp /media/jglathe/rootfs68n/etc/initramfs-tools/modules $@.partial/etc/initramfs-tools/ 
+	sudo cp data/syshacks/etc/initramfs-tools/modules $@.partial/etc/initramfs-tools/ 
 	sudo mkdir -p "$@.partial/etc/initramfs-tools/hooks"
-	sudo cp /home/jglathe/src/wdk2023_syshacks/etc/initramfs-tools/hooks/x13s-firmware $@.partial/etc/initramfs-tools/hooks/
+	sudo cp data/syshacks/etc/initramfs-tools/hooks/x13s-firmware $@.partial/etc/initramfs-tools/hooks/
 	#sudo chmod -x $@.partial/etc/initramfs-tools/hooks/x13s-firmware
-	sudo cp /media/jglathe/rootfs68n/etc/default/grub $@.partial/etc/default/
-	sudo cp /media/jglathe/rootfs68n/usr/lib/systemd/system/copy_firmware.service $@.partial/usr/lib/systemd/system/
-	sudo cp /media/jglathe/rootfs68n/usr/local/bin/fetch_sc8280xp_fw.sh $@.partial/usr/local/bin/
-	sudo cp /media/jglathe/rootfs68n/usr/local/bin/temperatures.sh $@.partial/usr/local/bin/
-	sudo cp /media/jglathe/rootfs68n/usr/bin/bootmac $@.partial/usr/bin/
-	sudo cp /media/jglathe/rootfs69p/var/spool/cron/crontabs/root $@.partial/var/spool/cron/crontabs/
+	sudo cp data/syshacks/etc/default/grub $@.partial/etc/default/
+	sudo cp data/syshacks/usr/lib/systemd/system/copy_firmware.service $@.partial/usr/lib/systemd/system/
+	sudo cp data/syshacks/usr/local/bin/fetch_sc8280xp_fw.sh $@.partial/usr/local/bin/
+	sudo cp data/syshacks/usr/local/bin/temperatures.sh $@.partial/usr/local/bin/
+	sudo cp data/syshacks/usr/bin/bootmac $@.partial/usr/bin/
+	sudo cp data/syshacks/var/spool/cron/crontabs/root $@.partial/var/spool/cron/crontabs/
 	sudo mkdir -p "$@.partial/usr/lib/firmware/updates"
-	sudo cp -R /media/jglathe/rootfs69p/usr/lib/firmware/updates/* $@.partial/usr/lib/firmware/updates/
-	# !!! copy over the Lenovo firmware files
-	sudo cp -R /home/jglathe/src/x13s_firmware/* $@.partial/usr/lib/firmware/updates/
+	sudo cp -R data/syshacks/usr/lib/firmware/updates/* $@.partial/usr/lib/firmware/updates/
+	# !!! also contains the Lenovo firmware files
+	# !!! passivate qcadsp8280.mbn, can wreak havoc if a reload from rootfs is tried and you're booted from USB-C
 	if [ -e "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" ]; then \
 		sudo mv "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn.disabled"; \
 	fi
 	# add db entry and machine identifier in flash-kernel for the x13s
 	sudo mkdir -p "$@.partial/etc/flash-kernel"
-	sudo cp /media/jglathe/rootfs69p/etc/flash-kernel/db $@.partial/etc/flash-kernel/
-	sudo cp /media/jglathe/rootfs69p/etc/flash-kernel/machine $@.partial/etc/flash-kernel/
+	sudo cp data/syshacks/etc/flash-kernel/db $@.partial/etc/flash-kernel/
+	sudo cp data/syshacks/etc/flash-kernel/machine $@.partial/etc/flash-kernel/
 	# install our custom kernel
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"OWN_KERNEL=1 \

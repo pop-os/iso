@@ -16,21 +16,21 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 
 ifeq ($(DISTRO_MACHINE),x13s)
 	# copy over dtb to casper
-	cp -v "$(BUILD)/live/usr/lib/linux-image-6.9.1+/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb" "$(BUILD)/iso/$(CASPER_PATH)/$(DISTRO_MACHINE_DTB)"
+	cp -v "$(BUILD)/live/usr/lib/firmware/6.9.3-76060903-generic/device-tree/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb" "$(BUILD)/iso/$(CASPER_PATH)/$(DISTRO_MACHINE_DTB)"
 endif
 
 	# Copy vmlinuz
-	if [ -e "$(BUILD)/live/boot/vmlinuz-6.9.1+" ]; then \
-		sudo cp "$(BUILD)/live/boot/vmlinuz-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
+	if [ -e "$(BUILD)/live/boot/vmlinuz-6.9.3-76060903-generic" ]; then \
+		sudo cp "$(BUILD)/live/boot/vmlinuz-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
 	else \
-		sudo cp "$(BUILD)/live/vmlinuz-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
+		sudo cp "$(BUILD)/live/vmlinuz-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
 	fi
 
 	# Copy initrd
-	if [ -e "$(BUILD)/live/boot/initrd.img-6.9.1+" ]; then \
-		sudo cp "$(BUILD)/live/boot/initrd.img-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
+	if [ -e "$(BUILD)/live/boot/initrd.img-6.9.3-76060903-generic" ]; then \
+		sudo cp "$(BUILD)/live/boot/initrd.img-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
 	else \
-		sudo cp "$(BUILD)/live/initrd.img-6.9.1+" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
+		sudo cp "$(BUILD)/live/initrd.img-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
 	fi
 
 	# Update manifest
