@@ -143,8 +143,14 @@ ifeq ($(DISTRO_MACHINE),x13s)
 	sudo cp -R data/syshacks/usr/lib/firmware/updates/* $@.partial/usr/lib/firmware/updates/
 	# !!! also contains the Lenovo firmware files
 	# !!! passivate qcadsp8280.mbn, can wreak havoc if a reload from rootfs is tried and you're booted from USB-C
+	# !!! it is explicitly put into the initramfs, should only be available from there
 	if [ -e "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" ]; then \
 		sudo mv "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn.disabled"; \
+	fi
+	# !!! do the same for the file in the linux-firmware package if it exists
+	# !!! the kernel search strategy for fw files would check this path, too
+	if [ -e "$@.partial/lib/firmware/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" ]; then \
+		sudo mv "$@.partial/lib/firmware/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" "$@.partial/lib/firmware/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn.disabled"; \
 	fi
 	# add db entry and machine identifier in flash-kernel for the x13s
 	sudo mkdir -p "$@.partial/etc/flash-kernel"
