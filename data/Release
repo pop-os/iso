@@ -3,4 +3,4 @@ Version: DISTRO_VERSION
 Component: COMPONENT
 Origin: Ubuntu
 Label: Ubuntu
-Architecture: amd64
+Architecture: DISTRO_ARCH

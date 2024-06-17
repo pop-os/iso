@@ -62,14 +62,14 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 	cd "$(BUILD)/iso" && \
 	mkdir -p "dists/$(UBUNTU_CODE)" && \
 	for pool in $$(ls -1 pool); do \
-		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-amd64" && \
-		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
-		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Packages" && \
-		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-amd64/Release"; \
+		mkdir -p "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)" && \
+		apt-ftparchive packages "pool/$$pool" > "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)/Packages" && \
+		gzip -k "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)/Packages" && \
+		sed "s|COMPONENT|$$pool|g; $(SED)" "../../../../data/Release" > "dists/$(UBUNTU_CODE)/$$pool/binary-$(DISTRO_ARCH)/Release"; \
 	done; \
 	apt-ftparchive \
 		-o "APT::FTPArchive::Release::Acquire-By-Hash=yes" \
-		-o "APT::FTPArchive::Release::Architectures=amd64" \
+		-o "APT::FTPArchive::Release::Architectures=$(DISTRO_ARCH)" \
 		-o "APT::FTPArchive::Release::Codename=$(UBUNTU_CODE)" \
 		-o "APT::FTPArchive::Release::Components=$$(ls -1 pool | tr $$'\n' ' ')" \
 		-o "APT::FTPArchive::Release::Description=$(DISTRO_CODE) $(DISTRO_VERSION)" \
@@ -86,9 +86,14 @@ $(BUILD)/iso_pool.tag: $(BUILD)/pool $(BUILD)/iso_create.tag
 
 	touch "$@"
 
-$(BUILD)/grub:
+$(BUILD)/grub: $(BUILD)/pool
 	rm -rf "$@.partial"
 	mkdir "$@.partial"
+
+	rm -rf "$(BUILD)/iso/efi"
+	mkdir -p "$(BUILD)/iso/efi/boot/"
+
+ifeq ($(DISTRO_ARCH),amd64)
 
 	grub-mkimage \
 		--directory /usr/lib/grub/i386-pc \
@@ -99,10 +104,15 @@ $(BUILD)/grub:
 		--config data/grub/load.cfg \
 		biosdisk iso9660
 
-	rm -rf "$(BUILD)/iso/efi"
-	mkdir -p "$(BUILD)/iso/efi/boot/"
 	cp -r "data/efi/shimx64.efi.signed" "$(BUILD)/iso/efi/boot/bootx64.efi"
 	cp -r "/usr/lib/grub/x86_64-efi-signed/gcdx64.efi.signed" "$(BUILD)/iso/efi/boot/grubx64.efi"
+
+else ifeq ($(DISTRO_ARCH),arm64)
+
+	cp -v "$(BUILD)/pool/usr/lib/shim/shimaa64.efi.signed.latest" "$(BUILD)/iso/efi/boot/bootaa64.efi"
+	cp -v "$(BUILD)/pool/usr/lib/grub/arm64-efi-signed/gcdaa64.efi.signed" "$(BUILD)/iso/efi/boot/grubaa64.efi"
+
+endif
 
 	mkfs.vfat -C "$@.partial/efi.img" 4096
 	mcopy -s -i "$@.partial/efi.img" "$(BUILD)/iso/efi" ::/
@@ -110,7 +120,7 @@ $(BUILD)/grub:
 	touch "$@.partial"
 	mv "$@.partial" "$@"
 
-$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
+$(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub $(BUILD)/pool
 	git submodule update --init data/grub-theme
 
 	# Replace disk info
@@ -118,18 +128,16 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	mkdir -p "$(BUILD)/iso/.disk"
 	sed "$(SED)" "data/disk/info" > "$(BUILD)/iso/.disk/info"
 
-	# Copy isolinux files
-	rm -rf "$(BUILD)/iso/isolinux"
-	mkdir -p "$(BUILD)/iso/isolinux"
-	cp /usr/lib/ISOLINUX/isolinux.bin "$(BUILD)/iso/isolinux/isolinux.bin"
-	cp /usr/lib/syslinux/modules/bios/ldlinux.c32 "$(BUILD)/iso/isolinux/ldlinux.c32"
-	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
-
 	# Update grub config
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
+
+	# Copy grub theme
+	cp -r "data/grub-theme/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
+
+ifeq ($(DISTRO_ARCH),amd64)
 
 	# Copy grub modules (BIOS)
 	mkdir -p "$(BUILD)/iso/boot/grub/i386-pc"
@@ -140,8 +148,21 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub
 	mkdir -p "$(BUILD)/iso/boot/grub/x86_64-efi"
 	cp "/usr/lib/grub/x86_64-efi/"*.mod "$(BUILD)/iso/boot/grub/x86_64-efi/"
 
-	# Copy grub theme
-	cp -r "data/grub-theme/usr/share/grub/themes" "$(BUILD)/iso/boot/grub/themes"
+	# Copy isolinux files
+	rm -rf "$(BUILD)/iso/isolinux"
+	mkdir -p "$(BUILD)/iso/isolinux"
+	cp /usr/lib/ISOLINUX/isolinux.bin "$(BUILD)/iso/isolinux/isolinux.bin"
+	cp /usr/lib/syslinux/modules/bios/ldlinux.c32 "$(BUILD)/iso/isolinux/ldlinux.c32"
+	sed "$(SED)" "data/isolinux/isolinux.cfg" > "$(BUILD)/iso/isolinux/isolinux.cfg"
+
+else ifeq ($(DISTRO_ARCH),arm64)
+
+	# Copy grub modules (EFI)
+	cp "$(BUILD)/grub/efi.img" "$(BUILD)/iso/boot/grub"
+	mkdir -p "$(BUILD)/iso/boot/grub/arm64-efi"
+	cp "$(BUILD)/pool/usr/lib/grub/arm64-efi/"*.mod "$(BUILD)/iso/boot/grub/arm64-efi/"
+
+endif
 
 	touch "$@"
 
@@ -161,29 +182,21 @@ $(TAR): $(BUILD)/iso_sum.tag
 
 	mv "$@.partial" "$@"
 
-$(USB): $(BUILD)/iso_sum.tag
-	scripts/usb.sh "$(BUILD)" "$@.partial"
-
-	mv "$@.partial" "$@"
-
 $(ISO): $(BUILD)/iso_sum.tag
-ifeq ($(GRUB_BIOS),1)
+ifeq ($(DISTRO_ARCH),amd64)
 	xorriso -as mkisofs \
 		-J \
-		--protective-msdos-label \
-		-b boot/grub/i386-pc/eltorito.img \
+		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+		-c isolinux/boot.cat -b isolinux/isolinux.bin \
 		-no-emul-boot -boot-load-size 4 -boot-info-table \
-		--grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
-		--efi-boot "boot/grub/efi.img" -efi-boot-part --efi-boot-image \
+		-eltorito-alt-boot -e boot/grub/efi.img \
+		-no-emul-boot -isohybrid-gpt-basdat \
 		-r -V "$(DISTRO_VOLUME_LABEL)" \
 		-o "$@.partial" "$(BUILD)/iso" -- \
 		-volume_date all_file_dates ="$(DISTRO_EPOCH)"
 else
 	xorriso -as mkisofs \
 		-J \
-		-isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
-		-c isolinux/boot.cat -b isolinux/isolinux.bin \
-		-no-emul-boot -boot-load-size 4 -boot-info-table \
 		-eltorito-alt-boot -e boot/grub/efi.img \
 		-no-emul-boot -isohybrid-gpt-basdat \
 		-r -V "$(DISTRO_VOLUME_LABEL)" \

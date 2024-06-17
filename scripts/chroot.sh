@@ -22,8 +22,11 @@ fi
 # Correctly specify resolv.conf
 ln -sf ../run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
 
-# Enable i386 so that steam is installable out of the box
-dpkg --add-architecture i386
+# Enable i386 on amd64 installs so that steam is installable out of the box
+if [ "$(dpkg --print-architecture)" == "amd64" ]
+then
+    dpkg --add-architecture i386
+fi
 
 # Add APT key
 if [ -n "${KEY}" ]

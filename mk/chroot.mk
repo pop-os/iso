@@ -6,7 +6,7 @@ $(BUILD)/debootstrap:
 
 	# Install using debootstrap
 	if ! sudo debootstrap \
-		--arch=amd64 \
+		--arch=$(DISTRO_ARCH) \
 		"$(UBUNTU_CODE)" \
 		"$@.partial" \
 		"$(UBUNTU_MIRROR)"; \
@@ -60,12 +60,6 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Copy kernelstub configuration
 	sudo mkdir "$@.partial/etc/kernelstub"
 	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
-
-	# Workaround bug caused by first run of add-apt-repository being blank
-	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
-		"add-apt-repository --yes -n ppa:system76/pop"
-	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
-		"rm -rf /etc/apt/sources.list.d/system76-ubuntu-pop-$(UBUNTU_CODE).list"
 
 	# Setup DEB822 format repos on 20.10 or later
 	if [ -n "${DEB822}" ]; then \
@@ -259,6 +253,7 @@ $(BUILD)/pool: $(BUILD)/chroot
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
 		"MAIN_POOL=\"$(MAIN_POOL)\" \
 		RESTRICTED_POOL=\"$(RESTRICTED_POOL)\" \
+		INSTALL=\"$(POOL_PKGS)\" \
 		CLEAN=1 \
 		/iso/chroot.sh"
 

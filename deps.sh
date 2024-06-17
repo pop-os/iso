@@ -12,6 +12,7 @@ sudo apt install \
     ovmf \
     qemu-efi \
     qemu-kvm \
+    qemu-user-static \
     squashfs-tools \
     xorriso \
     zsync
