@@ -128,6 +128,17 @@ MAIN_POOL=\
 	system76-wallpapers \
 	vbetool \
 	xbacklight
+# TODO: system76-driver deps should be revisited: https://github.com/pop-os/system76-driver/issues/292
+MAIN_POOL+=\
+	firmware-manager \
+	firmware-manager-notify \
+	firmware-manager-shared \
+	gir1.2-notify-0.7 \
+	gnome-shell-extension-system76-power \
+	hidpi-daemon \
+	python3-pydbus \
+	python3-xlib \
+	system76-power
 else ifeq ($(DISTRO_ARCH),arm64)
 MAIN_POOL=\
 	efibootmgr \
