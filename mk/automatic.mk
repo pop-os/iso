@@ -18,7 +18,8 @@ SED=\
 	s|DISTRO_REPOS|$(DISTRO_REPOS)|g; \
 	s|DISTRO_PKGS|$(DISTRO_PKGS)|g; \
 	s|UBUNTU_CODE|$(UBUNTU_CODE)|g; \
-	s|UBUNTU_NAME|$(UBUNTU_NAME)|g
+	s|UBUNTU_NAME|$(UBUNTU_NAME)|g; \
+	s|DISTRO_MACHINE_DTB|$(DISTRO_MACHINE_DTB)|g
 
 CHROOT=env -i PATH=/usr/sbin:/usr/bin:/sbin:/bin chroot
 

@@ -14,18 +14,23 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 	# Create new casper directory
 	mkdir -p "$(BUILD)/iso/$(CASPER_PATH)"
 
+ifeq ($(DISTRO_MACHINE),x13s)
+	# copy over dtb to casper
+	cp -v "$(BUILD)/live/usr/lib/firmware/6.9.3-76060903-generic/device-tree/qcom/sc8280xp-lenovo-thinkpad-x13s.dtb" "$(BUILD)/iso/$(CASPER_PATH)/$(DISTRO_MACHINE_DTB)"
+endif
+
 	# Copy vmlinuz
-	if [ -e "$(BUILD)/live/boot/vmlinuz" ]; then \
-		sudo cp "$(BUILD)/live/boot/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
+	if [ -e "$(BUILD)/live/boot/vmlinuz-6.9.3-76060903-generic" ]; then \
+		sudo cp "$(BUILD)/live/boot/vmlinuz-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
 	else \
-		sudo cp "$(BUILD)/live/vmlinuz" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
+		sudo cp "$(BUILD)/live/vmlinuz-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/vmlinuz.efi"; \
 	fi
 
 	# Copy initrd
-	if [ -e "$(BUILD)/live/boot/initrd.img" ]; then \
-		sudo cp "$(BUILD)/live/boot/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
+	if [ -e "$(BUILD)/live/boot/initrd.img-6.9.3-76060903-generic" ]; then \
+		sudo cp "$(BUILD)/live/boot/initrd.img-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
 	else \
-		sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
+		sudo cp "$(BUILD)/live/initrd.img-6.9.3-76060903-generic" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
 	fi
 
 	# Update manifest
@@ -39,7 +44,8 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 	sudo mksquashfs "$(BUILD)/live" \
 		"$(BUILD)/iso/$(CASPER_PATH)/filesystem.squashfs" \
 		-noappend -fstime "$(DISTRO_EPOCH)" \
-		-comp xz -b 1M -Xdict-size 1M -Xbcj x86
+		-comp xz -b 1M -Xdict-size 1M
+#		-comp xz -b 1M -Xdict-size 1M -Xbcj x86
 
 	sudo chown -R "$(USER):$(USER)" "$(BUILD)/iso/$(CASPER_PATH)"
 
@@ -131,7 +137,11 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub $(BUILD)/pool
 	# Update grub config
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
+ifeq ($(DISTRO_MACHINE),x13s)
+	sed "$(SED)" "data/grub/grub_with_dtb.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
+else
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
+endif	
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
 
 	# Copy grub theme

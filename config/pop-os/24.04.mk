@@ -7,6 +7,7 @@ DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH)
 endif
 
 # Show splash screen
+
 #TODO DISTRO_PARAMS+=quiet splash
 
 GNOME_INITIAL_SETUP_STAMP=21.04
@@ -39,22 +40,31 @@ POST_DISTRO_PKGS=\
 	system76-dkms \
 	system76-io-dkms
 else
-POST_DISTRO_PKGS=
+ifeq ($(DISTRO_ARCH),arm64)	
+ifeq ($(DISTRO_MACHINE),x13s)	
+POST_DISTRO_PKGS=\
+	protection-domain-mapper \
+	qrtr-tools
+endif
+endif
 endif
 
 # DKMS packages on Pop try to build with gcc-12, and it needs to be installed
 #TODO: figure out why this is not already a dependency
-POST_DISTRO_PKGS+=gcc-12
+POST_DISTRO_PKGS+=\
+	gcc-12
 
 #TODO: rsync is added because it is not depended on by anything except distinst
 # When distinst is removed from the installation, rsync is not available for
 # syncing the recovery partition
-POST_DISTRO_PKGS+=rsync
+POST_DISTRO_PKGS+=\
+	rsync
 
 #TODO: systemd-boot is added because it is not depended on by anything
 # This was broken out from the systemd package for 24.04 and should be
 # added to pop-desktop and/or kernelstub
-POST_DISTRO_PKGS+=systemd-boot
+POST_DISTRO_PKGS+=\
+	systemd-boot
 
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
@@ -141,6 +151,7 @@ MAIN_POOL+=\
 	system76-power
 else ifeq ($(DISTRO_ARCH),arm64)
 MAIN_POOL=\
+	gdm3 \
 	efibootmgr \
 	grub-efi-arm64 \
 	grub-efi-arm64-bin \

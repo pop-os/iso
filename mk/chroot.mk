@@ -119,6 +119,49 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		CLEAN=1 \
 		/iso/chroot.sh"
 
+ifeq ($(DISTRO_MACHINE),x13s)
+	# Add specific kernel and initramfs configuration for x13s, also some 
+	# setup scripts for newest sc8280xp device-specific firmwares from the 
+	# Windows partition, newest WLAN firmware, bootmac support for consistent 
+	# MACs on WLAN and BT.
+
+	# with all the scriptery we need
+	sudo mkdir -p "$@.partial/packages"
+	sudo cp ~/src/kernel/6.9.3-pop/*.deb $@.partial/packages/
+	sudo mkdir -p "$@.partial/etc/initramfs-tools/"
+	sudo cp data/syshacks/etc/initramfs-tools/modules $@.partial/etc/initramfs-tools/ 
+	sudo mkdir -p "$@.partial/etc/initramfs-tools/hooks"
+	sudo cp data/syshacks/etc/initramfs-tools/hooks/x13s-firmware $@.partial/etc/initramfs-tools/hooks/
+	#sudo chmod -x $@.partial/etc/initramfs-tools/hooks/x13s-firmware
+	sudo cp data/syshacks/etc/default/grub $@.partial/etc/default/
+	sudo cp data/syshacks/usr/lib/systemd/system/copy_firmware.service $@.partial/usr/lib/systemd/system/
+	sudo cp data/syshacks/usr/local/bin/fetch_sc8280xp_fw.sh $@.partial/usr/local/bin/
+	sudo cp data/syshacks/usr/local/bin/temperatures.sh $@.partial/usr/local/bin/
+	sudo cp data/syshacks/usr/bin/bootmac $@.partial/usr/bin/
+	sudo cp data/syshacks/var/spool/cron/crontabs/root $@.partial/var/spool/cron/crontabs/
+	sudo mkdir -p "$@.partial/usr/lib/firmware/updates"
+	sudo cp -R data/syshacks/usr/lib/firmware/updates/* $@.partial/usr/lib/firmware/updates/
+	# !!! also contains the Lenovo firmware files
+	# !!! passivate qcadsp8280.mbn, can wreak havoc if a reload from rootfs is tried and you're booted from USB-C
+	# !!! it is explicitly put into the initramfs, should only be available from there
+	if [ -e "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" ]; then \
+		sudo mv "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" "$@.partial/usr/lib/firmware/updates/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn.disabled"; \
+	fi
+	# !!! do the same for the file in the linux-firmware package if it exists
+	# !!! the kernel search strategy for fw files would check this path, too
+	if [ -e "$@.partial/lib/firmware/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" ]; then \
+		sudo mv "$@.partial/lib/firmware/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn" "$@.partial/lib/firmware/qcom/sc8280xp/LENOVO/21BX/qcadsp8280.mbn.disabled"; \
+	fi
+	# add db entry and machine identifier in flash-kernel for the x13s
+	sudo mkdir -p "$@.partial/etc/flash-kernel"
+	sudo cp data/syshacks/etc/flash-kernel/db $@.partial/etc/flash-kernel/
+	sudo cp data/syshacks/etc/flash-kernel/machine $@.partial/etc/flash-kernel/
+	# install our custom kernel
+	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
+		"OWN_KERNEL=1 \
+		/iso/chroot.sh"
+endif
+
 	# Remove apt preferences
 	sudo rm "$@.partial/etc/apt/preferences.d/pop-iso"
 
@@ -259,6 +302,11 @@ $(BUILD)/pool: $(BUILD)/chroot
 
 	# Unmount chroot
 	"scripts/unmount.sh" "$@.partial"
+
+ifeq ($(DISTRO_MACHINE),x13s)
+	# enable the x13s-firmware script
+	sudo chmod +x "$@.partial"/etc/initramfs-tools/hooks/x13s-firmware
+endif
 
 	sudo rm -rf "$@.partial"/root/.launchpadlib
 

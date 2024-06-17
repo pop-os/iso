@@ -5,12 +5,13 @@ DISTRO_ARCH?=$(shell dpkg --print-architecture)
 
 DISTRO_EPOCH?=$(shell date +%s)
 DISTRO_DATE?=$(shell date +%Y%m%d)
+DISTRO_MACHINE?=x13s
+DISTRO_MACHINE_DTB?="sc8280xp-lenovo-thinkpad-x13s.dtb"
+DISTRO_PARAMS?=pd_ignore_unused clk_ignore_unused arm64.nopauth efi=noruntime 'dyndbg=file drivers/base/firmware_loader/main.c +p'
 
-DISTRO_PARAMS?=
+ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)_$(DISTRO_ARCH)_$(DISTRO_MACHINE)
 
-ISO_NAME?=$(DISTRO_CODE)_$(DISTRO_VERSION)_$(DISTRO_ARCH)
-
-GPG_NAME?=`id -un`
+GPG_NAME?=jens.glathe@oldschoolsolutions.biz
 
 PROPOSED?=0
 NVIDIA?=0
@@ -64,4 +65,4 @@ include mk/update.mk
 include mk/iso.mk
 
 # Force target
-FORCE:
+FORCE: 
