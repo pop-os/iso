@@ -11,9 +11,11 @@ GNOME_INITIAL_SETUP_STAMP=21.04
 # DEB822 format system repositories, comment out to disable
 DEB822:=1
 APPS_URI:=http://apt.pop-os.org/proprietary
+APPS_KEY=/etc/apt/trusted.gpg.d/pop-keyring-2017-archive.gpg
 
 # Repositories to be present in installed system
 RELEASE_URI:=http://apt.pop-os.org/release
+RELEASE_KEY=/etc/apt/trusted.gpg.d/pop-keyring-2017-archive.gpg
 
 # Use proposed repositories instead, if requested
 ifeq ($(PROPOSED),1)

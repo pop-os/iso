@@ -16,6 +16,7 @@ UBUNTU_MIRROR:=http://ports.ubuntu.com/ubuntu-ports
 else
 $(error unknown DISTRO_ARCH $(DISTRO_ARCH))
 endif
+UBUNTU_KEY=/etc/apt/trusted.gpg.d/ubuntu-keyring-2018-archive.gpg
 
 UBUNTU_COMPONENTS:=\
 	main \
