@@ -70,6 +70,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 			URIS=\"${UBUNTU_MIRROR}\" \
 			SUITES=\"$(UBUNTU_CODE) $(UBUNTU_CODE)-security $(UBUNTU_CODE)-updates $(UBUNTU_CODE)-backports\" \
 			COMPONENTS=\"main restricted universe multiverse\" \
+			SIGNED_BY=\"${UBUNTU_KEY}\" \
 			/iso/repos.sh"; \
 	fi
 
@@ -82,6 +83,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 			URIS=\"${RELEASE_URI}\" \
 			SUITES=\"${UBUNTU_CODE}\" \
 			COMPONENTS=\"main\" \
+			SIGNED_BY=\"${RELEASE_KEY}\" \
 			/iso/repos.sh"; \
 	fi
 
@@ -108,6 +110,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 			URIS=\"${APPS_URI}\" \
 			SUITES=\"${UBUNTU_CODE}\" \
 			COMPONENTS=\"main\" \
+			SIGNED_BY=\"${APPS_KEY}\" \
 			/iso/repos.sh"; \
 	fi
 
