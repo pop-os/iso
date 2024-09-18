@@ -32,7 +32,7 @@ fi
 if [ -n "${KEY}" ]
 then
     echo "Adding APT key: ${KEY}"
-    apt-key add "${KEY}"
+    cp -v "${KEY}" /etc/apt/trusted.gpg.d/
 fi
 
 # Add all distro PPAs

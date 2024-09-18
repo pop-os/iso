@@ -49,7 +49,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 		/iso/chroot.sh"
 
 	# Copy GPG public key for Pop staging repositories
-	gpg --batch --yes --export --armor "204DD8AEC33A7AFF" | sudo tee "$@.partial/iso/pop.key"
+	gpg --batch --yes --export "204DD8AEC33A7AFF" | sudo tee "$@.partial/iso/pop-keyring-2017-archive.gpg" > /dev/null
 
 	# Clean APT sources
 	sudo truncate --size=0 "$@.partial/etc/apt/sources.list"
@@ -89,7 +89,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 
 	# Run chroot script
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
-		"KEY=\"/iso/pop.key\" \
+		"KEY=\"/iso/pop-keyring-2017-archive.gpg\" \
 		STAGING_BRANCHES=\"$(STAGING_BRANCHES)\" \
 		UPDATE=1 \
 		UPGRADE=1 \
@@ -163,7 +163,7 @@ $(BUILD)/live: $(BUILD)/chroot
 	"scripts/mount.sh" "$@.partial"
 
 	# Copy GPG public key for APT CDROM
-	gpg --batch --yes --export --armor "$(GPG_NAME)" | sudo tee "$@.partial/iso/apt-cdrom.key"
+	gpg --batch --yes --export "$(GPG_NAME)" | sudo tee "$@.partial/iso/apt-cdrom.gpg" > /dev/null
 
 	# Copy system76-power default modprobe.d configuration
 	sudo cp "data/system76-power.conf" "$@.partial/etc/modprobe.d/system76-power.conf"
@@ -173,7 +173,7 @@ $(BUILD)/live: $(BUILD)/chroot
 
 	# Run chroot script
 	sudo $(CHROOT) "$@.partial" /bin/bash -e -c \
-		"KEY=\"/iso/apt-cdrom.key\" \
+		"KEY=\"/iso/apt-cdrom.gpg\" \
 		STAGING_BRANCHES=\"$(STAGING_BRANCHES)\" \
 		INSTALL=\"$(LIVE_PKGS)\" \
 		PURGE=\"$(RM_PKGS)\" \
