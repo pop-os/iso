@@ -65,7 +65,7 @@ POST_DISTRO_PKGS+=systemd-boot
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 DISTRO_PARAMS+=nvidia-drm.modeset=1
-POST_DISTRO_PKGS+=nvidia-driver-550
+POST_DISTRO_PKGS+=nvidia-driver-570-open
 ifeq ($(DISTRO_ARCH),amd64)
 POST_DISTRO_PKGS+=amd-ppt-bin
 endif
