@@ -42,7 +42,7 @@ DISTRO_PARAMS+=modules_load=nvidia
 DISTRO_PARAMS+=nvidia-drm.modeset=0
 POST_DISTRO_PKGS+=\
 	amd-ppt-bin \
-	nvidia-driver-550
+	nvidia-driver-570-open
 endif
 
 # Staging branches to use when building ISO.
