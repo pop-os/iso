@@ -79,6 +79,7 @@ STAGING_BRANCHES=
 # Packages to have in live instance
 LIVE_PKGS=\
 	casper \
+	cosmic-initial-setup-casper \
 	distinst \
 	expect \
 	gparted \
