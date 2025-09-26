@@ -162,6 +162,10 @@ else ifeq ($(DISTRO_ARCH),arm64)
 	mkdir -p "$(BUILD)/iso/boot/grub/arm64-efi"
 	cp "$(BUILD)/pool/usr/lib/grub/arm64-efi/"*.mod "$(BUILD)/iso/boot/grub/arm64-efi/"
 
+	# Copy devicetree files
+	rm -rf "$(BUILD)/iso/dtb"
+	cp -r "$(BUILD)/chroot/usr/lib/firmware/"*"/device-tree" "$(BUILD)/iso/dtb"
+
 endif
 
 	touch "$@"
