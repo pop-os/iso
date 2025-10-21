@@ -5,6 +5,9 @@ UBUNTU_NAME:=Jammy Jellyfish
 else ifeq ($(DISTRO_VERSION),24.04)
 UBUNTU_CODE:=noble
 UBUNTU_NAME:=Noble Numbat
+else ifeq ($(DISTRO_VERSION),26.04)
+UBUNTU_CODE:=resolute
+UBUNTU_NAME:=Resolute Raccoon
 else
 $(error unknown DISTRO_VERSION $(DISTRO_VERSION))
 endif
