@@ -103,22 +103,14 @@ RM_PKGS=\
 	yaru-theme-gnome-shell
 
 # Packages not installed, but that may need to be discovered by the installer
-ifeq ($(DISTRO_ARCH),amd64)
 MAIN_POOL=\
 	at \
 	dfu-programmer \
 	efibootmgr \
 	ethtool \
-	grub-efi-amd64 \
-	grub-efi-amd64-bin \
-	grub-efi-amd64-signed \
-	grub-pc \
-	grub-pc-bin \
-	grub-gfxpayload-lists \
 	hdparm \
 	kernelstub \
 	libfl2 \
-	libx86-1 \
 	lm-sensors \
 	pm-utils \
 	pop-hp-vendor \
@@ -132,9 +124,7 @@ MAIN_POOL=\
 	python3-systemd \
 	system76-driver \
 	system76-firmware-daemon \
-	system76-oled \
 	system76-wallpapers \
-	vbetool \
 	xbacklight
 # TODO: system76-driver deps should be revisited: https://github.com/pop-os/system76-driver/issues/292
 MAIN_POOL+=\
@@ -147,13 +137,22 @@ MAIN_POOL+=\
 	python3-pydbus \
 	python3-xlib \
 	system76-power
+ifeq ($(DISTRO_ARCH),amd64)
+MAIN_POOL+=\
+	grub-efi-amd64 \
+	grub-efi-amd64-bin \
+	grub-efi-amd64-signed \
+	grub-gfxpayload-lists \
+	grub-pc \
+	grub-pc-bin \
+	libx86-1 \
+	system76-oled \
+	vbetool
 else ifeq ($(DISTRO_ARCH),arm64)
-MAIN_POOL=\
-	efibootmgr \
+MAIN_POOL+=\
 	grub-efi-arm64 \
 	grub-efi-arm64-bin \
-	grub-efi-arm64-signed \
-	kernelstub
+	grub-efi-arm64-signed
 else
 MAIN_POOL=
 endif
