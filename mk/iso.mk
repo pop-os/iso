@@ -132,6 +132,7 @@ $(BUILD)/iso_data.tag: $(BUILD)/iso_create.tag $(BUILD)/grub $(BUILD)/pool
 	rm -rf "$(BUILD)/iso/boot/grub"
 	mkdir -p "$(BUILD)/iso/boot/grub"
 	sed "$(SED)" "data/grub/grub.cfg" > "$(BUILD)/iso/boot/grub/grub.cfg"
+	cp "data/grub/loopback.cfg" "$(BUILD)/iso/boot/grub/loopback.cfg"
 	cp /usr/share/grub/unicode.pf2 "$(BUILD)/iso/boot/grub/font.pf2"
 
 	# Copy grub theme
