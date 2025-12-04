@@ -8,6 +8,9 @@ endif
 
 # Show splash screen
 #TODO DISTRO_PARAMS+=quiet splash
+ifeq ($(DISTRO_ARCH),arm64)
+	DISTRO_PARAMS+=console=tty0
+endif
 
 GNOME_INITIAL_SETUP_STAMP=21.04
 
@@ -108,6 +111,9 @@ MAIN_POOL=\
 	dfu-programmer \
 	efibootmgr \
 	ethtool \
+	grub-efi-$(DISTRO_ARCH) \
+	grub-efi-$(DISTRO_ARCH)-bin \
+	grub-efi-$(DISTRO_ARCH)-signed \
 	hdparm \
 	kernelstub \
 	libfl2 \
@@ -139,22 +145,12 @@ MAIN_POOL+=\
 	system76-power
 ifeq ($(DISTRO_ARCH),amd64)
 MAIN_POOL+=\
-	grub-efi-amd64 \
-	grub-efi-amd64-bin \
-	grub-efi-amd64-signed \
 	grub-gfxpayload-lists \
 	grub-pc \
 	grub-pc-bin \
 	libx86-1 \
 	system76-oled \
 	vbetool
-else ifeq ($(DISTRO_ARCH),arm64)
-MAIN_POOL+=\
-	grub-efi-arm64 \
-	grub-efi-arm64-bin \
-	grub-efi-arm64-signed
-else
-MAIN_POOL=
 endif
 
 ifeq ($(NVIDIA),1)

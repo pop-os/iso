@@ -1,10 +1,10 @@
+# Common flags
+QEMUFLAGS=-m 4G -smp 8
+
+# Flags per arch
 ifeq ($(DISTRO_ARCH),amd64)
 QEMU=qemu-system-x86_64
-QEMUFLAGS=\
-	-enable-kvm \
-	-m 4G \
-	-smp 8 \
-	-vga qxl
+QEMUFLAGS+=-vga qxl
 ifeq ($(efi),no)
 BOOTLOADER=BIOS
 else
@@ -13,12 +13,10 @@ QEMUFLAGS+=-bios /usr/share/OVMF/OVMF_CODE.fd
 endif
 else ifeq ($(DISTRO_ARCH),arm64)
 QEMU=qemu-system-aarch64
-QEMUFLAGS=\
+QEMUFLAGS+=\
 	-M virt \
-	-m 4G \
-	-cpu max \
-	-smp 8 \
-	-device ramfb \
+	-vga none \
+	-device virtio-gpu-pci \
 	-device qemu-xhci -device usb-kbd -device usb-tablet \
 	-device ich9-intel-hda -device hda-output \
 	-netdev user,id=net0 -device e1000,netdev=net0
@@ -26,6 +24,13 @@ BOOTLOADER=UEFI
 QEMUFLAGS+=-bios /usr/share/AAVMF/AAVMF_CODE.fd
 else
 $(error unknown DISTRO_ARCH $(DISTRO_ARCH))
+endif
+
+# Enable KVM if host arch matches distro arch
+ifeq ($(DISTRO_ARCH),$(shell dpkg --print-architecture))
+	QEMUFLAGS+=-enable-kvm -cpu host
+else
+	QEMUFLAGS+=-cpu max
 endif
 
 $(BUILD)/%.img:
