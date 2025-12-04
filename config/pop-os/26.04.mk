@@ -38,13 +38,11 @@ DISTRO_PKGS=\
 	pop-desktop
 
 # Packages to install after (to avoid dependency issues)
+POST_DISTRO_PKGS=system76-io-dkms
 ifeq ($(DISTRO_ARCH),amd64)
-POST_DISTRO_PKGS=\
+POST_DISTRO_PKGS+=\
 	system76-acpi-dkms \
-	system76-dkms \
-	system76-io-dkms
-else
-POST_DISTRO_PKGS=
+	system76-dkms
 endif
 
 # DKMS packages on Pop try to build with gcc-12, and it needs to be installed
