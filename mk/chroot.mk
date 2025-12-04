@@ -59,7 +59,7 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 
 	# Copy kernelstub configuration
 	sudo mkdir "$@.partial/etc/kernelstub"
-	sudo cp "data/kernelstub" "$@.partial/etc/kernelstub/configuration"
+	sudo cp "data/$(DISTRO_ARCH)/kernelstub" "$@.partial/etc/kernelstub/configuration"
 
 	# Setup DEB822 format repos on 20.10 or later
 	if [ -n "${DEB822}" ]; then \
