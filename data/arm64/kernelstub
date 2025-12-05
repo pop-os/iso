@@ -16,7 +16,8 @@
             "quiet",
             "loglevel=0",
             "systemd.show_status=false",
-            "console=tty0"
+            "console=tty0",
+            "ast.modeset=0"
         ],
         "esp_path": "/boot/efi",
         "setup_loader": true,

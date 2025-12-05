@@ -9,7 +9,10 @@ endif
 # Show splash screen
 #TODO DISTRO_PARAMS+=quiet splash
 ifeq ($(DISTRO_ARCH),arm64)
+	# ARM systems do not default to using the graphical console
 	DISTRO_PARAMS+=console=tty0
+	# Disables BMC video on Thelio Astra
+	DISTRO_PARAMS+=ast.modeset=0
 endif
 
 GNOME_INITIAL_SETUP_STAMP=21.04
