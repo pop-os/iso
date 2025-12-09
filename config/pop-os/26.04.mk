@@ -7,7 +7,7 @@ DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH)
 endif
 
 # Show splash screen
-#TODO DISTRO_PARAMS+=quiet splash
+DISTRO_PARAMS+=quiet splash
 ifeq ($(DISTRO_ARCH),arm64)
 	# ARM systems do not default to using the graphical console
 	DISTRO_PARAMS+=console=tty0
