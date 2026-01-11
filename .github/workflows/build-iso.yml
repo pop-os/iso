@@ -1,0 +1,184 @@
+name: Build Pop!_OS ZFS ISO
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      nvidia:
+        description: 'Build with NVIDIA drivers'
+        required: false
+        default: 'false'
+        type: boolean
+      arch:
+        description: 'Architecture to build'
+        required: false
+        default: 'amd64'
+        type: choice
+        options:
+          - amd64
+          - arm64
+
+env:
+  DISTRO_CODE: pop-os
+  DISTRO_VERSION: 24.04
+
+jobs:
+  build-iso:
+    runs-on: ubuntu-24.04
+    
+    strategy:
+      matrix:
+        arch: [amd64]
+        nvidia: [0, 1]
+      fail-fast: false
+    
+    steps:
+      - name: Maximize build space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          df -h
+      
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Set up build environment
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            debootstrap \
+            germinate \
+            isolinux \
+            mtools \
+            ovmf \
+            qemu-kvm \
+            qemu-user-static \
+            squashfs-tools \
+            xorriso \
+            zsync \
+            grub-efi-amd64-signed \
+            grub-pc-bin
+      
+      - name: Import GPG keys
+        run: |
+          gpg --keyserver keyserver.ubuntu.com --recv-keys 204DD8AEC33A7AFF || true
+      
+      - name: Set SOURCE_DATE_EPOCH for reproducibility
+        run: |
+          echo "SOURCE_DATE_EPOCH=$(git log -1 --format=%ct)" >> $GITHUB_ENV
+      
+      - name: Build ISO
+        run: |
+          if [ "${{ matrix.nvidia }}" = "1" ]; then
+            export NVIDIA=1
+            ISO_VARIANT="nvidia"
+          else
+            ISO_VARIANT="standard"
+          fi
+          
+          echo "Building $ISO_VARIANT ISO for ${{ matrix.arch }}"
+          
+          sudo make DISTRO_VERSION=${{ env.DISTRO_VERSION }} \
+                    DISTRO_ARCH=${{ matrix.arch }} \
+                    NVIDIA=${{ matrix.nvidia }} \
+                    iso
+          
+          # Rename ISO to include variant
+          BUILD_DIR="build/${{ env.DISTRO_CODE }}/${{ env.DISTRO_VERSION }}/${{ matrix.arch }}"
+          ISO_NAME="${{ env.DISTRO_CODE }}_${{ env.DISTRO_VERSION }}_${{ matrix.arch }}"
+          
+          if [ "${{ matrix.nvidia }}" = "1" ]; then
+            sudo mv "${BUILD_DIR}/${ISO_NAME}.iso" \
+                    "${BUILD_DIR}/${ISO_NAME}_zfs_nvidia.iso"
+            ISO_FILE="${ISO_NAME}_zfs_nvidia.iso"
+          else
+            sudo mv "${BUILD_DIR}/${ISO_NAME}.iso" \
+                    "${BUILD_DIR}/${ISO_NAME}_zfs.iso"
+            ISO_FILE="${ISO_NAME}_zfs.iso"
+          fi
+          
+          echo "ISO_FILE=${ISO_FILE}" >> $GITHUB_ENV
+          echo "BUILD_DIR=${BUILD_DIR}" >> $GITHUB_ENV
+      
+      - name: Generate checksums
+        run: |
+          cd ${{ env.BUILD_DIR }}
+          sha256sum ${{ env.ISO_FILE }} > SHA256SUMS
+          sha512sum ${{ env.ISO_FILE }} > SHA512SUMS
+          md5sum ${{ env.ISO_FILE }} > MD5SUMS
+      
+      - name: Get ISO info
+        run: |
+          ISO_PATH="${{ env.BUILD_DIR }}/${{ env.ISO_FILE }}"
+          ISO_SIZE=$(du -h "$ISO_PATH" | cut -f1)
+          ISO_SHA256=$(sha256sum "$ISO_PATH" | cut -d' ' -f1)
+          
+          echo "### Build Information" >> $GITHUB_STEP_SUMMARY
+          echo "- **ISO File**: ${{ env.ISO_FILE }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Size**: $ISO_SIZE" >> $GITHUB_STEP_SUMMARY
+          echo "- **SHA256**: \`$ISO_SHA256\`" >> $GITHUB_STEP_SUMMARY
+          echo "- **Architecture**: ${{ matrix.arch }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **NVIDIA**: ${{ matrix.nvidia }}" >> $GITHUB_STEP_SUMMARY
+      
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ISO_FILE }}
+          path: |
+            ${{ env.BUILD_DIR }}/${{ env.ISO_FILE }}
+            ${{ env.BUILD_DIR }}/SHA256SUMS
+            ${{ env.BUILD_DIR }}/SHA512SUMS
+            ${{ env.BUILD_DIR }}/MD5SUMS
+          retention-days: 30
+          compression-level: 0
+      
+      - name: Create zsync file
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          cd ${{ env.BUILD_DIR }}
+          zsyncmake -o ${{ env.ISO_FILE }}.zsync ${{ env.ISO_FILE }}
+      
+      - name: Upload zsync artifact
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ISO_FILE }}.zsync
+          path: ${{ env.BUILD_DIR }}/${{ env.ISO_FILE }}.zsync
+          retention-days: 90
+
+  create-release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    needs: build-iso
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4.1.3
+        with:
+          path: artifacts
+      
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/**/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,49 @@
+# ZFSBootMenu Configuration Template
+# This file should be installed to /etc/zfsbootmenu/config.yaml
+
+Global:
+  # Manage ZFSBootMenu images automatically
+  ManageImages: true
+  
+  # Boot partition mount point
+  BootMountPoint: /boot/efi
+  
+  # Dracut configuration directory
+  DracutConfDir: /etc/zfsbootmenu/dracut.conf.d
+
+Components:
+  # Disable unified image components
+  Enabled: false
+
+EFI:
+  # Directory for ZFSBootMenu EFI images
+  ImageDir: /boot/efi/EFI/zbm
+  
+  # Keep 2 versions of ZFSBootMenu (current and previous)
+  Versions: 2
+  
+  # Enable EFI bundle creation
+  Enabled: true
+
+Kernel:
+  # Default kernel command line
+  # These options will be used unless overridden by dataset properties
+  CommandLine: quiet splash
+  
+  # Optional: Specify kernel version
+  # Version: 6.8.0-76-generic
+  
+  # Optional: Kernel prefix for version detection
+  # Prefix: vmlinuz
+
+# syslinux:
+#   # Enable syslinux images for legacy BIOS boot
+#   Enabled: false
+#   Config: /boot/syslinux
+
+# Optional: Timeout for boot menu (in seconds)
+# Timeout: 10
+
+# Optional: Default boot environment
+# By default, uses the pool's bootfs property
+# DefaultBootEnvironment: rpool/ROOT/pop

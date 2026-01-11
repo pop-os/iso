@@ -1,0 +1,12 @@
+// APT hook to create ZFS snapshots before package operations
+// Install to: /etc/apt/apt.conf.d/80-zfs-snapshot
+
+// Pre-Install snapshot hook
+DPkg::Pre-Install-Pkgs {
+    "/usr/local/bin/apt-zfs-snapshot pre";
+};
+
+// Post-Install cleanup hook
+DPkg::Post-Invoke {
+    "/usr/local/bin/apt-zfs-snapshot post";
+};
