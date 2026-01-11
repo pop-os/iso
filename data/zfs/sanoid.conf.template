@@ -1,0 +1,106 @@
+# Sanoid Configuration Template for Pop!_OS ZFS Snapshots
+# This file should be installed to /etc/sanoid/sanoid.conf
+
+#############################
+# Dataset Snapshot Policies #
+#############################
+
+[rpool/ROOT]
+    use_template = production
+    recursive = yes
+
+[rpool/USERDATA]
+    use_template = userdata
+    recursive = yes
+
+[rpool/var/log]
+    use_template = logs
+    recursive = yes
+
+# Exclude cache and tmp from snapshots
+[rpool/var/cache]
+    autosnap = no
+    autoprune = no
+
+[rpool/var/tmp]
+    autosnap = no
+    autoprune = no
+
+#####################
+# Snapshot Templates #
+#####################
+
+# Production template for root filesystems
+# Aggressive retention for system recovery
+[template_production]
+    # No frequent snapshots (every 15 min)
+    frequently = 0
+    
+    # Keep 24 hourly snapshots (1 day)
+    hourly = 24
+    
+    # Keep 30 daily snapshots (1 month)
+    daily = 30
+    
+    # Keep 6 monthly snapshots (6 months)
+    monthly = 6
+    
+    # Keep 1 yearly snapshot
+    yearly = 1
+    
+    # Enable automatic snapshots
+    autosnap = yes
+    
+    # Enable automatic pruning
+    autoprune = yes
+
+# User data template
+# Longer retention for user files
+[template_userdata]
+    frequently = 0
+    
+    # Keep 48 hourly snapshots (2 days)
+    hourly = 48
+    
+    # Keep 90 daily snapshots (3 months)
+    daily = 90
+    
+    # Keep 12 monthly snapshots (1 year)
+    monthly = 12
+    
+    # Keep 2 yearly snapshots
+    yearly = 2
+    
+    autosnap = yes
+    autoprune = yes
+
+# Logs template
+# Shorter retention, logs can be regenerated
+[template_logs]
+    frequently = 0
+    
+    # Keep 12 hourly snapshots (12 hours)
+    hourly = 12
+    
+    # Keep 7 daily snapshots (1 week)
+    daily = 7
+    
+    # No monthly or yearly for logs
+    monthly = 0
+    yearly = 0
+    
+    autosnap = yes
+    autoprune = yes
+
+#####################
+# Global Settings   #
+#####################
+
+# Snapshot naming
+# Format: @autosnap_YYYY-MM-DD_HH:MM:SS_<period>
+
+# Enable monitoring (for Prometheus/Grafana integration)
+# monitor_health = yes
+
+# Send notifications on errors
+# monitor_children = yes

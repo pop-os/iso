@@ -1,0 +1,84 @@
+# Default ZFS Pool Layout for Pop!_OS
+# This YAML file describes the recommended ZFS dataset layout
+
+pool:
+  name: rpool
+  options:
+    ashift: 12
+    autotrim: on
+  properties:
+    acltype: posixacl
+    compression: lz4
+    dnodesize: auto
+    normalization: formD
+    relatime: on
+    xattr: sa
+    encryption: aes-256-gcm
+    keyformat: passphrase
+
+datasets:
+  # Root container - no mountpoint
+  - name: ROOT
+    mountpoint: none
+    properties: {}
+
+  # Boot environment - root filesystem
+  - name: ROOT/pop
+    mountpoint: /
+    properties:
+      canmount: noauto
+      org.zfsbootmenu:commandline: "quiet splash"
+      org.zfsbootmenu:active: "on"
+
+  # User data container
+  - name: USERDATA
+    mountpoint: none
+    properties: {}
+
+  # Home directory
+  - name: USERDATA/home
+    mountpoint: /home
+    properties:
+      com.sun:auto-snapshot: "true"
+
+  # Variable data container
+  - name: var
+    mountpoint: none
+    properties: {}
+
+  # Cache - excluded from snapshots
+  - name: var/cache
+    mountpoint: /var/cache
+    properties:
+      com.sun:auto-snapshot: "false"
+
+  # Logs - separate snapshot policy
+  - name: var/log
+    mountpoint: /var/log
+    properties:
+      com.sun:auto-snapshot: "true"
+
+  # Temporary - no snapshots
+  - name: var/tmp
+    mountpoint: /var/tmp
+    properties:
+      com.sun:auto-snapshot: "false"
+
+  # Reserved space (10% for deletions)
+  - name: reserved
+    mountpoint: none
+    properties:
+      reservation: "10%"
+
+# Optional separate boot pool (not implemented by default)
+# bootpool:
+#   name: bpool
+#   options:
+#     ashift: 12
+#   properties:
+#     compression: lz4
+#   datasets:
+#     - name: BOOT
+#       mountpoint: none
+#     - name: BOOT/pop
+#       mountpoint: /boot

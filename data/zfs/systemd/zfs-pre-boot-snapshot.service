@@ -1,0 +1,15 @@
+[Unit]
+Description=Create ZFS snapshot before boot
+Documentation=https://github.com/chainofreasoning/pop-os-iso-with-zfs
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+RequiresMountsFor=/
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/zfs-pre-boot-snapshot
+RemainAfterExit=yes
+TimeoutStartSec=30
+
+[Install]
+WantedBy=shutdown.target reboot.target halt.target
