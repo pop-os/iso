@@ -37,6 +37,9 @@ else
 POST_DISTRO_PKGS=
 endif
 
+# Kernel command-line options for using casper for live boot.
+LIVE_BOOT_PARAMS=boot=casper live-media-path=/CASPER_PATH
+
 ifeq ($(NVIDIA),1)
 DISTRO_PARAMS+=modules_load=nvidia
 DISTRO_PARAMS+=nvidia-drm.modeset=0

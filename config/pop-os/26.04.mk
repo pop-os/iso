@@ -1,9 +1,9 @@
 DISTRO_NAME=Pop_OS
 
 ifeq ($(NVIDIA),1)
-DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH) NVIDIA
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME)_$(DISTRO_VERSION)_$(DISTRO_ARCH)_NVIDIA
 else
-DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH)
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME)_$(DISTRO_VERSION)_$(DISTRO_ARCH)
 endif
 
 # Show splash screen
@@ -33,6 +33,7 @@ endif
 #TODO: cosmic-term is before pop-desktop to ensure it fulfills all x-terminal-emulator depends
 #TODO: linux-system76 is added since pop-server depends on linux-raspi for arm64
 DISTRO_PKGS=\
+	dracut \
 	systemd \
 	cosmic-term \
 	linux-system76 \
@@ -56,6 +57,10 @@ POST_DISTRO_PKGS+=rsync
 # added to pop-desktop and/or kernelstub
 POST_DISTRO_PKGS+=systemd-boot
 
+# Kernel command-line options for using dracut for live boot.
+CDLABEL=$(subst .,\.,$(DISTRO_VOLUME_LABEL))
+LIVE_BOOT_PARAMS=root=live:CDLABEL=$(CDLABEL) rd.live.image rd.live.dir=/CASPER_PATH rd.live.squashimg=filesystem.squashfs rd.live.overlay rd.live.debug=1
+
 #TODO: revisit whether these kernel params need to be explicitly invoked
 # This has been hard-set as a short term fix tied to the Nvidia ISOs'
 # inability to successfully reach a GUI session with the state of
@@ -76,19 +81,22 @@ STAGING_BRANCHES=
 
 # Packages to have in live instance
 LIVE_PKGS=\
-	casper \
-	cosmic-initial-setup-casper \
+	dmsetup \
+	dracut \
 	distinst \
 	expect \
 	gparted \
 	pop-installer \
-	pop-installer-casper
+	pop-installer-dracut
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
 	ibus-mozc \
 	imagemagick-7.q16 \
 	irqbalance \
+	gdm3 \
+	gnome-shell \
+	gnome-online-accounts \
 	mozc-utils-gui \
 	pop-installer-session \
 	snapd \
@@ -170,7 +178,7 @@ POOL_PKGS=\
 	shim-signed
 
 ifeq ($(HP),1)
-DISTRO_VOLUME_LABEL=$(DISTRO_NAME) $(DISTRO_VERSION) $(DISTRO_ARCH) HP
+DISTRO_VOLUME_LABEL=$(DISTRO_NAME)_$(DISTRO_VERSION)_$(DISTRO_ARCH)_HP
 POST_DISTRO_PKGS+=\
 	pop-hp-vendor \
 	pop-hp-vendor-dkms \

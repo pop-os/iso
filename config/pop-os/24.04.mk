@@ -58,6 +58,9 @@ POST_DISTRO_PKGS+=rsync
 # added to pop-desktop and/or kernelstub
 POST_DISTRO_PKGS+=systemd-boot
 
+# Kernel command-line options for using casper for live boot.
+LIVE_BOOT_PARAMS=boot=casper live-media-path=/CASPER_PATH
+
 #TODO: revisit whether these kernel params need to be explicitly invoked
 # This has been hard-set as a short term fix tied to the Nvidia ISOs'
 # inability to successfully reach a GUI session with the state of
