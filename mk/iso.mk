@@ -28,13 +28,6 @@ $(BUILD)/iso_casper.tag: $(BUILD)/live $(BUILD)/chroot.tag $(BUILD)/live.tag $(B
 		sudo cp "$(BUILD)/live/initrd.img" "$(BUILD)/iso/$(CASPER_PATH)/initrd.gz"; \
 	fi
 
-	# Test local module
-	# sudo cp -r "data/dracut/modules.d/90pop-installer-live" "$(BUILD)/live/usr/lib/dracut/modules.d/"
-	# if [ -e "$(BUILD)/live/usr/lib/dracut" ]; then \
-	# 	sudo cp -r "data/dracut/modules.d/90pop-installer-live" "$(BUILD)/live/usr/lib/dracut/modules.d/"; \
-	# 	sudo $(CHROOT) "$(BUILD)/live" /bin/bash -e -c 'dracut -v --no-hostonly --regenerate-all --force --force-add "bash dm dmsquash-live img-lib pollcdrom pop-installer-live rootfs-block" --force-drivers "sr_mod sd_mod cdrom usb-storage xhci_hcd ehci_hcd" --filesystem "isofs squashfs vfat"'; \
-	# fi
-
 	# Update manifest
 	cp "$(BUILD)/live.tag" "$(BUILD)/iso/$(CASPER_PATH)/filesystem.manifest"
 	grep -F -x -v -f "$(BUILD)/chroot.tag" "$(BUILD)/live.tag" | cut -f1 > "$(BUILD)/iso/$(CASPER_PATH)/filesystem.manifest-remove"

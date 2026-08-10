@@ -128,11 +128,6 @@ $(BUILD)/chroot: $(BUILD)/debootstrap
 	# Remove apt preferences
 	sudo rm "$@.partial/etc/apt/preferences.d/pop-iso"
 
-	# Rebuild initramfs with dracut's host-only mode disabled
-	if [ -e "$@.partial/usr/lib/dracut/" ]; then \
-		sudo $(CHROOT) "$@.partial" /bin/bash -e -c 'dracut -v --no-hostonly --regenerate-all --force --add "bash dmsquash-live" --filesystem "ext4 isofs squashfs vfat"'; \
-	fi
-
 	# Remove workaround for dracut issue on 26.04
 	sudo rmdir --ignore-fail-on-non-empty "$@.partial/lib/modules/$(shell uname -r)"
 

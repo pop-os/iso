@@ -148,14 +148,6 @@ then
     apt-get clean -y
 fi
 
-# Rebuild initramfs with dracut's host-only mode disabled
-if [ -e "/usr/lib/dracut" ]; then
-    dracut --no-hostonly --regenerate-all --force \
-        --force-add "bash dm dmsquash-live img-lib pollcdrom rootfs-block" \
-        --force-drivers "sr_mod sd_mod cdrom usb-storage xhci_hcd ehci_hcd" \
-        --filesystem "isofs squashfs vfat"
-fi
-
 # Remove temporary files
 rm -rf /tmp/*
 
