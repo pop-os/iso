@@ -4,6 +4,8 @@ This repository contains the tools necessary for building Pop!\_OS ISOs.
 
 ## Requirements
 
+- At least 40 GiB of free disk space (the build process consumes ~34 GiB).
+
 First you need to import the Pop!\_OS ISO signing key:
 
 ```sh

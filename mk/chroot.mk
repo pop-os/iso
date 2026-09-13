@@ -222,7 +222,7 @@ $(BUILD)/live: $(BUILD)/chroot
 	fi
 
 	# Rebuild initramfs with dracut's host-only mode disabled
-	if [ -e "$@.partial/usr/lib/dracut" ]; then \
+	if [ -x "$@.partial/usr/bin/dracut" ]; then \
 		sudo $(CHROOT) "$@.partial" /bin/bash -e -c 'dracut -v --no-hostonly --regenerate-all --force --add "bash dmsquash-live pop-installer" --filesystem "ext4 isofs squashfs vfat"'; \
 	fi
 
