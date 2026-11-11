@@ -91,12 +91,13 @@ LIVE_PKGS=\
 
 # Packages to remove from installed system (usually installed as Recommends)
 RM_PKGS=\
+	fcitx5-pinyin-gui \
+	gdm3 \
+	gnome-online-accounts \
+	gnome-shell \
 	ibus-mozc \
 	imagemagick-7.q16 \
 	irqbalance \
-	gdm3 \
-	gnome-shell \
-	gnome-online-accounts \
 	mozc-utils-gui \
 	pop-installer-session \
 	snapd \
